@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import './screens/recipe_list_screen.dart';
+
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
@@ -13,12 +15,7 @@ class MyApp extends StatelessWidget {
 			theme: ThemeData(
 				primarySwatch: Colors.blue,
 			),
-			home: Scaffold(
-				appBar: AppBar(
-					title: const Text("Recipe List"),
-				),
-				body: const Text("Text goes here"),
-			),
+			home: RecipeListScreen(),
 		);
 	}
 }
