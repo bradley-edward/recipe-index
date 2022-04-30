@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/main_drawer.dart';
+import '../widgets/image_input.dart';
 
 class EditRecipeScreen extends StatelessWidget {
 	static const routeName = '/edit-recipe';
@@ -11,8 +11,8 @@ class EditRecipeScreen extends StatelessWidget {
 			appBar: AppBar(
 				title: const Text('Edit Recipe')
 			),
-			body: const Center(
-				child: Text('Edit Recipe'),
+			body: Center(
+				child: ImageInput(() {}),
 			),
 		);
 	}
