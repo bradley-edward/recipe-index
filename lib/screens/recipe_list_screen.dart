@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/recipe_collection.dart';
+import './recipe_details_screen.dart';
 
 class RecipeListScreen extends StatelessWidget {
 	@override
@@ -29,6 +30,9 @@ class RecipeListScreen extends StatelessWidget {
 							),
 							title: Text(currEntry.name),
 							subtitle: Text(currEntry.entryId),
+							onTap: () {
+								Navigator.of(context).pushNamed(RecipeDetailsScreen.routeName, arguments: currEntry.id);
+							},
 						);
 					}
 				),

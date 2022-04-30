@@ -13,4 +13,7 @@ class RecipeCollection with ChangeNotifier {
 		return [..._entries];
 	}
 
+	RecipeEntry findById(String id) {
+		return _entries.firstWhere((entry) => entry.id == id);
+	}
 }
