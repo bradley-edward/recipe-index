@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../models/dummy_data.dart';
+import '../providers/recipe_collection.dart';
 
 class RecipeListScreen extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
+		var dummyData = Provider.of<RecipeCollection>(context).entries;
+
 		return Scaffold(
 			appBar: AppBar(
 				title: const Text("Recipe List"),
@@ -24,8 +27,8 @@ class RecipeListScreen extends StatelessWidget {
 									color: Colors.red,
 								),
 							),
-							title: Text(currEntry['name']),
-							subtitle: Text(currEntry['entryId']),
+							title: Text(currEntry.name),
+							subtitle: Text(currEntry.entryId),
 						);
 					}
 				),
