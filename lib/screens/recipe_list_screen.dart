@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../widgets/collection_list.dart';
 import '../widgets/main_drawer.dart';
 import './search_screen.dart';
+import './edit_recipe_screen.dart';
 
 class RecipeListScreen extends StatelessWidget {
 	@override
@@ -26,6 +27,13 @@ class RecipeListScreen extends StatelessWidget {
 				height: 400,
 				child: CollectionList(),
 			),
+			floatingActionButton: FloatingActionButton(
+				child: const Icon(Icons.add),
+				onPressed: () {
+					appNavigator.pushNamed(EditRecipeScreen.routeName);
+				},
+			),
+			floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
 		);
 	}
 }
