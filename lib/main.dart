@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import './providers/recipe_collection.dart';
 import './screens/recipe_list_screen.dart';
 import './screens/recipe_details_screen.dart';
+import './screens/search_screen.dart';
 
 void main() => runApp(const MyApp());
 
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
 				home: RecipeListScreen(),
 				routes: {
 					RecipeDetailsScreen.routeName: (ctx) => RecipeDetailsScreen(),
+					SearchScreen.routeName: (ctx) => SearchScreen(),
 				},
 			),
 		);
