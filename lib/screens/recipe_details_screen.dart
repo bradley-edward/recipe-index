@@ -9,7 +9,7 @@ class RecipeDetailsScreen extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
 		var entryId = ModalRoute.of(context)!.settings.arguments as String;
-		var entry = Provider.of<RecipeCollection>(context).findById(entryId);
+		var entry = Provider.of<RecipeCollection>(context, listen: false).findById(entryId);
 
 		return Scaffold(
 			appBar: AppBar(
