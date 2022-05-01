@@ -80,60 +80,64 @@ class _RecipeFormState extends State<RecipeForm> {
 	Widget build(BuildContext context) {
 		return _isLoading
 		? const Center(child: CircularProgressIndicator(),)
-		: Form(
-			key: _form,
-			child: ListView(
-				children: <Widget>[
-					TextFormField(
-						initialValue: _initValues['entryId'],
-						decoration: const InputDecoration(labelText: 'Entry ID',),
-						textInputAction: TextInputAction.next,
-						validator: (value) {
-							if (value == null) {
-								return 'Please provide a value';
-							}
-							if (value.isEmpty) {
-								return 'Please provide a value';
-							}
-							return null;
-						},
-						onSaved: (value) {
-							_editedEntry = RecipeEntry(
-								id: _editedEntry.id,
-								entryId: value!,
-								name: _editedEntry.name,
-							);
-						},
+		: Column(
+			children: [
+				Form(
+					key: _form,
+					child: Column(
+						children: <Widget>[
+							TextFormField(
+								initialValue: _initValues['entryId'],
+								decoration: const InputDecoration(labelText: 'Entry ID',),
+								textInputAction: TextInputAction.next,
+								validator: (value) {
+									if (value == null) {
+										return 'Please provide a value';
+									}
+									if (value.isEmpty) {
+										return 'Please provide a value';
+									}
+									return null;
+								},
+								onSaved: (value) {
+									_editedEntry = RecipeEntry(
+										id: _editedEntry.id,
+										entryId: value!,
+										name: _editedEntry.name,
+									);
+								},
+							),
+							TextFormField(
+								initialValue: _initValues['name'],
+								decoration: const InputDecoration(labelText: 'Entry Name',),
+								textInputAction: TextInputAction.next,
+								validator: (value) {
+									if (value == null) {
+										return 'Please provide a value';
+									}
+									if (value.isEmpty) {
+										return 'Please provide a value';
+									}
+									return null;
+								},
+								onSaved: (value) {
+									_editedEntry = RecipeEntry(
+										id: _editedEntry.id,
+										entryId: _editedEntry.entryId,
+										name: value!,
+									);
+								},
+							),
+						],
 					),
-					TextFormField(
-						initialValue: _initValues['name'],
-						decoration: const InputDecoration(labelText: 'Entry Name',),
-						textInputAction: TextInputAction.next,
-						validator: (value) {
-							if (value == null) {
-								return 'Please provide a value';
-							}
-							if (value.isEmpty) {
-								return 'Please provide a value';
-							}
-							return null;
-						},
-						onSaved: (value) {
-							_editedEntry = RecipeEntry(
-								id: _editedEntry.id,
-								entryId: _editedEntry.entryId,
-								name: value!,
-							);
-						},
-					),
-					const SizedBox(height: 50,),
-					ElevatedButton.icon(
-						onPressed: _saveForm,
-						icon: const Icon(Icons.save),
-						label: const Text('Submit')
-					),
-				],
-			),
+				),
+				const SizedBox(height: 50,),
+				ElevatedButton.icon(
+					onPressed: _saveForm,
+					icon: const Icon(Icons.save),
+					label: const Text('Submit')
+				),
+			],
 		);
 	}
 }
