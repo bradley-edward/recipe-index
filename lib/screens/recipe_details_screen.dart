@@ -20,7 +20,7 @@ class RecipeDetailsScreen extends StatelessWidget {
 			floatingActionButton: FloatingActionButton(
 				child: const Icon(Icons.edit),
 				onPressed: () {
-					Navigator.of(context).pushNamed(EditRecipeScreen.routeName);
+					Navigator.of(context).pushNamed(EditRecipeScreen.routeName, arguments: entryId);
 				},
 			),
 			floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

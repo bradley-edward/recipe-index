@@ -1,5 +1,5 @@
 class RecipeEntry {
-	final String id;
+	final String? id;
 	final String entryId;
 	final String name;
 
