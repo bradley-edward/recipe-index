@@ -16,4 +16,22 @@ class RecipeCollection with ChangeNotifier {
 	RecipeEntry findById(String id) {
 		return _entries.firstWhere((entry) => entry.id == id);
 	}
+
+	void addEntry(RecipeEntry entry) {
+		var newEntry = RecipeEntry(
+			id: DateTime.now().toString(),
+			entryId: entry.entryId,
+			name: entry.name,
+		);
+		_entries.add(newEntry);
+		notifyListeners();
+	}
+
+	void updateEntry(String id, RecipeEntry newEntry) {
+		final entryIndex = _entries.indexWhere((entry) => entry.id == id);
+		if (entryIndex >= 0) {
+			_entries[entryIndex] = newEntry;
+			notifyListeners();
+		}
+	}
 }

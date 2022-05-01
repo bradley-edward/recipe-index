@@ -46,7 +46,7 @@ class _RecipeFormState extends State<RecipeForm> {
 		super.dispose();
 	}
 
-	Future<void> _saveForm() async {
+	void _saveForm() {
 		var currentFormState = _form.currentState;
 		if (currentFormState == null) {
 			return;
@@ -57,24 +57,23 @@ class _RecipeFormState extends State<RecipeForm> {
 			return;
 		}
 
+		var collectionProvider = Provider.of<RecipeCollection>(context, listen: false);
+
 		currentFormState.save();
 		setState(() {
 			_isLoading = true;
 		});
 		if (_editedEntry.id != null) {
 			// Edit existing entry
-			print("Edit existing entry ${_editedEntry.id}");
+			collectionProvider.updateEntry(_editedEntry.id!, _editedEntry,);
 		} else {
 			// Add new entry
-			print("Add new entry");
+			collectionProvider.addEntry(_editedEntry);
 		}
-		print(_editedEntry);
-
 		setState(() {
 			_isLoading = false;
 		});
-		return;
-//		Navigator.of(context).pop();
+		Navigator.of(context).pop();
 	}
 
 	@override
