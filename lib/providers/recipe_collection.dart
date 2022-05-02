@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/recipe_entry.dart';
+import '../models/entry_image.dart';
 import '../helpers/db_helper.dart';
 
 class RecipeCollection with ChangeNotifier {
@@ -55,6 +56,10 @@ class RecipeCollection with ChangeNotifier {
 			id: item['id'],
 			entryId: item['entryId'],
 			name: item['name'],
+			images: [
+				EntryImage('https://images.unsplash.com/photo-1651185693290-90dd10d4ea28', ImageType.fromInternet),
+				EntryImage('https://i.imgur.com/OQaAojt.png', ImageType.fromInternet),
+			],
 		)).toList();
 		notifyListeners();
 	}

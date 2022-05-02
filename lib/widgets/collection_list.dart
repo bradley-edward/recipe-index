@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/recipe_collection.dart';
 import '../screens/recipe_details_screen.dart';
+import './entry_image_displayer.dart';
 
 class CollectionList extends StatelessWidget {
 	const CollectionList({ Key? key }) : super(key: key);
@@ -29,13 +30,17 @@ class CollectionList extends StatelessWidget {
 							itemCount: recipesCount,
 							itemBuilder: (ctx, index) {
 								var currEntry = fetchedEntries[index];
+								var hasImages = (currEntry.images != null) && (currEntry.images!.isNotEmpty);
 								return ListTile(
 									leading: Container(
-										width: 50,
-										height: 50,
-										decoration: const BoxDecoration(
-											color: Colors.red,
-										),
+										width: 60,
+										height: 60,
+										child: hasImages
+										? FittedBox(
+											child: EntryImageDisplayer(currEntry.images![0]),
+											fit: BoxFit.contain,
+										) 
+										: const ColoredBox(color: Colors.red),
 									),
 									title: Text(currEntry.name),
 									subtitle: Text(currEntry.entryId),
