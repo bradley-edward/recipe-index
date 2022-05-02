@@ -46,7 +46,7 @@ class _RecipeFormState extends State<RecipeForm> {
 		super.dispose();
 	}
 
-	void _saveForm() {
+	Future<void> _saveForm() async {
 		var currentFormState = _form.currentState;
 		if (currentFormState == null) {
 			return;
@@ -65,10 +65,10 @@ class _RecipeFormState extends State<RecipeForm> {
 		});
 		if (_editedEntry.id != null) {
 			// Edit existing entry
-			collectionProvider.updateEntry(_editedEntry.id!, _editedEntry,);
+			await collectionProvider.updateEntry(_editedEntry.id!, _editedEntry,);
 		} else {
 			// Add new entry
-			collectionProvider.addEntry(_editedEntry);
+			await collectionProvider.addEntry(_editedEntry);
 		}
 		setState(() {
 			_isLoading = false;

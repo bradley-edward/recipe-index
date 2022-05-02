@@ -9,24 +9,42 @@ class CollectionList extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
-		var dummyData = Provider.of<RecipeCollection>(context).entries;
+		return FutureBuilder(
+			future: Provider.of<RecipeCollection>(context, listen: false).fetchAndSetRecipes(),
+			builder: (context, snapshot) {
+				if (snapshot.connectionState != ConnectionState.done) {
+					return const Center(child: CircularProgressIndicator(),);
+				}
+				return Consumer<RecipeCollection>(
+					child: const Center(child: Text('Got no recipes yet, start adding some!')),
+					builder: (ctx, recipeCollection, ch) {
+						final fetchedEntries = recipeCollection.entries;
+						final recipesCount = fetchedEntries.length;
 
-		return ListView.builder(
-			itemCount: dummyData.length,
-			itemBuilder: (ctx, index) {
-				var currEntry = dummyData[index];
-				return ListTile(
-					leading: Container(
-						width: 50,
-						height: 50,
-						decoration: const BoxDecoration(
-							color: Colors.red,
-						),
-					),
-					title: Text(currEntry.name),
-					subtitle: Text(currEntry.entryId),
-					onTap: () {
-						Navigator.of(context).pushNamed(RecipeDetailsScreen.routeName, arguments: currEntry.id);
+						if (recipesCount <= 0) {
+							return ch!;
+						}
+
+						return ListView.builder(
+							itemCount: recipesCount,
+							itemBuilder: (ctx, index) {
+								var currEntry = fetchedEntries[index];
+								return ListTile(
+									leading: Container(
+										width: 50,
+										height: 50,
+										decoration: const BoxDecoration(
+											color: Colors.red,
+										),
+									),
+									title: Text(currEntry.name),
+									subtitle: Text(currEntry.entryId),
+									onTap: () {
+										Navigator.of(context).pushNamed(RecipeDetailsScreen.routeName, arguments: currEntry.id);
+									},
+								);
+							}
+						);
 					},
 				);
 			}
