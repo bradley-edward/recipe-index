@@ -89,6 +89,7 @@ class _RecipeFormState extends State<RecipeForm> {
 							TextFormField(
 								initialValue: _initValues['entryId'],
 								decoration: const InputDecoration(labelText: 'Entry ID',),
+								keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
 								textInputAction: TextInputAction.next,
 								validator: (value) {
 									if (value == null) {
