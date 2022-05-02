@@ -39,6 +39,7 @@ dependencies:
   path_provider: ^2.0.9
   reorderable_grid_view: ^2.2.2
   carousel_slider: ^4.1.1
+  sqflite: ^2.0.2+1
 
 dev_dependencies:
   flutter_test:
