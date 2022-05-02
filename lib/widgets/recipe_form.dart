@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/recipe_collection.dart';
 import '../models/recipe_entry.dart';
+import './image_list_edit.dart';
 
 class RecipeForm extends StatefulWidget {
 	final String? inputId;
@@ -132,7 +133,9 @@ class _RecipeFormState extends State<RecipeForm> {
 						],
 					),
 				),
-				const SizedBox(height: 50,),
+				const SizedBox(height: 25,),
+				ImageListEdit(),
+				const SizedBox(height: 25,),
 				ElevatedButton.icon(
 					onPressed: _saveForm,
 					icon: const Icon(Icons.save),
