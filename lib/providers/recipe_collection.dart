@@ -53,7 +53,7 @@ class RecipeCollection with ChangeNotifier {
 		if (entryIndex >= 0) {
 			_entries[entryIndex] = newEntry;
 			notifyListeners();
-			await DBHelper.insert('recipes', {
+			await DBHelper.update('recipes', {
 				'id': newEntry.id!,
 				'entryId': newEntry.entryId,
 				'name': newEntry.name,
