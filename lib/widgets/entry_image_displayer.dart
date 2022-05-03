@@ -13,11 +13,18 @@ class EntryImageDisplayer extends StatelessWidget {
 	Widget build(BuildContext context) {
 		switch (imageItem.imageType) {
 			case ImageType.fromInternet:
-				return FadeInImage(
-					key: ValueKey(imageItem.imageLocation),
-					placeholder: const AssetImage('assets/images/downloading.png'),
-					image: NetworkImage(imageItem.imageLocation,),
-					fit: BoxFit.cover,
+				return Image.network(
+					imageItem.imageLocation,
+					loadingBuilder: (context, child, loadingProgress) {
+						if (loadingProgress == null) return child;
+						return Center(
+							child: CircularProgressIndicator(
+								value: loadingProgress.expectedTotalBytes != null
+								? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+								: null,
+							),
+						);
+					},
 				);
 			case ImageType.onPhone:
 				return Image.file(
