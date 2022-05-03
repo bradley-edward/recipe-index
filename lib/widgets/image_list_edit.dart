@@ -26,16 +26,11 @@ class _ImageListEditState extends State<ImageListEdit> {
 		_testData.addAll(widget.initialList);
 	}
 	
-	Widget _buildItem(String text) {
-		return Card(
-			key: ValueKey(text),
-			child: Text(text),
-		);
-    }
 
 	@override
 	Widget build(BuildContext context) {
 		return Column(
+			crossAxisAlignment: CrossAxisAlignment.end,
 			children: [
 				Container(
 					height: 240,
@@ -67,17 +62,22 @@ class _ImageListEditState extends State<ImageListEdit> {
 						),
 					),
 				),
-				Card(
-					child: Row(
-						children: [
-							const Text('Add New Image'),
-							ImageInput((EntryImage newImage) {
-								setState(() {
-									_testData.add(newImage);
-								});
-								widget.onUpdateList(_testData);
-							}),
-						]
+				Container(
+					width: 240,
+					child: Card(
+						child: Row(
+							children: [
+								const Center(
+									child: Text('Add New Image'),
+								),
+								ImageInput((EntryImage newImage) {
+									setState(() {
+										_testData.add(newImage);
+									});
+									widget.onUpdateList(_testData);
+								}),
+							]
+						),
 					),
 				)
 			],
