@@ -27,7 +27,7 @@ class ImageInput extends StatelessWidget {
 		final appDir = await syspaths.getApplicationDocumentsDirectory();
 		final fileName = path.basename(imageFile.path);
 		final savedImage = await imageFile.copy('${appDir.path}/$fileName');
-		onSelectImage(EntryImage(savedImage.path, ImageType.onPhone));
+		onSelectImage(EntryImage(imageLocation: savedImage.path, imageType: ImageType.onPhone));
 	}
 
 	@override

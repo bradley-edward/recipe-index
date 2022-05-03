@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/entry_image.dart';
 import '../providers/recipe_collection.dart';
 import '../models/recipe_entry.dart';
 import './image_list_edit.dart';
@@ -21,11 +22,13 @@ class _RecipeFormState extends State<RecipeForm> {
 		id: null,
 		entryId: '',
 		name: '',
+		images: [],
 	);
 
-	var _initValues = {
+	var _initValues = <String, dynamic>{
 		'entryId': '',
 		'name': '',
+		'images': <EntryImage>[],
 	};
 
 	var _isLoading = false;
@@ -38,6 +41,7 @@ class _RecipeFormState extends State<RecipeForm> {
 			_initValues = {
 				'entryId': _editedEntry.entryId,
 				'name': _editedEntry.name,
+				'images': _editedEntry.images,
 			};
 		}
 	}
@@ -106,6 +110,7 @@ class _RecipeFormState extends State<RecipeForm> {
 										id: _editedEntry.id,
 										entryId: value!,
 										name: _editedEntry.name,
+										images: _editedEntry.images,
 									);
 								},
 							),
@@ -127,6 +132,7 @@ class _RecipeFormState extends State<RecipeForm> {
 										id: _editedEntry.id,
 										entryId: _editedEntry.entryId,
 										name: value!,
+										images: _editedEntry.images,
 									);
 								},
 							),
@@ -134,7 +140,12 @@ class _RecipeFormState extends State<RecipeForm> {
 					),
 				),
 				const SizedBox(height: 25,),
-				ImageListEdit(),
+				ImageListEdit(
+					initialList: _initValues['images'],
+					onUpdateList: (List<EntryImage> newImagesList) {
+						_editedEntry.images = newImagesList;
+					}
+				),
 				const SizedBox(height: 25,),
 				ElevatedButton.icon(
 					onPressed: _saveForm,

@@ -8,10 +8,14 @@ import './entry_image_displayer.dart';
 class CollectionList extends StatelessWidget {
 	const CollectionList({ Key? key }) : super(key: key);
 
+	Future<void> _refreshCollection(BuildContext context) {
+		return Provider.of<RecipeCollection>(context, listen: false).fetchAndSetRecipes();
+	}
+
 	@override
 	Widget build(BuildContext context) {
 		return FutureBuilder(
-			future: Provider.of<RecipeCollection>(context, listen: false).fetchAndSetRecipes(),
+			future: _refreshCollection(context),
 			builder: (context, snapshot) {
 				if (snapshot.connectionState != ConnectionState.done) {
 					return const Center(child: CircularProgressIndicator(),);
@@ -30,14 +34,13 @@ class CollectionList extends StatelessWidget {
 							itemCount: recipesCount,
 							itemBuilder: (ctx, index) {
 								var currEntry = fetchedEntries[index];
-								var hasImages = (currEntry.images != null) && (currEntry.images!.isNotEmpty);
 								return ListTile(
 									leading: Container(
 										width: 60,
 										height: 60,
-										child: hasImages
+										child: (currEntry.images.isNotEmpty)
 										? FittedBox(
-											child: EntryImageDisplayer(currEntry.images![0]),
+											child: EntryImageDisplayer(currEntry.images[0]),
 											fit: BoxFit.contain,
 										) 
 										: const ColoredBox(color: Colors.red),

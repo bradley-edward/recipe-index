@@ -24,7 +24,7 @@ class RecipeDetailsScreen extends StatelessWidget {
 					children: <Widget>[
 						Container(
 							height: 240,
-							child: entryImageCarousel(),
+							child: entryImageCarousel(entry.images),
 						),
 						const SizedBox(height: 10,),
 						Container(

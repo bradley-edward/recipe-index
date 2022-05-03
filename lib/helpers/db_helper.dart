@@ -7,8 +7,9 @@ class DBHelper {
 		final dbPath = await sql.getDatabasesPath();
 		return sql.openDatabase(
 			path.join(dbPath, 'collection_indexer.db'),
-			onCreate: (db, version) {
-				return db.execute('CREATE TABLE recipes(id TEXT PRIMARY KEY, entryId TEXT, name TEXT)');
+			onCreate: (db, version) async {
+				await db.execute('CREATE TABLE recipes(id TEXT PRIMARY KEY, entryId TEXT, name TEXT)');
+				await db.execute('CREATE TABLE images(id TEXT PRIMARY KEY, listIndex INTEGER, imageType INTEGER, imageLocation TEXT, ownerId TEXT, FOREIGN KEY(ownerId) REFERENCES recipes(id))');
 			},
 			version: 1,
 		);
@@ -17,6 +18,15 @@ class DBHelper {
 	static Future<void> insert(String table, Map<String, Object> data) async {
 		final db = await DBHelper.database();
 		await db.insert(table, data, conflictAlgorithm: sql.ConflictAlgorithm.replace);
+	}
+
+	static Future<void> insertMany(String table, List<Map<String, Object>> data) async {
+		final db = await DBHelper.database();
+		var insertBatch = db.batch();
+		for (var datum in data) {
+			insertBatch.insert(table, datum, conflictAlgorithm: sql.ConflictAlgorithm.replace);
+		}
+		await insertBatch.commit();
 	}
 
 	static Future<void> update(String table, Map<String, Object> data) async {
