@@ -18,12 +18,12 @@ class ImageListEdit extends StatefulWidget {
 }
 
 class _ImageListEditState extends State<ImageListEdit> {
-	List<EntryImage> _testData = [];
+	final List<EntryImage> _testData = [];
 
 	@override
 	void initState() {
 		super.initState();
-		_testData = [...widget.initialList];
+		_testData.addAll(widget.initialList);
 	}
 	
 	Widget _buildItem(String text) {
