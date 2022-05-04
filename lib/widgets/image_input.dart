@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as syspaths;
 
+import './image_url_modal.dart';
 import '../models/entry_image.dart';
 
 class ImageInput extends StatelessWidget {
@@ -41,7 +42,16 @@ class ImageInput extends StatelessWidget {
 					style: TextButton.styleFrom(
 						primary: Theme.of(context).primaryColor,
 					),
-					onPressed: () {},
+					onPressed: () async {
+						final String? imageUrl = await showModalBottomSheet(
+							context: context,
+							builder: (ctx) => const ImageUrlModal(),
+						);
+
+						if (imageUrl == null) return;
+
+						onSelectImage(EntryImage(imageLocation: imageUrl, imageType: ImageType.fromInternet));
+					},
 				),
 				TextButton.icon(
 					icon: const Icon(Icons.image),
