@@ -1,11 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:reorderable_grid_view/reorderable_grid_view.dart';
 
 import '../models/entry_image.dart';
-import './entry_image_displayer.dart';
 import './image_input.dart';
+import './image_list_item.dart';
 
 class ImageListEdit extends StatefulWidget {
 	Function onUpdateList;
@@ -19,13 +17,16 @@ class ImageListEdit extends StatefulWidget {
 
 class _ImageListEditState extends State<ImageListEdit> {
 	final List<EntryImage> _testData = [];
+	final _imagesToDelete = <String,bool>{};
 
 	@override
 	void initState() {
 		super.initState();
-		_testData.addAll(widget.initialList);
+		for (final image in widget.initialList) {
+			_testData.add(image);
+			_imagesToDelete[image.id!] = false;
+		}
 	}
-	
 
 	@override
 	Widget build(BuildContext context) {
@@ -53,12 +54,11 @@ class _ImageListEditState extends State<ImageListEdit> {
 								});
 								widget.onUpdateList(_testData);
 							}),
-							children: _testData.map((imageItem) {
-								return Card(
-									key:  ValueKey(imageItem.imageLocation,),
-									child: EntryImageDisplayer(imageItem,),
-								);
-							}).toList(),
+							children: _testData.map((imageData) => ImageListItem(
+								key: ValueKey( imageData.id ?? imageData.imageLocation ),
+								imageData: imageData,
+								toBeDeleted: _imagesToDelete[imageData.id] ?? false,
+							)).toList(),
 						),
 					),
 				),
