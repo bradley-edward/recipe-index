@@ -24,7 +24,7 @@ class _RecipeFormState extends State<RecipeForm> {
 		name: '',
 		images: [],
 	);
-
+	var _imagesToDelete = <String>{};
 	var _initValues = <String, dynamic>{
 		'entryId': '',
 		'name': '',
@@ -70,7 +70,7 @@ class _RecipeFormState extends State<RecipeForm> {
 		});
 		if (_editedEntry.id != null) {
 			// Edit existing entry
-			await collectionProvider.updateEntry(_editedEntry.id!, _editedEntry,);
+			await collectionProvider.updateEntry(_editedEntry.id!, _editedEntry, _imagesToDelete);
 		} else {
 			// Add new entry
 			await collectionProvider.addEntry(_editedEntry);
@@ -142,8 +142,11 @@ class _RecipeFormState extends State<RecipeForm> {
 				const SizedBox(height: 25,),
 				ImageListEdit(
 					initialList: _initValues['images'],
-					onUpdateList: (List<EntryImage> newImagesList) {
+					onUpdateList: (List<EntryImage> newImagesList, [Set<String>? deletedImageIds]) {
 						_editedEntry.images = newImagesList;
+						if (deletedImageIds != null) {
+							_imagesToDelete = deletedImageIds;
+						}
 					}
 				),
 				const SizedBox(height: 25,),

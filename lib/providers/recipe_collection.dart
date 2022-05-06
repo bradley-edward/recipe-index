@@ -48,17 +48,48 @@ class RecipeCollection with ChangeNotifier {
 		await DBHelper.insertMany('images', imagesData);
 	}
 
-	Future<void> updateEntry(String id, RecipeEntry newEntry) async {
-		final entryIndex = _entries.indexWhere((entry) => entry.id == id);
-		if (entryIndex >= 0) {
-			_entries[entryIndex] = newEntry;
-			notifyListeners();
-			await DBHelper.update('recipes', {
-				'id': newEntry.id!,
-				'entryId': newEntry.entryId,
-				'name': newEntry.name,
-			});
+	Future<void> _updateEntryImages(String ownerId, List<EntryImage> imageList, Set<String> deleteIds) async {
+		List<Map<String,dynamic>> recordsToInsert = [];
+		List<Map<String,dynamic>> recordsToUpdate = [];
+		
+		for (var i = 0, len = imageList.length; i < len; i++) {
+			var currImage = imageList[i];
+			final recordItem = {
+				'listIndex': i,
+				'imageType': currImage.imageType.index,
+				'imageLocation': currImage.imageLocation,
+				'ownerId': ownerId,
+			};
+			if (currImage.id != null) {
+				recordItem['id'] = currImage.id!;
+				recordsToUpdate.add(recordItem);
+			} else {
+				recordItem['id'] = UniqueKey().toString();
+				recordsToInsert.add(recordItem);
+			}
 		}
+
+		await DBHelper.batchStmts('images', recordsToInsert, recordsToUpdate, deleteIds,);
+	}
+
+	Future<void> updateEntry(String id, RecipeEntry newEntry, Set<String> imageIdsToRemove,) async {
+		final entryIndex = _entries.indexWhere((entry) => entry.id == id);
+		if (entryIndex == -1) {
+			return;
+		}
+
+		// We should perhaps deal with deleting image files from the file-system, depending on how the images table is being updated.
+		newEntry.images.removeWhere((image) => imageIdsToRemove.contains(image.id));
+		_entries[entryIndex] = newEntry;
+		notifyListeners();
+
+		await DBHelper.update('recipes', {
+			'id': newEntry.id!,
+			'entryId': newEntry.entryId,
+			'name': newEntry.name,
+		});
+
+		await _updateEntryImages(newEntry.id!, newEntry.images, imageIdsToRemove,);
 	}
 
 	Future<void> fetchAndSetRecipes() async {

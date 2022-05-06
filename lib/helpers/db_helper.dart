@@ -34,6 +34,21 @@ class DBHelper {
 		await db.update(table, data, where: '"id" = ?', whereArgs: [data['id'],]);
 	}
 
+	static Future<void> batchStmts(String table, List<Map<String,dynamic>> insertList, List<Map<String,dynamic>> updateList, Set<String> deleteIdSet) async {
+		final db = await DBHelper.database();
+		final stmtBatch = db.batch();
+		for (var insertItem in insertList) {
+			stmtBatch.insert(table, insertItem, conflictAlgorithm: sql.ConflictAlgorithm.replace);
+		}
+		for (var updateItem in updateList) {
+			stmtBatch.update(table, updateItem, where: '"id" = ?', whereArgs: [updateItem['id']]);
+		}
+		for (var deleteId in deleteIdSet) {
+			stmtBatch.delete(table, where: '"id" = ?', whereArgs: [deleteId]);
+		}
+		await stmtBatch.commit();
+	}
+
 	static Future<List<Map<String, dynamic>>> getData(String table) async {
 		final db = await DBHelper.database();
 		return db.query(table);

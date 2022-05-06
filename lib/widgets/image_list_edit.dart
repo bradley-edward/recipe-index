@@ -17,7 +17,7 @@ class ImageListEdit extends StatefulWidget {
 
 class _ImageListEditState extends State<ImageListEdit> {
 	final List<EntryImage> _testData = [];
-	final _imagesToDelete = <String,bool>{};
+	final _imagesToDelete = <String>{};
 
 	@override
 	void initState() {
@@ -56,22 +56,23 @@ class _ImageListEditState extends State<ImageListEdit> {
 							children: _testData.map((imageData) => ImageListItem(
 								key: ValueKey( imageData.id ?? imageData.imageLocation ),
 								imageData: imageData,
-								toBeDeleted: _imagesToDelete[imageData.id] ?? false,
+								toBeDeleted: _imagesToDelete.contains(imageData.id),
 								markToBeDeleted: () {
 									if (imageData.id == null) {
 										setState(() {
 											_testData.removeWhere((entry) => entry == imageData);
 										});
-										return;
+										widget.onUpdateList(_testData);
+									} else {
+										setState(() {
+											if (_imagesToDelete.contains(imageData.id)) {
+												_imagesToDelete.remove(imageData.id);
+											} else {
+												_imagesToDelete.add(imageData.id!);
+											}
+										});
+										widget.onUpdateList(_testData, _imagesToDelete);
 									}
-
-									setState(() {
-										if (_imagesToDelete[imageData.id!] != null && _imagesToDelete[imageData.id!] == true) {
-											_imagesToDelete.remove(imageData.id);
-										} else {
-											_imagesToDelete[imageData.id!] = true;
-										}
-									});
 								},
 							)).toList(),
 						),
