@@ -24,7 +24,6 @@ class _ImageListEditState extends State<ImageListEdit> {
 		super.initState();
 		for (final image in widget.initialList) {
 			_testData.add(image);
-			_imagesToDelete[image.id!] = false;
 		}
 	}
 
@@ -58,6 +57,22 @@ class _ImageListEditState extends State<ImageListEdit> {
 								key: ValueKey( imageData.id ?? imageData.imageLocation ),
 								imageData: imageData,
 								toBeDeleted: _imagesToDelete[imageData.id] ?? false,
+								markToBeDeleted: () {
+									if (imageData.id == null) {
+										setState(() {
+											_testData.removeWhere((entry) => entry == imageData);
+										});
+										return;
+									}
+
+									setState(() {
+										if (_imagesToDelete[imageData.id!] != null && _imagesToDelete[imageData.id!] == true) {
+											_imagesToDelete.remove(imageData.id);
+										} else {
+											_imagesToDelete[imageData.id!] = true;
+										}
+									});
+								},
 							)).toList(),
 						),
 					),
