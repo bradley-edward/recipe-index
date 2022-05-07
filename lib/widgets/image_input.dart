@@ -33,8 +33,8 @@ class ImageInput extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
-		return Column(
-			mainAxisAlignment: MainAxisAlignment.center,
+		return Row(
+			mainAxisAlignment: MainAxisAlignment.spaceAround,
 			children: <Widget>[
 				TextButton.icon(
 					icon: const Icon(Icons.language),

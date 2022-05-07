@@ -81,10 +81,11 @@ class _ImageListEditState extends State<ImageListEdit> {
 						),
 					),
 				),
-				Container(
-					width: 240,
-					child: Card(
-						child: Row(
+				Card(
+					child: Padding(
+						padding: const EdgeInsets.only(top: 8.0),
+						child: Column(
+							mainAxisAlignment: MainAxisAlignment.center,
 							children: [
 								const Center(
 									child: Text('Add New Image'),
@@ -98,7 +99,7 @@ class _ImageListEditState extends State<ImageListEdit> {
 							]
 						),
 					),
-				)
+				),
 			],
 		);
 	}
