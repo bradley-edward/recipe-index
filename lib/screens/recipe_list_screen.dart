@@ -24,7 +24,7 @@ class RecipeListScreen extends StatelessWidget {
 			drawer: MainDrawer(),
 			body: Container(
 				width: double.infinity,
-				height: 400,
+				height: 500,
 				child: CollectionList(),
 			),
 			floatingActionButton: FloatingActionButton(
