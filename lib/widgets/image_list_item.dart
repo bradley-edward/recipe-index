@@ -12,39 +12,53 @@ class ImageListItem extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
-		return Stack(
-			children: [
-				Card(
-					child: Center(
-						child: Container(
-							padding: const EdgeInsets.all(8),
-							decoration: BoxDecoration(
-								color: imageData.id == null
-								? const Color.fromARGB(80, 0, 240, 0)
-								: toBeDeleted
-								? const Color.fromARGB(80, 240, 0, 0)
-								: null
+		return LayoutBuilder(
+			builder: ((ctx, constraints) {
+				return Stack(
+					children: [
+						Positioned(
+							bottom: 0,
+							left: 0,
+							child: Container(
+								height: (constraints.maxHeight * 0.95),
+								width: constraints.maxWidth * 0.95,
+								child: Card(
+									color: imageData.id == null
+									? const Color.fromARGB(255, 167, 243, 167)
+									: toBeDeleted
+									? const Color.fromARGB(255, 243, 167, 167)
+									: null,
+									child: Center(
+										child: Container(
+											padding: const EdgeInsets.all(5),
+											child: EntryImageDisplayer(imageData,),
+										),
+									),
+								),
 							),
-							child: EntryImageDisplayer(imageData,),
 						),
-					),
-				),
-				Positioned(
-					top: 5,
-					right: 5,
-					child: Container(
-						decoration: BoxDecoration(
-							color: Colors.black,
-							borderRadius: BorderRadius.circular(10),
+						Positioned(
+							top: 0.5,
+							right: 0.5,
+							child: Container(
+								height: 30,
+								width: 30,
+								decoration: BoxDecoration(
+									color: Colors.black,
+									borderRadius: BorderRadius.circular(15),
+								),
+								child: IconButton(
+									color: Colors.white,
+									icon: const Icon(Icons.highlight_off),
+									padding: EdgeInsets.zero,
+									constraints: const BoxConstraints(),
+									onPressed: markToBeDeleted,
+								),
+							),
 						),
-						child: IconButton(
-							color: Colors.white,
-							icon: const Icon(Icons.highlight_off),
-							onPressed: markToBeDeleted,
-						),
-					),
-				),
-			],
+					],
+				);
+			}),
 		);
 	}
 }

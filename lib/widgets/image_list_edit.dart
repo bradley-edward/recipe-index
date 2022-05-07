@@ -35,17 +35,20 @@ class _ImageListEditState extends State<ImageListEdit> {
 				Container(
 					height: 240,
 					width: double.infinity,
-					decoration: BoxDecoration(
-						border: Border.all(
-							color: Colors.red,
-							width: 2.0,
+					decoration: const BoxDecoration(
+						border: Border.symmetric(
+							horizontal: BorderSide(
+								color: Colors.black54,
+								width: 1,
+							)
 						)
 					),
-					child: Center(
+					child: Padding(
+						padding: const EdgeInsets.all(2),
 						child: ReorderableGridView.count(
 							crossAxisCount: 4,
-							crossAxisSpacing: 5,
-							mainAxisSpacing: 5,
+							crossAxisSpacing: 4,
+							mainAxisSpacing: 4,
 							onReorder: ((oldIdx, newIdx) {
 								setState(() {
 									final element = _testData.removeAt(oldIdx);
