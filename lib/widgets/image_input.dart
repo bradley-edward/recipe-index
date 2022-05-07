@@ -33,47 +33,60 @@ class ImageInput extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
-		return Row(
-			mainAxisAlignment: MainAxisAlignment.spaceAround,
-			children: <Widget>[
-				TextButton.icon(
-					icon: const Icon(Icons.language),
-					label: const Text('Image URL'),
-					style: TextButton.styleFrom(
-						primary: Theme.of(context).primaryColor,
-					),
-					onPressed: () async {
-						final String? imageUrl = await showModalBottomSheet(
-							context: context,
-							builder: (ctx) => const ImageUrlModal(),
-						);
+		return Card(
+			child: Padding(
+				padding: const EdgeInsets.only(top: 8.0),
+				child: Column(
+					mainAxisAlignment: MainAxisAlignment.center,
+					children: [
+						const Center(
+							child: Text('Add New Image'),
+						),
+						Row(
+							mainAxisAlignment: MainAxisAlignment.spaceAround,
+							children: <Widget>[
+								TextButton.icon(
+									icon: const Icon(Icons.language),
+									label: const Text('Image URL'),
+									style: TextButton.styleFrom(
+										primary: Theme.of(context).primaryColor,
+									),
+									onPressed: () async {
+										final String? imageUrl = await showModalBottomSheet(
+											context: context,
+											builder: (ctx) => const ImageUrlModal(),
+										);
 
-						if (imageUrl == null) return;
+										if (imageUrl == null) return;
 
-						onSelectImage(EntryImage(imageLocation: imageUrl, imageType: ImageType.fromInternet));
-					},
+										onSelectImage(EntryImage(imageLocation: imageUrl, imageType: ImageType.fromInternet));
+									},
+								),
+								TextButton.icon(
+									icon: const Icon(Icons.image),
+									label: const Text('Gallery'),
+									style: TextButton.styleFrom(
+										primary: Theme.of(context).primaryColor,
+									),
+									onPressed: () {
+										_takePicture(ImageSource.gallery);
+									},
+								),
+								TextButton.icon(
+									icon: const Icon(Icons.camera),
+									label: const Text('Camera'),
+									style: TextButton.styleFrom(
+										primary: Theme.of(context).primaryColor,
+									),
+									onPressed: () {
+										_takePicture(ImageSource.camera);
+									},
+								),
+							],
+						)
+					],
 				),
-				TextButton.icon(
-					icon: const Icon(Icons.image),
-					label: const Text('Gallery'),
-					style: TextButton.styleFrom(
-						primary: Theme.of(context).primaryColor,
-					),
-					onPressed: () {
-						_takePicture(ImageSource.gallery);
-					},
-				),
-				TextButton.icon(
-					icon: const Icon(Icons.camera),
-					label: const Text('Camera'),
-					style: TextButton.styleFrom(
-						primary: Theme.of(context).primaryColor,
-					),
-					onPressed: () {
-						_takePicture(ImageSource.camera);
-					},
-				),
-			],
+			),
 		);
 	}
 }

@@ -81,25 +81,12 @@ class _ImageListEditState extends State<ImageListEdit> {
 						),
 					),
 				),
-				Card(
-					child: Padding(
-						padding: const EdgeInsets.only(top: 8.0),
-						child: Column(
-							mainAxisAlignment: MainAxisAlignment.center,
-							children: [
-								const Center(
-									child: Text('Add New Image'),
-								),
-								ImageInput((EntryImage newImage) {
-									setState(() {
-										_testData.add(newImage);
-									});
-									widget.onUpdateList(_testData);
-								}),
-							]
-						),
-					),
-				),
+				ImageInput((EntryImage newImage) {
+					setState(() {
+						_testData.add(newImage);
+					});
+					widget.onUpdateList(_testData);
+				}),
 			],
 		);
 	}
