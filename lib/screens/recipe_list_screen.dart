@@ -45,12 +45,38 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 				: null,
 				title: const Text("Recipes"),
 				actions: <Widget>[
-					if (!_isInEditMode) IconButton(
-						icon: const Icon(Icons.search),
-						onPressed: () {
-							appNavigator.pushReplacementNamed(SearchScreen.routeName);
-						},
-					)
+					if (!_isInEditMode) ...<Widget>[
+						IconButton(
+							icon: const Icon(Icons.search),
+							onPressed: () {
+								appNavigator.pushReplacementNamed(SearchScreen.routeName);
+							},
+						),
+						IconButton(
+							icon: const Icon(Icons.edit),
+							onPressed: () {
+								setState(() {
+									_isInEditMode = true;
+								});
+							},
+						),
+					],
+					if (_isInEditMode) ...<Widget>[
+						IconButton(
+							icon: const Icon(Icons.delete),
+							onPressed: () {
+								print('batch delete');
+							},
+						),
+						IconButton(
+							icon: const Icon(Icons.edit_off),
+							onPressed: () {
+								setState(() {
+									_isInEditMode = false;
+								});
+							},
+						),
+					],
 				],
 			),
 			drawer: _isInEditMode ? null : MainDrawer(),
@@ -76,7 +102,7 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 									return Container(
 										width: double.infinity,
 										height: 500,
-										child: CollectionList(fetchedEntries),
+										child: CollectionList(fetchedEntries, _isInEditMode,),
 									);
 								}
 							);

@@ -6,8 +6,9 @@ import './entry_image_displayer.dart';
 
 class CollectionList extends StatelessWidget {
 	final List<RecipeEntry> entryList;
+	bool isInEditMode;
 
-	const CollectionList(this.entryList, { Key? key }) : super(key: key);
+	CollectionList(this.entryList, this.isInEditMode, { Key? key }) : super(key: key);
 
 	@override
 	Widget build(BuildContext context) {
@@ -28,8 +29,18 @@ class CollectionList extends StatelessWidget {
 					),
 					title: Text(currEntry.name),
 					subtitle: Text(currEntry.entryId),
+					trailing: isInEditMode
+					? IconButton(
+						onPressed: () {
+							print('select entry with id ${currEntry.id}');
+						},
+						icon: const Icon(Icons.circle_outlined),
+					)
+					: null,
 					onTap: () {
-						Navigator.of(context).pushNamed(RecipeDetailsScreen.routeName, arguments: currEntry.id);
+						if (!isInEditMode) {
+							Navigator.of(context).pushNamed(RecipeDetailsScreen.routeName, arguments: currEntry.id);
+						}
 					},
 				);
 			}
