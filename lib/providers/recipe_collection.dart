@@ -91,7 +91,7 @@ class RecipeCollection with ChangeNotifier {
 		await _updateEntryImages(newEntry.id!, newEntry.images, imageIdsToRemove,);
 	}
 
-	Future<void> fetchAndSetRecipes() async {
+	Future<bool> fetchAndSetRecipes() async {
 		final dataList = await DBHelper.getData('recipes');
 		final imageList = await DBHelper.getData('images');
 
@@ -114,5 +114,6 @@ class RecipeCollection with ChangeNotifier {
 			);
 		}).toList();
 		notifyListeners();
+		return true;
 	}
 }
