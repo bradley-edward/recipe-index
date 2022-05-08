@@ -21,6 +21,17 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 
 	var _isInit = false;
 	var _isInEditMode = false;
+	final Set<String> _selectedEntries = {};
+
+	void _selectEntry(String id) {
+		setState(() {
+			if (_selectedEntries.contains(id)) {
+				_selectedEntries.remove(id);
+			} else {
+				_selectedEntries.add(id);
+			}
+		});
+	}
 	
 	@override
 	void didChangeDependencies() {
@@ -65,7 +76,7 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 						IconButton(
 							icon: const Icon(Icons.delete),
 							onPressed: () {
-								print('batch delete');
+								print(_selectedEntries);
 							},
 						),
 						IconButton(
@@ -102,7 +113,12 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 									return Container(
 										width: double.infinity,
 										height: 500,
-										child: CollectionList(fetchedEntries, _isInEditMode,),
+										child: CollectionList(
+											entryList: fetchedEntries,
+											isInEditMode: _isInEditMode,
+											selectEntryFn: _selectEntry,
+											selectedEntries: _selectedEntries
+										),
 									);
 								}
 							);

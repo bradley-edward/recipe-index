@@ -6,16 +6,18 @@ import './entry_image_displayer.dart';
 
 class CollectionList extends StatelessWidget {
 	final List<RecipeEntry> entryList;
-	bool isInEditMode;
+	final bool isInEditMode;
+	final Function selectEntryFn;
+	final Set<String> selectedEntries;
 
-	CollectionList(this.entryList, this.isInEditMode, { Key? key }) : super(key: key);
+	const CollectionList({ required this.entryList, required this.isInEditMode, required this.selectEntryFn, required this.selectedEntries, Key? key }) : super(key: key);
 
 	@override
 	Widget build(BuildContext context) {
 		return ListView.builder(
 			itemCount: entryList.length,
 			itemBuilder: (ctx, index) {
-				var currEntry = entryList[index];
+				final currEntry = entryList[index];
 				return ListTile(
 					leading: Container(
 						width: 60,
@@ -32,14 +34,18 @@ class CollectionList extends StatelessWidget {
 					trailing: isInEditMode
 					? IconButton(
 						onPressed: () {
-							print('select entry with id ${currEntry.id}');
+							selectEntryFn(currEntry.id!);
 						},
-						icon: const Icon(Icons.circle_outlined),
+						icon: selectedEntries.contains(currEntry.id!)
+						? const Icon(Icons.check_circle)
+						: const Icon(Icons.circle_outlined),
 					)
 					: null,
 					onTap: () {
 						if (!isInEditMode) {
 							Navigator.of(context).pushNamed(RecipeDetailsScreen.routeName, arguments: currEntry.id);
+						} else {
+							selectEntryFn(currEntry.id!);
 						}
 					},
 				);
