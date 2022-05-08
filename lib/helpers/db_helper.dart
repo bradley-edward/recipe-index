@@ -22,7 +22,7 @@ class DBHelper {
 
 	static Future<void> insertMany(String table, List<Map<String, Object>> data) async {
 		final db = await DBHelper.database();
-		var insertBatch = db.batch();
+		final insertBatch = db.batch();
 		for (var datum in data) {
 			insertBatch.insert(table, datum, conflictAlgorithm: sql.ConflictAlgorithm.replace);
 		}
