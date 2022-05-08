@@ -76,7 +76,7 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 						IconButton(
 							icon: const Icon(Icons.delete),
 							onPressed: () {
-								print(_selectedEntries);
+								Provider.of<RecipeCollection>(context, listen: false).deleteEntries(_selectedEntries);
 							},
 						),
 						IconButton(
