@@ -8,15 +8,60 @@ import '../widgets/entry_image_carousel.dart';
 class RecipeDetailsScreen extends StatelessWidget {
 	static const routeName = '/recipe-details';
 
+	Widget _buildConfirmDeleteModal(BuildContext ctx) {
+		return Column(
+			mainAxisAlignment: MainAxisAlignment.center,
+			children: <Widget>[
+				const Text('Delete this recipe entry?'),
+				const SizedBox(height: 10,),
+				Row(
+					mainAxisAlignment: MainAxisAlignment.center,
+					children: <Widget>[
+						ElevatedButton(
+							onPressed: () {
+								Navigator.of(ctx).pop(false);
+							},
+							child: const Text('Go Back'),
+						),
+						const SizedBox(width: 10,),
+						ElevatedButton(
+							onPressed: () {
+								Navigator.of(ctx).pop(true);
+							},
+							child: const Text('Confirm'),
+						),
+					],
+				)
+			],
+		);
+	}
+
 	@override
 	Widget build(BuildContext context) {
+		final appNav = Navigator.of(context);
+
 		var entryId = ModalRoute.of(context)!.settings.arguments as String;
-		var entry = Provider.of<RecipeCollection>(context).findById(entryId);
+		var collectionProvider = Provider.of<RecipeCollection>(context, listen: false);
+		final entry = collectionProvider.findById(entryId);
 
 		return Scaffold(
 			appBar: AppBar(
 				title: Text(entry.name),
 				elevation: 0,
+				actions: <Widget>[
+					IconButton(onPressed: () async {
+						final bool confirmDelete = await showModalBottomSheet(
+							context: context,
+							builder: _buildConfirmDeleteModal,
+						);
+
+						if (confirmDelete) {
+							await collectionProvider.deleteEntry(entryId);
+							appNav.pop();
+						}
+					},
+					icon: const Icon(Icons.delete)),
+				],
 			),
 			body: SingleChildScrollView(
 				child: Column(
@@ -32,7 +77,7 @@ class RecipeDetailsScreen extends StatelessWidget {
 							child: Text(
 								entry.name,
 								textAlign: TextAlign.center,
-								style: TextStyle(
+								style: const TextStyle(
 									fontWeight: FontWeight.bold,
 								),
 							),
@@ -43,7 +88,7 @@ class RecipeDetailsScreen extends StatelessWidget {
 			floatingActionButton: FloatingActionButton(
 				child: const Icon(Icons.edit),
 				onPressed: () {
-					Navigator.of(context).pushNamed(EditRecipeScreen.routeName, arguments: entryId);
+					appNav.pushNamed(EditRecipeScreen.routeName, arguments: entryId);
 				},
 			),
 			floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

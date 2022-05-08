@@ -91,6 +91,22 @@ class RecipeCollection with ChangeNotifier {
 		await _updateEntryImages(newEntry.id!, newEntry.images, imageIdsToRemove,);
 	}
 
+	Future<void> deleteEntry(String id) async {
+		final entryIndex = _entries.indexWhere((entry) => entry.id == id);
+		if (entryIndex == -1) {
+			return;
+		}
+
+		final entryToDelete = _entries.removeAt(entryIndex);
+		notifyListeners();
+
+		// Delete the images associated with this entry, if any.
+		if (entryToDelete.images.isNotEmpty) {
+			await DBHelper.deleteWhere('images', '"ownerId" = ?', [entryToDelete.id!]);
+		}
+		await DBHelper.deleteById('recipes', entryToDelete.id!);
+	}
+
 	Future<bool> fetchAndSetRecipes() async {
 		final dataList = await DBHelper.getData('recipes');
 		final imageList = await DBHelper.getData('images');

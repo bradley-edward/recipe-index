@@ -34,6 +34,16 @@ class DBHelper {
 		await db.update(table, data, where: '"id" = ?', whereArgs: [data['id'],]);
 	}
 
+	static Future<void> deleteById(String table, String id) async {
+		final db = await DBHelper.database();
+		int deletedCount = await db.delete(table, where: '"id" = ?', whereArgs: [id]);
+	}
+
+	static Future<void> deleteWhere(String table, String whereStr, List<Object?>? whereArr) async {
+		final db = await DBHelper.database();
+		int deletedCount = await db.delete(table, where: whereStr, whereArgs: whereArr);
+	}
+
 	static Future<void> batchStmts(String table, List<Map<String,dynamic>> insertList, List<Map<String,dynamic>> updateList, Set<String> deleteIdSet) async {
 		final db = await DBHelper.database();
 		final stmtBatch = db.batch();
