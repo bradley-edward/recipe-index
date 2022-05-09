@@ -73,10 +73,37 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 						),
 					],
 					if (_isInEditMode) ...<Widget>[
-						IconButton(
+						if (_selectedEntries.isNotEmpty) IconButton(
 							icon: const Icon(Icons.delete),
-							onPressed: () {
-								Provider.of<RecipeCollection>(context, listen: false).deleteEntries(_selectedEntries);
+							onPressed: () async {
+								final confirmDelete = await showDialog(
+									context: context,
+									builder: (BuildContext ctx) {
+										return AlertDialog(
+											title: const Text('Deleting entries...'),
+											content: const Center(
+												child: Text('Delete the selected entries?'),
+											),
+											actions: <Widget>[
+												TextButton(
+													onPressed: () {
+														Navigator.of(context).pop(false);
+													},
+													child: const Text('No'),
+												),
+												TextButton(
+													onPressed: () {
+														Navigator.of(context).pop(true);
+													},
+													child: const Text('Yes'),
+												),
+											],
+										);
+									}
+								);
+								if (confirmDelete) {
+									Provider.of<RecipeCollection>(context, listen: false).deleteEntries(_selectedEntries);
+								}
 							},
 						),
 						IconButton(
