@@ -41,7 +41,7 @@ class RecipeDetailsScreen extends StatelessWidget {
 		final appNav = Navigator.of(context);
 
 		var entryId = ModalRoute.of(context)!.settings.arguments as String;
-		var collectionProvider = Provider.of<RecipeCollection>(context);
+		var collectionProvider = Provider.of<RecipeCollection>(context, listen: false);
 		final entry = collectionProvider.findById(entryId);
 
 		return Scaffold(
