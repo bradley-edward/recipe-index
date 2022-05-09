@@ -38,7 +38,7 @@ class RecipeCollection with ChangeNotifier {
 		for (var i = 0, len = entry.images.length; i < len; i++) {
 			var currImage = entry.images[i];
 			imagesData.add({
-				'id': currImage.id!,
+				'id': UniqueKey().toString(),
 				'listIndex': i,
 				'imageType': currImage.imageType.index,
 				'imageLocation': currImage.imageLocation,
@@ -55,13 +55,13 @@ class RecipeCollection with ChangeNotifier {
 		for (var i = 0, len = imageList.length; i < len; i++) {
 			var currImage = imageList[i];
 			final recordItem = {
-				'id': currImage.id!,
 				'listIndex': i,
 				'imageType': currImage.imageType.index,
 				'imageLocation': currImage.imageLocation,
 				'ownerId': ownerId,
 			};
 			if (currImage.id != null) {
+				recordItem['id'] = currImage.id!;
 				recordsToUpdate.add(recordItem);
 			} else {
 				recordsToInsert.add(recordItem);

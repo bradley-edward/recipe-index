@@ -69,10 +69,6 @@ class _RecipeFormState extends State<RecipeForm> {
 			_isLoading = true;
 		});
 
-		for (final image in _editedEntry.images) {
-			image.id ??= UniqueKey().toString();
-		}
-
 		if (_editedEntry.id != null) {
 			// Edit existing entry
 			await collectionProvider.updateEntry(_editedEntry.id!, _editedEntry, _imagesToDelete);
