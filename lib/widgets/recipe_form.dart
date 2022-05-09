@@ -137,6 +137,43 @@ class _RecipeFormState extends State<RecipeForm> {
 									);
 								},
 							),
+							Row(
+								children: [
+									Expanded(
+										child: DropdownButtonFormField(
+											decoration: const InputDecoration(
+												label: Text('Complexity'),
+											),
+											items: <String>['Simple', 'Moderate', 'Complex'].map((String value) =>
+												DropdownMenuItem(
+													value: value,
+													child: Text(value),
+												)
+											).toList(),
+											onChanged: (String? newVal) {
+												print(newVal);
+											}
+										),
+									),
+									const SizedBox(width: 10,),
+									Expanded(
+										child: DropdownButtonFormField(
+											decoration: const InputDecoration(
+												label: Text('Difficulty'),
+											),
+											items: <String>['Easy', 'Medium', 'Difficult'].map((String value) =>
+												DropdownMenuItem(
+													value: value,
+													child: Text(value),
+												)
+											).toList(),
+											onChanged: (String? newVal) {
+												print(newVal);
+											}
+										),
+									),
+								],
+							),
 						],
 					),
 				),
