@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import '../../models/entry_image.dart';
 import '../../providers/recipe_collection.dart';
 import '../../models/recipe_entry.dart';
+import '../../models/recipe_complexity.dart';
+import '../../models/technical_difficulty.dart';
 import './image_list_edit.dart';
 
 class RecipeForm extends StatefulWidget {
@@ -142,16 +144,18 @@ class _RecipeFormState extends State<RecipeForm> {
 									Expanded(
 										child: DropdownButtonFormField(
 											decoration: const InputDecoration(
-												label: Text('Complexity'),
+												label: Text('Difficulty'),
 											),
-											items: <String>['Simple', 'Moderate', 'Complex'].map((String value) =>
+											items: <TechnicalDifficulty>[
+												TechnicalDifficulty.easy, TechnicalDifficulty.medium, TechnicalDifficulty.difficult
+												].map((TechnicalDifficulty value) =>
 												DropdownMenuItem(
 													value: value,
-													child: Text(value),
+													child: Text(difficultyStrings[value]!),
 												)
 											).toList(),
-											onChanged: (String? newVal) {
-												print(newVal);
+											onChanged: (TechnicalDifficulty? value) {
+												print(difficultyStrings[value]!);
 											}
 										),
 									),
@@ -159,16 +163,18 @@ class _RecipeFormState extends State<RecipeForm> {
 									Expanded(
 										child: DropdownButtonFormField(
 											decoration: const InputDecoration(
-												label: Text('Difficulty'),
+												label: Text('Complexity'),
 											),
-											items: <String>['Easy', 'Medium', 'Difficult'].map((String value) =>
+											items: <RecipeComplexity>[
+												RecipeComplexity.simple, RecipeComplexity.moderate, RecipeComplexity.complex
+												].map((RecipeComplexity value) =>
 												DropdownMenuItem(
 													value: value,
-													child: Text(value),
+													child: Text(complexityStrings[value]!),
 												)
 											).toList(),
-											onChanged: (String? newVal) {
-												print(newVal);
+											onChanged: (RecipeComplexity? value) {
+												print(complexityStrings[value]!);
 											}
 										),
 									),
