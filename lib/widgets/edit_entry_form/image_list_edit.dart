@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reorderable_grid_view/reorderable_grid_view.dart';
 
-import '../models/entry_image.dart';
+import '../../models/entry_image.dart';
 import './image_input.dart';
 import './image_list_item.dart';
 

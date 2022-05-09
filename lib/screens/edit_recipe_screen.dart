@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/recipe_form.dart';
+import '../widgets/edit_entry_form/recipe_form.dart';
 
 class EditRecipeScreen extends StatelessWidget {
 	static const routeName = '/edit-recipe';

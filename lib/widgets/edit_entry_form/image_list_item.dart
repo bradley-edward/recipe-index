@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../models/entry_image.dart';
-import './entry_image_displayer.dart';
+import '../../models/entry_image.dart';
+import '../entry_image_displayer.dart';
 
 class ImageListItem extends StatelessWidget {
 	final EntryImage imageData;

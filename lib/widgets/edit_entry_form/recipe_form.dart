@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/entry_image.dart';
-import '../providers/recipe_collection.dart';
-import '../models/recipe_entry.dart';
+import '../../models/entry_image.dart';
+import '../../providers/recipe_collection.dart';
+import '../../models/recipe_entry.dart';
 import './image_list_edit.dart';
 
 class RecipeForm extends StatefulWidget {

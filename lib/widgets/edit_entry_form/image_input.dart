@@ -6,7 +6,7 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as syspaths;
 
 import './image_url_modal.dart';
-import '../models/entry_image.dart';
+import '../../models/entry_image.dart';
 
 class ImageInput extends StatelessWidget {
 	final Function onSelectImage;
