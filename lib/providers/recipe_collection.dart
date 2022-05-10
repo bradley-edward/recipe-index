@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../models/recipe_entry.dart';
 import '../models/entry_image.dart';
+import '../models/recipe_complexity.dart';
+import '../models/technical_difficulty.dart';
 import '../helpers/db_helper.dart';
 
 class RecipeCollection with ChangeNotifier {
@@ -20,6 +22,8 @@ class RecipeCollection with ChangeNotifier {
 			id: UniqueKey().toString(),
 			entryId: entry.entryId,
 			name: entry.name,
+			complexity: entry.complexity,
+			difficulty: entry.difficulty,
 			images: entry.images,
 		);
 		_entries.add(newEntry);
@@ -28,6 +32,8 @@ class RecipeCollection with ChangeNotifier {
 			'id': newEntry.id!,
 			'entryId': newEntry.entryId,
 			'name': newEntry.name,
+			'complexity': newEntry.complexity!.index,
+			'difficulty': newEntry.difficulty!.index,
 		});
 
 		if (entry.images.isEmpty) {
@@ -86,6 +92,8 @@ class RecipeCollection with ChangeNotifier {
 			'id': newEntry.id!,
 			'entryId': newEntry.entryId,
 			'name': newEntry.name,
+			'complexity': newEntry.complexity!.index,
+			'difficulty': newEntry.difficulty!.index,
 		});
 
 		await _updateEntryImages(newEntry.id!, newEntry.images, imageIdsToRemove,);
@@ -142,6 +150,8 @@ class RecipeCollection with ChangeNotifier {
 				id: entry['id'],
 				entryId: entry['entryId'],
 				name: entry['name'],
+				complexity: RecipeComplexity.values[entry['complexity']],
+				difficulty: TechnicalDifficulty.values[entry['difficulty']],
 				images: entryImageData.map((image) => EntryImage(
 					id: image['id'],
 					imageLocation: image['imageLocation'],

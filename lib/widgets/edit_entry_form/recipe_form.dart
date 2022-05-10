@@ -24,6 +24,8 @@ class _RecipeFormState extends State<RecipeForm> {
 		id: null,
 		entryId: '',
 		name: '',
+		difficulty: null,
+		complexity: null,
 		images: [],
 	);
 	var _imagesToDelete = <String>{};
@@ -31,6 +33,8 @@ class _RecipeFormState extends State<RecipeForm> {
 		'entryId': '',
 		'name': '',
 		'images': <EntryImage>[],
+		'difficulty': null,
+		'complexity': null,
 	};
 
 	var _isLoading = false;
@@ -44,6 +48,8 @@ class _RecipeFormState extends State<RecipeForm> {
 				'entryId': _editedEntry.entryId,
 				'name': _editedEntry.name,
 				'images': _editedEntry.images,
+				'complexity': _editedEntry.complexity,
+				'difficulty': _editedEntry.difficulty,
 			};
 		}
 	}
@@ -113,6 +119,8 @@ class _RecipeFormState extends State<RecipeForm> {
 										id: _editedEntry.id,
 										entryId: value!,
 										name: _editedEntry.name,
+										complexity: _editedEntry.complexity,
+										difficulty: _editedEntry.difficulty,
 										images: _editedEntry.images,
 									);
 								},
@@ -135,6 +143,8 @@ class _RecipeFormState extends State<RecipeForm> {
 										id: _editedEntry.id,
 										entryId: _editedEntry.entryId,
 										name: value!,
+										complexity: _editedEntry.complexity,
+										difficulty: _editedEntry.difficulty,
 										images: _editedEntry.images,
 									);
 								},
@@ -142,26 +152,8 @@ class _RecipeFormState extends State<RecipeForm> {
 							Row(
 								children: [
 									Expanded(
-										child: DropdownButtonFormField(
-											decoration: const InputDecoration(
-												label: Text('Difficulty'),
-											),
-											items: <TechnicalDifficulty>[
-												TechnicalDifficulty.easy, TechnicalDifficulty.medium, TechnicalDifficulty.difficult
-												].map((TechnicalDifficulty value) =>
-												DropdownMenuItem(
-													value: value,
-													child: Text(difficultyStrings[value]!),
-												)
-											).toList(),
-											onChanged: (TechnicalDifficulty? value) {
-												print(difficultyStrings[value]!);
-											}
-										),
-									),
-									const SizedBox(width: 10,),
-									Expanded(
-										child: DropdownButtonFormField(
+										child: DropdownButtonFormField<RecipeComplexity>(
+											value: _initValues['complexity'],
 											decoration: const InputDecoration(
 												label: Text('Complexity'),
 											),
@@ -173,9 +165,57 @@ class _RecipeFormState extends State<RecipeForm> {
 													child: Text(complexityStrings[value]!),
 												)
 											).toList(),
-											onChanged: (RecipeComplexity? value) {
-												print(complexityStrings[value]!);
-											}
+											validator: (RecipeComplexity? value) {
+												if (value == null) {
+													return 'Please provide a value.';
+												}
+												return null;
+											},
+											onChanged: (_) {},
+											onSaved: (RecipeComplexity? value) {
+												_editedEntry = RecipeEntry(
+													id: _editedEntry.id,
+													entryId: _editedEntry.entryId,
+													name: _editedEntry.name,
+													complexity: value!,
+													difficulty: _editedEntry.difficulty,
+													images: _editedEntry.images,
+												);
+											},
+										),
+									),
+									const SizedBox(width: 10,),
+									Expanded(
+										child: DropdownButtonFormField<TechnicalDifficulty>(
+											value: _initValues['difficulty'],
+											decoration: const InputDecoration(
+												label: Text('Difficulty'),
+											),
+											items: <TechnicalDifficulty>[
+												TechnicalDifficulty.easy, TechnicalDifficulty.medium, TechnicalDifficulty.difficult
+												].map((TechnicalDifficulty value) =>
+												DropdownMenuItem(
+													value: value,
+													child: Text(difficultyStrings[value]!),
+												)
+											).toList(),
+											validator: (TechnicalDifficulty? value) {
+												if (value == null) {
+													return 'Please provide a value.';
+												}
+												return null;
+											},
+											onChanged: (_) {},
+											onSaved: (TechnicalDifficulty? value) {
+												_editedEntry = RecipeEntry(
+													id: _editedEntry.id,
+													entryId: _editedEntry.entryId,
+													name: _editedEntry.name,
+													complexity: _editedEntry.complexity,
+													difficulty: value!,
+													images: _editedEntry.images,
+												);
+											},
 										),
 									),
 								],

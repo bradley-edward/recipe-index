@@ -8,7 +8,7 @@ class DBHelper {
 		return sql.openDatabase(
 			path.join(dbPath, 'collection_indexer.db'),
 			onCreate: (db, version) async {
-				await db.execute('CREATE TABLE recipes(id TEXT PRIMARY KEY, entryId TEXT, name TEXT)');
+				await db.execute('CREATE TABLE recipes(id TEXT PRIMARY KEY, entryId TEXT, name TEXT, complexity INTEGER, difficulty INTEGER)');
 				await db.execute('CREATE TABLE images(id TEXT PRIMARY KEY, listIndex INTEGER, imageType INTEGER, imageLocation TEXT, ownerId TEXT, FOREIGN KEY(ownerId) REFERENCES recipes(id))');
 			},
 			version: 1,

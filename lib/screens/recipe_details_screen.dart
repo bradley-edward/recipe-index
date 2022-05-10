@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import '../providers/recipe_collection.dart';
 import '../screens/edit_recipe_screen.dart';
 import '../widgets/entry_image_carousel.dart';
+import '../models/recipe_complexity.dart';
+import '../models/technical_difficulty.dart';
 
 class RecipeDetailsScreen extends StatelessWidget {
 	static const routeName = '/recipe-details';
@@ -39,6 +41,7 @@ class RecipeDetailsScreen extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
 		final appNav = Navigator.of(context);
+		final appTheme = Theme.of(context);
 
 		var entryId = ModalRoute.of(context)!.settings.arguments as String;
 		var collectionProvider = Provider.of<RecipeCollection>(context, listen: false);
@@ -65,7 +68,7 @@ class RecipeDetailsScreen extends StatelessWidget {
 			),
 			body: SingleChildScrollView(
 				child: Column(
-					mainAxisAlignment: MainAxisAlignment.center,
+					mainAxisAlignment: MainAxisAlignment.start,
 					children: <Widget>[
 						Container(
 							height: 240,
@@ -73,14 +76,35 @@ class RecipeDetailsScreen extends StatelessWidget {
 						),
 						const SizedBox(height: 10,),
 						Container(
-							height: 100,
 							child: Text(
 								entry.name,
 								textAlign: TextAlign.center,
-								style: const TextStyle(
-									fontWeight: FontWeight.bold,
-								),
+								style: appTheme.textTheme.titleLarge,
 							),
+						),
+						const SizedBox(height: 40,),
+						Row(
+							mainAxisAlignment: MainAxisAlignment.spaceAround,
+							children: [
+								Column(
+									children: [
+										Text(
+											'Complexity',
+											style: appTheme.textTheme.headline6,
+										),
+										Text(complexityStrings[entry.complexity]!),
+									],
+								),
+								Column(
+									children: [
+										Text(
+											'Technical Difficulty',
+											style: appTheme.textTheme.headline6,
+										),
+										Text(difficultyStrings[entry.difficulty]!),
+									],
+								),
+							],
 						),
 					],
 				),
