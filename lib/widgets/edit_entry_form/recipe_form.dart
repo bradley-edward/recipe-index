@@ -189,7 +189,7 @@ class _RecipeFormState extends State<RecipeForm> {
 										child: DropdownButtonFormField<TechnicalDifficulty>(
 											value: _initValues['difficulty'],
 											decoration: const InputDecoration(
-												label: Text('Difficulty'),
+												label: Text('Expertise'),
 											),
 											items: <TechnicalDifficulty>[
 												TechnicalDifficulty.easy, TechnicalDifficulty.medium, TechnicalDifficulty.difficult

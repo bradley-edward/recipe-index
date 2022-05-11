@@ -6,6 +6,6 @@ enum TechnicalDifficulty {
 
 Map<TechnicalDifficulty, String> difficultyStrings = {
 	TechnicalDifficulty.easy: 'Easy',
-	TechnicalDifficulty.medium: 'Medium',
-	TechnicalDifficulty.difficult: 'Difficult',
+	TechnicalDifficulty.medium: 'Intermediate',
+	TechnicalDifficulty.difficult: 'Challenging',
 };

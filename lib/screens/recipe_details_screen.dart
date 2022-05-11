@@ -98,7 +98,7 @@ class RecipeDetailsScreen extends StatelessWidget {
 								Column(
 									children: [
 										Text(
-											'Technical Difficulty',
+											'Expertise',
 											style: appTheme.textTheme.headline6,
 										),
 										Text(difficultyStrings[entry.difficulty]!),
