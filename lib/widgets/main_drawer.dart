@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../screens/recipe_archive_screen.dart';
+
 class MainDrawer extends StatelessWidget {
 	Widget buildListTile(String title, IconData icon, VoidCallback tapHandler) {
 		return ListTile(
@@ -35,7 +37,7 @@ class MainDrawer extends StatelessWidget {
 					'Archives',
 					Icons.archive,
 					() {
-						appNavigator.pushReplacementNamed('/');
+						appNavigator.pushReplacementNamed(RecipeArchiveScreen.routeName);
 					}
 				),
 			],),
