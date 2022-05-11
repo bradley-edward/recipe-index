@@ -43,8 +43,9 @@ class RecipeCollection with ChangeNotifier {
 		List<Map<String, Object>> imagesData = [];
 		for (var i = 0, len = entry.images.length; i < len; i++) {
 			var currImage = entry.images[i];
+			currImage.id = UniqueKey().toString();
 			imagesData.add({
-				'id': UniqueKey().toString(),
+				'id': currImage.id!,
 				'listIndex': i,
 				'imageType': currImage.imageType.index,
 				'imageLocation': currImage.imageLocation,
@@ -70,6 +71,8 @@ class RecipeCollection with ChangeNotifier {
 				recordItem['id'] = currImage.id!;
 				recordsToUpdate.add(recordItem);
 			} else {
+				currImage.id = UniqueKey().toString();
+				recordItem['id'] = currImage.id!;
 				recordsToInsert.add(recordItem);
 			}
 		}
