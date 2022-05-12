@@ -109,11 +109,25 @@ class RecipeDetailsScreen extends StatelessWidget {
 					],
 				),
 			),
-			floatingActionButton: FloatingActionButton(
-				child: const Icon(Icons.edit),
-				onPressed: () {
-					appNav.pushNamed(EditRecipeScreen.routeName, arguments: entryId);
-				},
+			floatingActionButton: Row(
+				mainAxisAlignment: MainAxisAlignment.center,
+				children: <Widget>[
+					FloatingActionButton(
+						heroTag: 'editThis',
+						child: const Icon(Icons.edit),
+						onPressed: () {
+							appNav.pushNamed(EditRecipeScreen.routeName, arguments: entryId);
+						},
+					),
+					const SizedBox(width: 20),
+					FloatingActionButton(
+						heroTag: 'newBasedOnThis',
+						child: const Icon(Icons.content_copy),
+						onPressed: () {
+							print("This should take you to the 'recipe edit' screen, where you're creating a NEW entry using this recipe's info as the starting point");
+						},
+					),
+				],
 			),
 			floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
 		);
