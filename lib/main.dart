@@ -6,7 +6,7 @@ import './screens/recipe_list_screen.dart';
 import './screens/recipe_details_screen.dart';
 import './screens/search_screen.dart';
 import './screens/edit_recipe_screen.dart';
-import './screens/recipe_archive_screen.dart';
+import './screens/recipe_backup_screen.dart';
 
 void main() => runApp(const MyApp());
 
