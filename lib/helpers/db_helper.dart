@@ -103,4 +103,24 @@ class DBHelper {
 
 		return encrypted.base64;
 	}
+
+	static Future<void> restoreBackup(String backup, { bool isEncrypted = true }) async {
+		final db = await DBHelper.database();
+
+		final Batch batch = db.batch();
+
+		final key = encrypt.Key.fromUtf8(_backupKey);
+		final iv = encrypt.IV.fromLength(16);
+		final encrypter = encrypt.Encrypter(encrypt.AES(key));
+
+		List json = convert.jsonDecode(isEncrypted ? encrypter.decrypt64(backup, iv: iv) : backup);
+
+		for (var i = 0, ilen = json[0].length; i < ilen; i++) {
+			for (var j = 0, jlen = json[1].length; j < jlen; j++) {
+				batch.insert(json[0][i],json[1][i][j]);
+			}
+		}
+
+		await batch.commit(continueOnError: false, noResult: true);
+	}
 }
