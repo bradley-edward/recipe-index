@@ -116,7 +116,10 @@ class RecipeDetailsScreen extends StatelessWidget {
 						heroTag: 'editThis',
 						child: const Icon(Icons.edit),
 						onPressed: () {
-							appNav.pushNamed(EditRecipeScreen.routeName, arguments: entryId);
+							appNav.pushNamed(EditRecipeScreen.routeName, arguments: {
+								'entryId': entryId,
+								'formMode': 'Edit'
+							});
 						},
 					),
 					const SizedBox(width: 20),
@@ -124,7 +127,10 @@ class RecipeDetailsScreen extends StatelessWidget {
 						heroTag: 'newBasedOnThis',
 						child: const Icon(Icons.content_copy),
 						onPressed: () {
-							print("This should take you to the 'recipe edit' screen, where you're creating a NEW entry using this recipe's info as the starting point");
+							appNav.pushNamed(EditRecipeScreen.routeName, arguments: {
+								'entryId': entryId,
+								'formMode': 'New'
+							});
 						},
 					),
 				],

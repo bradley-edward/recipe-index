@@ -10,15 +10,19 @@ class EditRecipeScreen extends StatelessWidget {
 		final modalRoute = ModalRoute.of(context);
 
 		String? inputEntryId;
+		String? formMode;
 		if (modalRoute != null) {
-			inputEntryId = modalRoute.settings.arguments as String?;
+			final modalRouteArgs = modalRoute.settings.arguments as Map<String,String?>;
+			inputEntryId = modalRouteArgs['entryId'];
+			formMode = (modalRoute.settings.arguments as Map<String,String?>)['formMode']!;
 		} else {
 			inputEntryId = null;
+			formMode = 'New';
 		}
 
 		return Scaffold(
 			appBar: AppBar(
-				title: const Text('Edit Recipe')
+				title: Text('$formMode Recipe')
 			),
 			body: Padding(
 				padding: const EdgeInsets.all(16),

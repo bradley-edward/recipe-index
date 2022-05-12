@@ -156,7 +156,10 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 			floatingActionButton: FloatingActionButton(
 				child: const Icon(Icons.add),
 				onPressed: () {
-					appNavigator.pushNamed(EditRecipeScreen.routeName);
+					appNavigator.pushNamed(EditRecipeScreen.routeName, arguments: {
+						'entryId': null,
+						'formMode': 'New'
+					});
 				},
 			),
 			floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
