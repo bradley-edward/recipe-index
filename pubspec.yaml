@@ -41,6 +41,7 @@ dependencies:
   carousel_slider: ^4.1.1
   sqflite: ^2.0.2+1
   path: ^1.8.0
+  encrypt: ^5.0.1
 
 dev_dependencies:
   flutter_test:
