@@ -1,8 +1,12 @@
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:path/path.dart' as path;
 import 'package:sqflite/sqlite_api.dart';
+import 'dart:convert' as convert;
+import 'package:encrypt/encrypt.dart' as encrypt;
 
 class DBHelper {
+	static const _backupKey = 'fyUNIYWM()*(*(KIOHRWOP)WR))BN%)R';
+
 	static Future<Database> database() async {
 		final dbPath = await sql.getDatabasesPath();
 		return sql.openDatabase(
@@ -62,5 +66,28 @@ class DBHelper {
 	static Future<List<Map<String, dynamic>>> getData(String table) async {
 		final db = await DBHelper.database();
 		return db.query(table);
+	}
+
+	static Future<String> generateBackup({bool isEncrypted = true}) async {
+		final db = await DBHelper.database();
+		final List<List<Map<String, Object?>>> data = [];
+		final List tables = ['recipes'];
+
+		for (final tableName in tables) {
+			final listMap = await db.query(tableName);
+			data.add(listMap);
+		}
+		final List backups = [tables, data];
+
+		String json = convert.jsonEncode(backups);
+
+		if (!isEncrypted) return json;
+
+		final key = encrypt.Key.fromUtf8(_backupKey);
+		final iv = encrypt.IV.fromLength(16);
+		final encrypter = encrypt.Encrypter(encrypt.AES(key));
+		final encrypted = encrypter.encrypt(json, iv: iv);
+
+		return encrypted.base64;
 	}
 }
