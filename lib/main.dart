@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
 					RecipeDetailsScreen.routeName: (ctx) => RecipeDetailsScreen(),
 					SearchScreen.routeName: (ctx) => SearchScreen(),
 					EditRecipeScreen.routeName: (ctx) => EditRecipeScreen(),
-					RecipeArchiveScreen.routeName: (ctx) => RecipeArchiveScreen(),
+					RecipeBackupScreen.routeName: (ctx) => RecipeBackupScreen(),
 				},
 			),
 		);

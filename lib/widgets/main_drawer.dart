@@ -34,10 +34,10 @@ class MainDrawer extends StatelessWidget {
 					}
 				),
 				buildListTile(
-					'Archives',
+					'Backup',
 					Icons.archive,
 					() {
-						appNavigator.pushReplacementNamed(RecipeArchiveScreen.routeName);
+						appNavigator.pushReplacementNamed(RecipeBackupScreen.routeName);
 					}
 				),
 			],),

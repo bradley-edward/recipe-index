@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 
 import '../widgets/main_drawer.dart';
 
-class RecipeArchiveScreen extends StatelessWidget {
-	static const routeName = '/recipe-archive';
+class RecipeBackupScreen extends StatelessWidget {
+	static const routeName = '/recipe-backup';
 
-	const RecipeArchiveScreen({ Key? key }) : super(key: key);
+	const RecipeBackupScreen({ Key? key }) : super(key: key);
 
 	@override
 	Widget build(BuildContext context) {
 		return Scaffold(
 			appBar: AppBar(
-				title: const Text('Recipe Archives'),
+				title: const Text('Recipe Backup'),
 				elevation: 0,
 			),
 			drawer: MainDrawer(),
