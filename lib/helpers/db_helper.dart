@@ -68,6 +68,19 @@ class DBHelper {
 		return db.query(table);
 	}
 
+	Future clearAllTables() async {
+		try {
+			final db = await DBHelper.database();
+			for (String table in ['recipes']) {
+				await db.delete(table);
+				await db.rawQuery("DELETE FROM sqlite_sequence where name='$table'");
+			}
+		} catch(e) {
+			print('Something went wrong with clearing all tables!');
+			print(e.toString());
+		}
+	}
+
 	static Future<String> generateBackup({bool isEncrypted = true}) async {
 		final db = await DBHelper.database();
 		final List<List<Map<String, Object?>>> data = [];
