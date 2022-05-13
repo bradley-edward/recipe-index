@@ -21,9 +21,9 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 
 	var _isInit = false;
 	var _isInEditMode = false;
-	final Set<String> _selectedEntries = {};
+	final Set<int> _selectedEntries = {};
 
-	void _selectEntry(String id) {
+	void _selectEntry(int id) {
 		setState(() {
 			if (_selectedEntries.contains(id)) {
 				_selectedEntries.remove(id);

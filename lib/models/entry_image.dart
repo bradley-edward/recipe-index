@@ -4,7 +4,7 @@ enum ImageType {
 }
 
 class EntryImage {
-	String? id;
+	int? id;
 	final ImageType imageType;
 	final String imageLocation;
 

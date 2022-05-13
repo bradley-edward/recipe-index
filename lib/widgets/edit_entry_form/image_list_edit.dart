@@ -17,7 +17,7 @@ class ImageListEdit extends StatefulWidget {
 
 class _ImageListEditState extends State<ImageListEdit> {
 	final List<EntryImage> _testData = [];
-	final _imagesToDelete = <String>{};
+	final _imagesToDelete = <int>{};
 
 	@override
 	void initState() {

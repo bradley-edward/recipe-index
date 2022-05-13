@@ -12,25 +12,27 @@ class DBHelper {
 		return sql.openDatabase(
 			path.join(dbPath, 'collection_indexer.db'),
 			onCreate: (db, version) async {
-				await db.execute('CREATE TABLE recipes(id TEXT PRIMARY KEY, entryId TEXT, name TEXT, complexity INTEGER, difficulty INTEGER)');
-				await db.execute('CREATE TABLE images(id TEXT PRIMARY KEY, listIndex INTEGER, imageType INTEGER, imageLocation TEXT, ownerId TEXT, FOREIGN KEY(ownerId) REFERENCES recipes(id))');
+				await db.execute('CREATE TABLE recipes(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT, complexity INTEGER, difficulty INTEGER)');
+				await db.execute('CREATE TABLE images(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, listIndex INTEGER, imageType INTEGER, imageLocation TEXT, ownerId INTEGER NOT NULL, FOREIGN KEY(ownerId) REFERENCES recipes(id))');
 			},
 			version: 1,
 		);
 	}
 
-	static Future<void> insert(String table, Map<String, Object> data) async {
+	static Future<int> insert(String table, Map<String, Object> data) async {
 		final db = await DBHelper.database();
-		await db.insert(table, data, conflictAlgorithm: sql.ConflictAlgorithm.replace);
+		final insertedRecordId = await db.insert(table, data, conflictAlgorithm: sql.ConflictAlgorithm.replace);
+		return insertedRecordId;
 	}
 
-	static Future<void> insertMany(String table, List<Map<String, Object>> data) async {
+	static Future<List<Object?>> insertMany(String table, List<Map<String, Object>> data) async {
 		final db = await DBHelper.database();
 		final insertBatch = db.batch();
 		for (var datum in data) {
 			insertBatch.insert(table, datum, conflictAlgorithm: sql.ConflictAlgorithm.replace);
 		}
-		await insertBatch.commit();
+		final insertResults = await insertBatch.commit();	// Contains a list of IDs of the newly inserted records.
+		return insertResults;
 	}
 
 	static Future<void> update(String table, Map<String, Object> data) async {
@@ -38,7 +40,7 @@ class DBHelper {
 		await db.update(table, data, where: '"id" = ?', whereArgs: [data['id'],]);
 	}
 
-	static Future<void> deleteById(String table, String id) async {
+	static Future<void> deleteById(String table, int id) async {
 		final db = await DBHelper.database();
 		int deletedCount = await db.delete(table, where: '"id" = ?', whereArgs: [id]);
 	}
@@ -48,7 +50,7 @@ class DBHelper {
 		int deletedCount = await db.delete(table, where: whereStr, whereArgs: whereArr);
 	}
 
-	static Future<void> batchStmts(String table, List<Map<String,dynamic>> insertList, List<Map<String,dynamic>> updateList, Set<String> deleteIdSet) async {
+	static Future<void> batchStmts(String table, List<Map<String,dynamic>> insertList, List<Map<String,dynamic>> updateList, Set<int> deleteIdSet) async {
 		final db = await DBHelper.database();
 		final stmtBatch = db.batch();
 		for (var insertItem in insertList) {

@@ -8,7 +8,7 @@ class CollectionList extends StatelessWidget {
 	final List<RecipeEntry> entryList;
 	final bool isInEditMode;
 	final Function selectEntryFn;
-	final Set<String> selectedEntries;
+	final Set<int> selectedEntries;
 
 	const CollectionList({ required this.entryList, required this.isInEditMode, required this.selectEntryFn, required this.selectedEntries, Key? key }) : super(key: key);
 
@@ -30,7 +30,7 @@ class CollectionList extends StatelessWidget {
 						: const ColoredBox(color: Colors.red),
 					),
 					title: Text(currEntry.name),
-					subtitle: Text(currEntry.entryId),
+					subtitle: Text(currEntry.id!.toString().padLeft(5,'0')),
 					trailing: isInEditMode
 					? IconButton(
 						onPressed: () {
@@ -43,7 +43,7 @@ class CollectionList extends StatelessWidget {
 					: null,
 					onTap: () {
 						if (!isInEditMode) {
-							Navigator.of(context).pushNamed(RecipeDetailsScreen.routeName, arguments: currEntry.id);
+							Navigator.of(context).pushNamed(RecipeDetailsScreen.routeName, arguments: currEntry.id!);
 						} else {
 							selectEntryFn(currEntry.id!);
 						}

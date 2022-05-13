@@ -3,16 +3,14 @@ import './recipe_complexity.dart';
 import './technical_difficulty.dart';
 
 class RecipeEntry {
-	final String? id;
-	final String entryId;
+	int? id;
 	final String name;
 	final RecipeComplexity? complexity;
 	final TechnicalDifficulty? difficulty;
 	List<EntryImage> images;
 
 	RecipeEntry({
-		required this.id,
-		required this.entryId,
+		this.id,
 		required this.name,
 		required this.difficulty,
 		required this.complexity,

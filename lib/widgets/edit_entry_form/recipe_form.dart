@@ -9,7 +9,7 @@ import '../../models/technical_difficulty.dart';
 import './image_list_edit.dart';
 
 class RecipeForm extends StatefulWidget {
-	final String? inputId;
+	final int? inputId;
 	final String formMode;
 
 	const RecipeForm({this.inputId, required this.formMode, Key? key }) : super(key: key);
@@ -23,13 +23,12 @@ class _RecipeFormState extends State<RecipeForm> {
 
 	var _editedEntry = RecipeEntry(
 		id: null,
-		entryId: '',
 		name: '',
 		difficulty: null,
 		complexity: null,
 		images: [],
 	);
-	var _imagesToDelete = <String>{};
+	var _imagesToDelete = <int>{};
 	var _initValues = <String, dynamic>{
 		'entryId': '',
 		'name': '',
@@ -48,7 +47,6 @@ class _RecipeFormState extends State<RecipeForm> {
 			if (widget.formMode == 'New') {
 				_editedEntry = RecipeEntry(
 					id: null,
-					entryId: fetchedEntry.entryId,
 					name: fetchedEntry.name,
 					difficulty: fetchedEntry.difficulty,
 					complexity: fetchedEntry.complexity,
@@ -64,7 +62,6 @@ class _RecipeFormState extends State<RecipeForm> {
 				_editedEntry = fetchedEntry;
 			}
 			_initValues = {
-				'entryId': _editedEntry.entryId,
 				'name': _editedEntry.name,
 				'images': _editedEntry.images,
 				'complexity': _editedEntry.complexity,
@@ -120,31 +117,6 @@ class _RecipeFormState extends State<RecipeForm> {
 					child: Column(
 						children: <Widget>[
 							TextFormField(
-								initialValue: _initValues['entryId'],
-								decoration: const InputDecoration(labelText: 'Entry ID',),
-								keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
-								textInputAction: TextInputAction.next,
-								validator: (value) {
-									if (value == null) {
-										return 'Please provide a value';
-									}
-									if (value.isEmpty) {
-										return 'Please provide a value';
-									}
-									return null;
-								},
-								onSaved: (value) {
-									_editedEntry = RecipeEntry(
-										id: _editedEntry.id,
-										entryId: value!,
-										name: _editedEntry.name,
-										complexity: _editedEntry.complexity,
-										difficulty: _editedEntry.difficulty,
-										images: _editedEntry.images,
-									);
-								},
-							),
-							TextFormField(
 								initialValue: _initValues['name'],
 								decoration: const InputDecoration(labelText: 'Entry Name',),
 								textInputAction: TextInputAction.next,
@@ -160,7 +132,6 @@ class _RecipeFormState extends State<RecipeForm> {
 								onSaved: (value) {
 									_editedEntry = RecipeEntry(
 										id: _editedEntry.id,
-										entryId: _editedEntry.entryId,
 										name: value!,
 										complexity: _editedEntry.complexity,
 										difficulty: _editedEntry.difficulty,
@@ -194,7 +165,6 @@ class _RecipeFormState extends State<RecipeForm> {
 											onSaved: (RecipeComplexity? value) {
 												_editedEntry = RecipeEntry(
 													id: _editedEntry.id,
-													entryId: _editedEntry.entryId,
 													name: _editedEntry.name,
 													complexity: value!,
 													difficulty: _editedEntry.difficulty,
@@ -228,7 +198,6 @@ class _RecipeFormState extends State<RecipeForm> {
 											onSaved: (TechnicalDifficulty? value) {
 												_editedEntry = RecipeEntry(
 													id: _editedEntry.id,
-													entryId: _editedEntry.entryId,
 													name: _editedEntry.name,
 													complexity: _editedEntry.complexity,
 													difficulty: value!,
@@ -245,7 +214,7 @@ class _RecipeFormState extends State<RecipeForm> {
 				const SizedBox(height: 25,),
 				ImageListEdit(
 					initialList: _initValues['images'],
-					onUpdateList: (List<EntryImage> newImagesList, [Set<String>? deletedImageIds]) {
+					onUpdateList: (List<EntryImage> newImagesList, [Set<int>? deletedImageIds]) {
 						_editedEntry.images = newImagesList;
 						if (deletedImageIds != null) {
 							_imagesToDelete = deletedImageIds;
