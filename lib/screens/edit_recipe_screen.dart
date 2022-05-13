@@ -27,7 +27,7 @@ class EditRecipeScreen extends StatelessWidget {
 			body: Padding(
 				padding: const EdgeInsets.all(16),
 				child: SingleChildScrollView(
-					child: RecipeForm(inputId: inputEntryId)
+					child: RecipeForm(inputId: inputEntryId, formMode: formMode,)
 				),
 			),
 		);

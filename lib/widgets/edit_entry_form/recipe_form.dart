@@ -10,8 +10,9 @@ import './image_list_edit.dart';
 
 class RecipeForm extends StatefulWidget {
 	final String? inputId;
+	final String formMode;
 
-	const RecipeForm({this.inputId, Key? key }) : super(key: key);
+	const RecipeForm({this.inputId, required this.formMode, Key? key }) : super(key: key);
 
 	@override
 	State<RecipeForm> createState() => _RecipeFormState();
@@ -43,7 +44,25 @@ class _RecipeFormState extends State<RecipeForm> {
 	void initState() {
 		super.initState();
 		if (widget.inputId != null) {
-			_editedEntry = Provider.of<RecipeCollection>(context, listen: false).findById(widget.inputId!);
+			final fetchedEntry = Provider.of<RecipeCollection>(context, listen: false).findById(widget.inputId!);
+			if (widget.formMode == 'New') {
+				_editedEntry = RecipeEntry(
+					id: null,
+					entryId: fetchedEntry.entryId,
+					name: fetchedEntry.name,
+					difficulty: fetchedEntry.difficulty,
+					complexity: fetchedEntry.complexity,
+					images: [],
+				);
+				for (final image in fetchedEntry.images) {
+					_editedEntry.images.add(EntryImage(
+						imageLocation: image.imageLocation,
+						imageType: image.imageType,
+					));
+				}
+			} else if (widget.formMode == 'Edit') {
+				_editedEntry = fetchedEntry;
+			}
 			_initValues = {
 				'entryId': _editedEntry.entryId,
 				'name': _editedEntry.name,
