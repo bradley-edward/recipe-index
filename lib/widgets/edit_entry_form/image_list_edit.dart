@@ -41,7 +41,8 @@ class _ImageListEditState extends State<ImageListEdit> {
 								color: Colors.black54,
 								width: 1,
 							)
-						)
+						),
+						color: Colors.black12,
 					),
 					child: Padding(
 						padding: const EdgeInsets.all(2),
