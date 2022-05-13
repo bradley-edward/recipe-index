@@ -14,7 +14,7 @@ class EditRecipeScreen extends StatelessWidget {
 		if (modalRoute != null) {
 			final modalRouteArgs = modalRoute.settings.arguments as Map<String,Object?>;
 			inputEntryId = modalRouteArgs['entryId'] as int?;
-			formMode = (modalRoute.settings.arguments as Map<String,String?>)['formMode']!;
+			formMode = modalRouteArgs['formMode'] as String;
 		} else {
 			inputEntryId = null;
 			formMode = 'New';
