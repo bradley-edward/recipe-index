@@ -20,6 +20,8 @@ class entryImageCarousel extends StatelessWidget {
 			options: CarouselOptions(
 				enableInfiniteScroll: false,
 				autoPlay: false,
+				enlargeCenterPage: true,
+				viewportFraction: 0.5
 			),
 		);
 	}
