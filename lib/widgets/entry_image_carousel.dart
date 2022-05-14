@@ -15,7 +15,13 @@ class entryImageCarousel extends StatelessWidget {
 			itemCount: imageList.length,
 			itemBuilder: (ctx, index, pageViewIndex) {
 				var currImage = imageList[index];
-				return EntryImageDisplayer(currImage, key: ValueKey(currImage.id));
+				return InkWell(
+					key: ValueKey(currImage.id),
+					child: EntryImageDisplayer(currImage),
+					onDoubleTap: () {
+						print('Double tapped image!');
+					},
+				);
 			},
 			options: CarouselOptions(
 				enableInfiniteScroll: false,
