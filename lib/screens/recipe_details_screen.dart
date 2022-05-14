@@ -116,7 +116,7 @@ class RecipeDetailsScreen extends StatelessWidget {
 											'Prep. Time',
 											style: appTheme.textTheme.headline6,
 										),
-										Text('${entry.prepTimeMins.toString()} mins'),
+										Text(entry.prepTimeHrsMins),
 									],
 								),
 								Column(
@@ -125,7 +125,7 @@ class RecipeDetailsScreen extends StatelessWidget {
 											'Cooking Time',
 											style: appTheme.textTheme.headline6,
 										),
-										Text('${entry.cookTimeMins.toString()} mins'),
+										Text(entry.cookingTimeHrsMins),
 									],
 								),
 							],

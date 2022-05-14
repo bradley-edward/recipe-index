@@ -23,10 +23,25 @@ class RecipeEntry {
 		required this.images,
 	});
 
+	String _getHoursMinutesStr(inputMins) {
+		if (inputMins < 60) {
+			return '$inputMins min';
+		}
+		return '${inputMins ~/ 60} hr ${inputMins % 60} min';
+	}
+
 	String get idString {
 		if (id == null) {
 			return '#NaN';
 		}
 		return '#${id.toString().padLeft(4,'0')}';
+	}
+
+	String get prepTimeHrsMins {
+		return _getHoursMinutesStr(prepTimeMins);
+	}
+
+	String get cookingTimeHrsMins {
+		return _getHoursMinutesStr(cookTimeMins);
 	}
 }
