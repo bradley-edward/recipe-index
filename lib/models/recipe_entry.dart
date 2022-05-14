@@ -16,4 +16,11 @@ class RecipeEntry {
 		required this.complexity,
 		required this.images,
 	});
+
+	String get idString {
+		if (id == null) {
+			return '#NaN';
+		}
+		return '#${id.toString().padLeft(4,'0')}';
+	}
 }

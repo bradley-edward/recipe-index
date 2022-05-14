@@ -49,7 +49,7 @@ class RecipeDetailsScreen extends StatelessWidget {
 
 		return Scaffold(
 			appBar: AppBar(
-				title: Text(entry.name),
+				title: Text(entry.idString),
 				elevation: 0,
 				actions: <Widget>[
 					IconButton(onPressed: () async {

@@ -30,7 +30,7 @@ class CollectionList extends StatelessWidget {
 						: const ColoredBox(color: Colors.red),
 					),
 					title: Text(currEntry.name),
-					subtitle: Text(currEntry.id!.toString().padLeft(5,'0')),
+					subtitle: Text(currEntry.idString),
 					trailing: isInEditMode
 					? IconButton(
 						onPressed: () {
