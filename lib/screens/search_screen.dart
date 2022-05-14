@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/search_form/search_form.dart';
 import '../widgets/main_drawer.dart';
 
 class SearchScreen extends StatelessWidget {
@@ -12,9 +13,7 @@ class SearchScreen extends StatelessWidget {
 				title: const Text('Search')
 			),
 			drawer: MainDrawer(),
-			body: const Center(
-				child: Text('Search'),
-			),
+			body: SearchForm(),
 		);
 	}
 }
