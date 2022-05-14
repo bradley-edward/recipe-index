@@ -62,8 +62,10 @@ class RecipeCollection with ChangeNotifier {
 	}
 
 	Future<void> _updateEntryImages(int ownerId, List<EntryImage> imageList, Set<int> deleteIds) async {
-		List<Map<String,dynamic>> recordsToInsert = [];
+		List<Map<String,Object>> recordsToInsert = [];
 		List<Map<String,dynamic>> recordsToUpdate = [];
+
+		List<int> insertedImagesIndices = [];
 		
 		for (var i = 0, len = imageList.length; i < len; i++) {
 			var currImage = imageList[i];
@@ -78,10 +80,17 @@ class RecipeCollection with ChangeNotifier {
 				recordsToUpdate.add(recordItem);
 			} else {
 				recordsToInsert.add(recordItem);
+				insertedImagesIndices.add(i);
 			}
 		}
 
-		await DBHelper.batchStmts('images', recordsToInsert, recordsToUpdate, deleteIds,);
+		final batchResults = await DBHelper.batchStmts('images', recordsToInsert, recordsToUpdate, deleteIds,);
+		if (recordsToInsert.isNotEmpty) {
+			for (var i = 0, len = insertedImagesIndices.length; i < len; i++) {
+				final imageIdx = insertedImagesIndices[i];
+				imageList[imageIdx].id ??= batchResults['insertResults']![i] as int;
+			}
+		}
 	}
 
 	Future<void> updateEntry(int id, RecipeEntry newEntry, Set<int> imageIdsToRemove,) async {
