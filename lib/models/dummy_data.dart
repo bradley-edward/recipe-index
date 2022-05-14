@@ -8,6 +8,9 @@ final dummyData = <RecipeEntry>[
 		name: 'Glazed Carrots',
 		difficulty: TechnicalDifficulty.easy,
 		complexity: RecipeComplexity.moderate,
+		prepTimeMins: 10,
+		cookTimeMins: 10,
+		servings: 2,
 		images: [
 			EntryImage(
 				imageLocation: 'https://www.recipetineats.com/wp-content/uploads/2018/11/Brown-Sugar-Roast-Carrots_3.jpg',
@@ -23,6 +26,9 @@ final dummyData = <RecipeEntry>[
 		name: 'Sweetcorn Soup',
 		difficulty: TechnicalDifficulty.easy,
 		complexity: RecipeComplexity.moderate,
+		prepTimeMins: 5,
+		cookTimeMins: 15,
+		servings: 4,
 		images: [
 			EntryImage(
 				imageLocation: 'https://meaningfuleats.com/wp-content/uploads/2017/07/corn-soup.jpg',

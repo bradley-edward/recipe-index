@@ -26,6 +26,9 @@ class _RecipeFormState extends State<RecipeForm> {
 		name: '',
 		difficulty: null,
 		complexity: null,
+		prepTimeMins: 0,
+		cookTimeMins: 0,
+		servings: 0,
 		images: [],
 	);
 	var _imagesToDelete = <int>{};
@@ -35,6 +38,9 @@ class _RecipeFormState extends State<RecipeForm> {
 		'images': <EntryImage>[],
 		'difficulty': null,
 		'complexity': null,
+		'prepTime': 0,
+		'cookingTime': 0,
+		'servings': 0,
 	};
 
 	var _isLoading = false;
@@ -50,6 +56,9 @@ class _RecipeFormState extends State<RecipeForm> {
 					name: fetchedEntry.name,
 					difficulty: fetchedEntry.difficulty,
 					complexity: fetchedEntry.complexity,
+					prepTimeMins: fetchedEntry.prepTimeMins,
+					cookTimeMins: fetchedEntry.cookTimeMins,
+					servings: fetchedEntry.servings,
 					images: [],
 				);
 				for (final image in fetchedEntry.images) {
@@ -66,6 +75,9 @@ class _RecipeFormState extends State<RecipeForm> {
 				'images': _editedEntry.images,
 				'complexity': _editedEntry.complexity,
 				'difficulty': _editedEntry.difficulty,
+				'prepTime': _editedEntry.prepTimeMins,
+				'cookingTime': _editedEntry.cookTimeMins,
+				'servings': _editedEntry.servings,
 			};
 		}
 	}
@@ -135,6 +147,9 @@ class _RecipeFormState extends State<RecipeForm> {
 										name: value!,
 										complexity: _editedEntry.complexity,
 										difficulty: _editedEntry.difficulty,
+										prepTimeMins: _editedEntry.prepTimeMins,
+										cookTimeMins: _editedEntry.cookTimeMins,
+										servings: _editedEntry.servings,
 										images: _editedEntry.images,
 									);
 								},
@@ -168,6 +183,9 @@ class _RecipeFormState extends State<RecipeForm> {
 													name: _editedEntry.name,
 													complexity: value!,
 													difficulty: _editedEntry.difficulty,
+													prepTimeMins: _editedEntry.prepTimeMins,
+													cookTimeMins: _editedEntry.cookTimeMins,
+													servings: _editedEntry.servings,
 													images: _editedEntry.images,
 												);
 											},
@@ -201,12 +219,126 @@ class _RecipeFormState extends State<RecipeForm> {
 													name: _editedEntry.name,
 													complexity: _editedEntry.complexity,
 													difficulty: value!,
+													prepTimeMins: _editedEntry.prepTimeMins,
+													cookTimeMins: _editedEntry.cookTimeMins,
+													servings: _editedEntry.servings,
 													images: _editedEntry.images,
 												);
 											},
 										),
 									),
 								],
+							),
+							Row(
+								children: [
+									Expanded(
+										child: TextFormField(
+											initialValue: _initValues['prepTime'].toString(),
+											decoration: const InputDecoration(labelText: 'Prep. Time (mins)',),
+											keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
+											textInputAction: TextInputAction.next,
+											validator: (value) {
+												if (value == null) {
+													return 'Please provide a value';
+												}
+												if (value.isEmpty) {
+													return 'Please provide a value';
+												}
+												final valueInt = int.tryParse(value);
+												if (valueInt == null) {
+													return 'Please provide an integer';
+												}
+												if (valueInt < 1) {
+													return 'Please provide a value greater than 0';
+												}
+												return null;
+											},
+											onSaved: (value) {
+												_editedEntry = RecipeEntry(
+													id: _editedEntry.id,
+													name: _editedEntry.name,
+													complexity: _editedEntry.complexity,
+													difficulty: _editedEntry.difficulty,
+													prepTimeMins: int.parse(value!),
+													cookTimeMins: _editedEntry.cookTimeMins,
+													servings: _editedEntry.servings,
+													images: _editedEntry.images,
+												);
+											},
+										),
+									),
+									const SizedBox(width: 10,),
+									Expanded(
+										child: TextFormField(
+											initialValue: _initValues['cookingTime'].toString(),
+											decoration: const InputDecoration(labelText: 'Cooking Time (mins)',),
+											keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
+											textInputAction: TextInputAction.next,
+											validator: (value) {
+												if (value == null) {
+													return 'Please provide a value';
+												}
+												if (value.isEmpty) {
+													return 'Please provide a value';
+												}
+												final valueInt = int.tryParse(value);
+												if (valueInt == null) {
+													return 'Please provide an integer';
+												}
+												if (valueInt < 1) {
+													return 'Please provide a value greater than 0';
+												}
+												return null;
+											},
+											onSaved: (value) {
+												_editedEntry = RecipeEntry(
+													id: _editedEntry.id,
+													name: _editedEntry.name,
+													complexity: _editedEntry.complexity,
+													difficulty: _editedEntry.difficulty,
+													prepTimeMins: _editedEntry.prepTimeMins,
+													cookTimeMins: int.parse(value!),
+													servings: _editedEntry.servings,
+													images: _editedEntry.images,
+												);
+											},
+										),
+									),
+								],
+							),
+							TextFormField(
+								initialValue: _initValues['servings'].toString(),
+								decoration: const InputDecoration(labelText: 'Servings',),
+								keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
+								textInputAction: TextInputAction.next,
+								validator: (value) {
+									if (value == null) {
+										return 'Please provide a value';
+									}
+									if (value.isEmpty) {
+										return 'Please provide a value';
+									}
+									final valueInt = int.tryParse(value);
+									if (valueInt == null) {
+										return 'Please provide an integer';
+									}
+									if (valueInt < 1) {
+										return 'Please provide a value greater than 0';
+									}
+									return null;
+								},
+								onSaved: (value) {
+									_editedEntry = RecipeEntry(
+										id: _editedEntry.id,
+										name: _editedEntry.name,
+										complexity: _editedEntry.complexity,
+										difficulty: _editedEntry.difficulty,
+										prepTimeMins: _editedEntry.prepTimeMins,
+										cookTimeMins: _editedEntry.cookTimeMins,
+										servings: int.parse(value!),
+										images: _editedEntry.images,
+									);
+								},
 							),
 						],
 					),

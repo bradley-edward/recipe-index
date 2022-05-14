@@ -23,12 +23,18 @@ class RecipeCollection with ChangeNotifier {
 			'name': entry.name,
 			'complexity': entry.complexity!.index,
 			'difficulty': entry.difficulty!.index,
+			'prepTime': entry.prepTimeMins,
+			'cookingTime': entry.cookTimeMins,
+			'servings': entry.servings,
 		});
 		final newEntry = RecipeEntry(
 			id: entryId,
 			name: entry.name,
 			complexity: entry.complexity,
 			difficulty: entry.difficulty,
+			prepTimeMins: entry.prepTimeMins,
+			cookTimeMins: entry.cookTimeMins,
+			servings: entry.servings,
 			images: entry.images,
 		);
 		
@@ -94,6 +100,9 @@ class RecipeCollection with ChangeNotifier {
 			'name': newEntry.name,
 			'complexity': newEntry.complexity!.index,
 			'difficulty': newEntry.difficulty!.index,
+			'prepTime': newEntry.prepTimeMins,
+			'cookingTime': newEntry.cookTimeMins,
+			'servings': newEntry.servings,
 		});
 
 		await _updateEntryImages(newEntry.id!, newEntry.images, imageIdsToRemove,);
@@ -151,6 +160,9 @@ class RecipeCollection with ChangeNotifier {
 				name: entry['name'],
 				complexity: RecipeComplexity.values[entry['complexity']],
 				difficulty: TechnicalDifficulty.values[entry['difficulty']],
+				prepTimeMins: entry['prepTime'],
+				cookTimeMins: entry['cookingTime'],
+				servings: entry['servings'],
 				images: entryImageData.map((image) => EntryImage(
 					id: image['id'],
 					imageLocation: image['imageLocation'],

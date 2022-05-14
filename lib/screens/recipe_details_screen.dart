@@ -106,6 +106,45 @@ class RecipeDetailsScreen extends StatelessWidget {
 								),
 							],
 						),
+						const SizedBox(height: 20,),
+						Row(
+							mainAxisAlignment: MainAxisAlignment.spaceAround,
+							children: [
+								Column(
+									children: [
+										Text(
+											'Prep. Time',
+											style: appTheme.textTheme.headline6,
+										),
+										Text('${entry.prepTimeMins.toString()} mins'),
+									],
+								),
+								Column(
+									children: [
+										Text(
+											'Cooking Time',
+											style: appTheme.textTheme.headline6,
+										),
+										Text('${entry.cookTimeMins.toString()} mins'),
+									],
+								),
+							],
+						),
+						const SizedBox(height: 20,),
+						Row(
+							mainAxisAlignment: MainAxisAlignment.spaceAround,
+							children: [
+								Column(
+									children: [
+										Text(
+											'Servings',
+											style: appTheme.textTheme.headline6,
+										),
+										Text(entry.servings.toString()),
+									],
+								),
+							],
+						),
 					],
 				),
 			),
