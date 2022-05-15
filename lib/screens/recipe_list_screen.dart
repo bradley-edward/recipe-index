@@ -47,6 +47,11 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 	Widget build(BuildContext context) {
 		final modalRoute = ModalRoute.of(context);
 		final appNavigator = Navigator.of(context);
+
+		final searchCriteria = (modalRoute != null && modalRoute.settings.arguments != null)
+		? modalRoute.settings.arguments as Map<String,Object>
+		: null;
+
 		return Scaffold(
 			appBar: AppBar(
 				leading: _isInEditMode
@@ -130,11 +135,14 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 							return const Center(child: Text('An error occurred!'),);
 						} else {
 							return Consumer<RecipeCollection>(
-								child: const Center(child: Text('Got no recipes yet, start adding some!')),
+								child: Center(
+									child: (searchCriteria != null)
+									? const Text('No recipes match the search!')
+									: const Text('Got no recipes yet; start adding some!'),
+								),
 								builder: (ctx, recipeCollection, ch) {
 									final List<RecipeEntry> fetchedEntries;
-									if (modalRoute != null && modalRoute.settings.arguments != null) {
-										final searchCriteria = modalRoute.settings.arguments as Map<String,Object>;
+									if (searchCriteria != null) {
 										fetchedEntries = recipeCollection.searchForEntries(searchCriteria);
 									} else {
 										fetchedEntries = recipeCollection.entries;
