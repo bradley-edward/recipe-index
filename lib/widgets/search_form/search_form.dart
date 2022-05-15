@@ -20,6 +20,18 @@ class _SearchFormState extends State<SearchForm> {
 	final _complexitySearch = <RecipeComplexity>{};
 	final _difficultySearch = <TechnicalDifficulty>{};
 
+	void submitSearch() {
+		final searchPayload = <String,Object>{};
+		if (_enabledSearches['complexity']! && _complexitySearch.isNotEmpty) {
+			searchPayload['complexity'] = _complexitySearch;
+		}
+		if (_enabledSearches['difficulty']! && _difficultySearch.isNotEmpty) {
+			searchPayload['difficulty'] = _difficultySearch;
+		}
+
+		Navigator.of(context).pushReplacementNamed('/', arguments: searchPayload.isEmpty ? null : searchPayload);
+	}
+
 	Widget _buildEnumSearch({
 		required Widget title,
 		required String searchName,
@@ -131,6 +143,11 @@ class _SearchFormState extends State<SearchForm> {
 							),
 						),
 					],
+				),
+				ElevatedButton.icon(
+					onPressed: submitSearch,
+					icon: const Icon(Icons.search),
+					label: const Text('Search'),
 				),
 			],
 		);

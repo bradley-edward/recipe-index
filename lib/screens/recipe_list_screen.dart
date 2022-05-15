@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/recipe_entry.dart';
 import '../providers/recipe_collection.dart';
 import '../widgets/collection_list.dart';
 import '../widgets/main_drawer.dart';
@@ -44,6 +45,7 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 
 	@override
 	Widget build(BuildContext context) {
+		final modalRoute = ModalRoute.of(context);
 		final appNavigator = Navigator.of(context);
 		return Scaffold(
 			appBar: AppBar(
@@ -130,7 +132,13 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 							return Consumer<RecipeCollection>(
 								child: const Center(child: Text('Got no recipes yet, start adding some!')),
 								builder: (ctx, recipeCollection, ch) {
-									final fetchedEntries = recipeCollection.entries;
+									final List<RecipeEntry> fetchedEntries;
+									if (modalRoute != null && modalRoute.settings.arguments != null) {
+										final searchCriteria = modalRoute.settings.arguments as Map<String,Object>;
+										fetchedEntries = recipeCollection.searchForEntries(searchCriteria);
+									} else {
+										fetchedEntries = recipeCollection.entries;
+									}
 									final recipesCount = fetchedEntries.length;
 
 									if (recipesCount <= 0) {

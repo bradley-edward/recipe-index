@@ -14,6 +14,24 @@ class RecipeCollection with ChangeNotifier {
 		return [..._entries];
 	}
 
+	List<RecipeEntry> searchForEntries(Map<String,Object> searchCriteria) {
+		final foundEntries = _entries.where((entry) {
+			var inComplexity = true;
+			var inDifficulty = true;
+			if (searchCriteria.containsKey('complexity')) {
+				final complexitySet = searchCriteria['complexity'] as Set<RecipeComplexity>;
+				inComplexity = complexitySet.contains(entry.complexity);
+			}
+			if (searchCriteria.containsKey('difficulty')) {
+				final difficultySet = searchCriteria['difficulty'] as Set<TechnicalDifficulty>;
+				inDifficulty = difficultySet.contains(entry.difficulty);
+			}
+
+			return inComplexity && inDifficulty;
+		}).toList();
+		return foundEntries;
+	}
+
 	RecipeEntry findById(int id) {
 		return _entries.firstWhere((entry) => entry.id == id);
 	}
