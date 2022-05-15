@@ -11,8 +11,46 @@ class SearchForm extends StatefulWidget {
 }
 
 class _SearchFormState extends State<SearchForm> {
-	var _complexitySearchEnabled = false;
+	final _enabledSearches = {
+		'complexity': false,
+		'difficulty': false,
+		'prepTime': false,
+		'cookTime': false,
+	};
 	final _complexitySearch = <RecipeComplexity, bool>{};
+	final _difficultySearch = <TechnicalDifficulty, bool>{};
+
+	Widget _buildEnumSearch({
+		required Widget title,
+		required String searchName,
+		required List<Enum> enumValues,
+		required Map<Object,Object> searchParams,
+		required Map<Object, String> enumStrings,
+	}) => ExpansionTile(
+		title: title,
+		controlAffinity: ListTileControlAffinity.leading,
+		leading: Switch(value: _enabledSearches[searchName] ?? false, onChanged: (_) {}),
+		onExpansionChanged: (isExpanded) {
+			setState(() {
+				_enabledSearches[searchName] = isExpanded;
+			});
+		},
+		children: enumValues.map((enumVal) =>
+			CheckboxListTile(
+				value: searchParams.containsKey(enumVal),
+				onChanged: (_) {
+					setState(() {
+						if (searchParams.containsKey(enumVal)) {
+							searchParams.remove(enumVal);
+						} else {
+							searchParams[enumVal] = true;
+						}
+					});
+				},
+				title: Text(enumStrings[enumVal]!),
+			),
+		).toList(),
+	);
 	
 	@override
 	Widget build(BuildContext context) {
@@ -24,45 +62,22 @@ class _SearchFormState extends State<SearchForm> {
 					mainAxisAlignment: MainAxisAlignment.spaceAround,
 					children: [
 						Expanded(
-							child: ExpansionTile(
+							child: _buildEnumSearch(
 								title: Text('Complexity', style: appTheme.textTheme.titleMedium,),
-								controlAffinity: ListTileControlAffinity.leading,
-								leading: Switch(value: _complexitySearchEnabled, onChanged: (_) {}),
-								onExpansionChanged: (isExpanded) {
-									setState(() {
-										_complexitySearchEnabled = isExpanded;
-									});
-								},
-								children: RecipeComplexity.values.map((rcVal) =>
-									CheckboxListTile(
-										value: _complexitySearch.containsKey(rcVal),
-										onChanged: (_) {
-											setState(() {
-												if (_complexitySearch.containsKey(rcVal)) {
-													_complexitySearch.remove(rcVal);
-												} else {
-													_complexitySearch.addEntries([MapEntry(rcVal, true)]);
-												}
-											});
-										},
-										title: Text(complexityStrings[rcVal]!),
-									),
-								).toList(),
+								searchName: 'complexity',
+								enumValues: RecipeComplexity.values,
+								searchParams: _complexitySearch,
+								enumStrings: complexityStrings,
 							),
 						),
 						const SizedBox(width: 5,),
 						Expanded(
-							child: ExpansionTile(
+							child: _buildEnumSearch(
 								title: Text('Expertise', style: appTheme.textTheme.titleMedium,),
-								controlAffinity: ListTileControlAffinity.leading,
-								children: TechnicalDifficulty.values.map((val) =>
-									CheckboxListTile(
-										value: true,
-										onChanged: (_) {},
-										title: Text(difficultyStrings[val]!),
-									),
-								).toList(),
-								leading: Switch(value: true, onChanged: (_) {}),
+								searchName: 'difficulty',
+								enumValues: TechnicalDifficulty.values,
+								searchParams: _difficultySearch,
+								enumStrings: difficultyStrings,
 							),
 						),
 					],
