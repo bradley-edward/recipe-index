@@ -11,6 +11,9 @@ class SearchForm extends StatefulWidget {
 }
 
 class _SearchFormState extends State<SearchForm> {
+	var _complexitySearchEnabled = false;
+	final _complexitySearch = <RecipeComplexity, bool>{};
+	
 	@override
 	Widget build(BuildContext context) {
 		final appTheme = Theme.of(context);
@@ -24,14 +27,27 @@ class _SearchFormState extends State<SearchForm> {
 							child: ExpansionTile(
 								title: Text('Complexity', style: appTheme.textTheme.titleMedium,),
 								controlAffinity: ListTileControlAffinity.leading,
-								children: RecipeComplexity.values.map((val) =>
+								leading: Switch(value: _complexitySearchEnabled, onChanged: (_) {}),
+								onExpansionChanged: (isExpanded) {
+									setState(() {
+										_complexitySearchEnabled = isExpanded;
+									});
+								},
+								children: RecipeComplexity.values.map((rcVal) =>
 									CheckboxListTile(
-										value: true,
-										onChanged: (_) {},
-										title: Text(complexityStrings[val]!),
+										value: _complexitySearch.containsKey(rcVal),
+										onChanged: (_) {
+											setState(() {
+												if (_complexitySearch.containsKey(rcVal)) {
+													_complexitySearch.remove(rcVal);
+												} else {
+													_complexitySearch.addEntries([MapEntry(rcVal, true)]);
+												}
+											});
+										},
+										title: Text(complexityStrings[rcVal]!),
 									),
 								).toList(),
-								leading: Switch(value: true, onChanged: (_) {}),
 							),
 						),
 						const SizedBox(width: 5,),
