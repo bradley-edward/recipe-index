@@ -17,14 +17,14 @@ class _SearchFormState extends State<SearchForm> {
 		'prepTime': false,
 		'cookTime': false,
 	};
-	final _complexitySearch = <RecipeComplexity, bool>{};
-	final _difficultySearch = <TechnicalDifficulty, bool>{};
+	final _complexitySearch = <RecipeComplexity>{};
+	final _difficultySearch = <TechnicalDifficulty>{};
 
 	Widget _buildEnumSearch({
 		required Widget title,
 		required String searchName,
 		required List<Enum> enumValues,
-		required Map<Object,Object> searchParams,
+		required Set<Object> searchParams,
 		required Map<Object, String> enumStrings,
 	}) => ExpansionTile(
 		title: title,
@@ -37,13 +37,13 @@ class _SearchFormState extends State<SearchForm> {
 		},
 		children: enumValues.map((enumVal) =>
 			CheckboxListTile(
-				value: searchParams.containsKey(enumVal),
+				value: searchParams.contains(enumVal),
 				onChanged: (_) {
 					setState(() {
-						if (searchParams.containsKey(enumVal)) {
+						if (searchParams.contains(enumVal)) {
 							searchParams.remove(enumVal);
 						} else {
-							searchParams[enumVal] = true;
+							searchParams.add(enumVal);
 						}
 					});
 				},
