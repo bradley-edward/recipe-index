@@ -18,6 +18,7 @@ class RecipeCollection with ChangeNotifier {
 		final foundEntries = _entries.where((entry) {
 			var inComplexity = true;
 			var inDifficulty = true;
+			var inPrepTime = true;
 			if (searchCriteria.containsKey('complexity')) {
 				final complexitySet = searchCriteria['complexity'] as Set<RecipeComplexity>;
 				inComplexity = complexitySet.contains(entry.complexity);
@@ -26,8 +27,14 @@ class RecipeCollection with ChangeNotifier {
 				final difficultySet = searchCriteria['difficulty'] as Set<TechnicalDifficulty>;
 				inDifficulty = difficultySet.contains(entry.difficulty);
 			}
+			if (searchCriteria.containsKey('prepTime')) {
+				final prepTimeRange = searchCriteria['prepTime'] as Map<String,int>;
+				final isWithinFrom = (prepTimeRange['from'] == -1) || (entry.prepTimeMins >= prepTimeRange['from']!);
+				final isWithinTo = (prepTimeRange['to'] == -1) || (entry.prepTimeMins <= prepTimeRange['to']!);
+				inPrepTime = isWithinFrom && isWithinTo;
+			}
 
-			return inComplexity && inDifficulty;
+			return inComplexity && inDifficulty && inPrepTime;
 		}).toList();
 		return foundEntries;
 	}

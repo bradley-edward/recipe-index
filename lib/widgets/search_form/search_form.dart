@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/recipe_complexity.dart';
 import '../../models/technical_difficulty.dart';
+import '../../models/minute_range_params.dart';
 
 class SearchForm extends StatefulWidget {
 	const SearchForm({ Key? key }) : super(key: key);
@@ -19,6 +20,11 @@ class _SearchFormState extends State<SearchForm> {
 	};
 	final _complexitySearch = <RecipeComplexity>{};
 	final _difficultySearch = <TechnicalDifficulty>{};
+	final _prepTimeParams = MinuteRangeParams(
+		errorMsg: '',
+		fromController: TextEditingController(),
+		toController: TextEditingController(),
+	);
 
 	void submitSearch() {
 		final searchPayload = <String,Object>{};
@@ -27,6 +33,17 @@ class _SearchFormState extends State<SearchForm> {
 		}
 		if (_enabledSearches['difficulty']! && _difficultySearch.isNotEmpty) {
 			searchPayload['difficulty'] = _difficultySearch;
+		}
+
+		if (_enabledSearches['prepTime']!) {
+			setState(() {
+				_prepTimeParams.validateInputs();
+			});
+			if (_prepTimeParams.hasError) {
+				return;
+			}
+
+			searchPayload['prepTime'] = _prepTimeParams.intRange;
 		}
 
 		Navigator.of(context).pushReplacementNamed('/', arguments: searchPayload.isEmpty ? null : searchPayload);
@@ -103,20 +120,51 @@ class _SearchFormState extends State<SearchForm> {
 							child: ExpansionTile(
 								title: Text('Prep. Time', style: appTheme.textTheme.titleMedium,),
 								controlAffinity: ListTileControlAffinity.leading,
-								leading: Switch(value: true, onChanged: (_) {}),
-								children: const [
+								leading: Switch(value: _enabledSearches['prepTime']!, onChanged: (_) {}),
+								onExpansionChanged: (isExpanded) {
+									setState(() {
+										_enabledSearches['prepTime'] = isExpanded;
+									});
+								},
+								children: [
 									ListTile(
-										leading: Text('From'),
+										leading: const Text('From'),
 										title: TextField(
-											keyboardType: TextInputType.numberWithOptions(signed: false, decimal: false),
+											controller: _prepTimeParams.fromController,
+											keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
+											onEditingComplete: () {
+												FocusScope.of(context).unfocus();
+												setState(() {
+													_prepTimeParams.validateInputs();
+												});
+											},
 										),
+										trailing: const Text('min'),
 									),
 									ListTile(
-										leading: Text('To'),
+										leading: const Text('To'),
 										title: TextField(
-											keyboardType: TextInputType.numberWithOptions(signed: false, decimal: false),
+											controller: _prepTimeParams.toController,
+											keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
+											onEditingComplete: () {
+												FocusScope.of(context).unfocus();
+												setState(() {
+													_prepTimeParams.validateInputs();
+												});
+											},
 										),
+										trailing: const Text('min'),
 									),
+									if (_prepTimeParams.hasError) Padding(
+										padding: const EdgeInsets.symmetric(vertical: 8),
+										child: Text(
+											_prepTimeParams.errorMsg,
+											style: TextStyle(
+												color: appTheme.errorColor,
+											),
+											textAlign: TextAlign.center,
+										),
+									)
 								],
 							),
 						),
