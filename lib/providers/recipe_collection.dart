@@ -14,6 +14,14 @@ class RecipeCollection with ChangeNotifier {
 		return [..._entries];
 	}
 
+	bool _isWithinSet(Enum? enumValue, Set<Enum> enumSet) {
+		return enumSet.contains(enumValue);
+	}
+
+	bool _isWithinRange(int a, Map<String,int> range) {
+		return ((range['from'] == -1) || (a >= range['from']!)) && ((range['to'] == -1) || (a <= range['to']!));
+	}
+
 	List<RecipeEntry> searchForEntries(Map<String,Object> searchCriteria) {
 		final foundEntries = _entries.where((entry) {
 			var inComplexity = true;
@@ -22,24 +30,16 @@ class RecipeCollection with ChangeNotifier {
 			var inCookTime = true;
 
 			if (searchCriteria.containsKey('complexity')) {
-				final complexitySet = searchCriteria['complexity'] as Set<RecipeComplexity>;
-				inComplexity = complexitySet.contains(entry.complexity);
+				inComplexity = _isWithinSet(entry.complexity, searchCriteria['complexity'] as Set<RecipeComplexity>);
 			}
 			if (searchCriteria.containsKey('difficulty')) {
-				final difficultySet = searchCriteria['difficulty'] as Set<TechnicalDifficulty>;
-				inDifficulty = difficultySet.contains(entry.difficulty);
+				inDifficulty = _isWithinSet(entry.difficulty, searchCriteria['difficulty'] as Set<TechnicalDifficulty>);
 			}
 			if (searchCriteria.containsKey('prepTime')) {
-				final prepTimeRange = searchCriteria['prepTime'] as Map<String,int>;
-				final isWithinFrom = (prepTimeRange['from'] == -1) || (entry.prepTimeMins >= prepTimeRange['from']!);
-				final isWithinTo = (prepTimeRange['to'] == -1) || (entry.prepTimeMins <= prepTimeRange['to']!);
-				inPrepTime = isWithinFrom && isWithinTo;
+				inPrepTime = _isWithinRange(entry.prepTimeMins, searchCriteria['prepTime'] as Map<String,int>);
 			}
 			if (searchCriteria.containsKey('cookTime')) {
-				final cookTimeRange = searchCriteria['cookTime'] as Map<String,int>;
-				final isWithinFrom = (cookTimeRange['from'] == -1) || (entry.cookTimeMins >= cookTimeRange['from']!);
-				final isWithinTo = (cookTimeRange['to'] == -1) || (entry.cookTimeMins <= cookTimeRange['to']!);
-				inCookTime = isWithinFrom && isWithinTo;
+				inCookTime = _isWithinRange(entry.cookTimeMins, searchCriteria['cookTime'] as Map<String,int>);
 			}
 
 			return inComplexity && inDifficulty && inPrepTime && inCookTime;
