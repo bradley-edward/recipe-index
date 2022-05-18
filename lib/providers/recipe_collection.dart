@@ -28,6 +28,7 @@ class RecipeCollection with ChangeNotifier {
 			var inDifficulty = true;
 			var inPrepTime = true;
 			var inCookTime = true;
+			var inServings = true;
 
 			if (searchCriteria.containsKey('complexity')) {
 				inComplexity = _isWithinSet(entry.complexity, searchCriteria['complexity'] as Set<RecipeComplexity>);
@@ -41,8 +42,11 @@ class RecipeCollection with ChangeNotifier {
 			if (searchCriteria.containsKey('cookTime')) {
 				inCookTime = _isWithinRange(entry.cookTimeMins, searchCriteria['cookTime'] as Map<String,int>);
 			}
+			if (searchCriteria.containsKey('servings')) {
+				inServings = _isWithinRange(entry.servings, searchCriteria['servings'] as Map<String,int>);
+			}
 
-			return inComplexity && inDifficulty && inPrepTime && inCookTime;
+			return inComplexity && inDifficulty && inPrepTime && inCookTime && inServings;
 		}).toList();
 		return foundEntries;
 	}

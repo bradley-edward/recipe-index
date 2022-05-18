@@ -17,6 +17,7 @@ class _SearchFormState extends State<SearchForm> {
 		'difficulty': false,
 		'prepTime': false,
 		'cookTime': false,
+		'servings': false,
 	};
 	final _complexitySearch = <RecipeComplexity>{};
 	final _difficultySearch = <TechnicalDifficulty>{};
@@ -26,6 +27,11 @@ class _SearchFormState extends State<SearchForm> {
 		toController: TextEditingController(),
 	);
 	final _cookTimeParams = MinuteRangeParams(
+		errorMsg: '',
+		fromController: TextEditingController(),
+		toController: TextEditingController(),
+	);
+	final _servingParams = MinuteRangeParams(
 		errorMsg: '',
 		fromController: TextEditingController(),
 		toController: TextEditingController(),
@@ -59,6 +65,16 @@ class _SearchFormState extends State<SearchForm> {
 			}
 
 			searchPayload['cookTime'] = _cookTimeParams.intRange;
+		}
+		if (_enabledSearches['servings']!) {
+			setState(() {
+				_servingParams.validateInputs();
+			});
+			if (_servingParams.hasError) {
+				return;
+			}
+
+			searchPayload['servings'] = _servingParams.intRange;
 		}
 
 		Navigator.of(context).pushReplacementNamed('/', arguments: searchPayload.isEmpty ? null : searchPayload);
@@ -211,6 +227,21 @@ class _SearchFormState extends State<SearchForm> {
 								inputParams: _cookTimeParams,
 								appTheme: appTheme,
 								unitName: 'min',
+							),
+						),
+					],
+				),
+				const SizedBox(height: 20,),
+				Row(
+					crossAxisAlignment: CrossAxisAlignment.start,
+					mainAxisAlignment: MainAxisAlignment.start,
+					children: [
+						Expanded(
+							child: _buildIntRange(
+								titleStr: 'Servings',
+								searchName: 'servings',
+								inputParams: _servingParams,
+								appTheme: appTheme,
 							),
 						),
 					],
