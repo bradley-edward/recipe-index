@@ -25,6 +25,11 @@ class _SearchFormState extends State<SearchForm> {
 		fromController: TextEditingController(),
 		toController: TextEditingController(),
 	);
+	final _cookTimeParams = MinuteRangeParams(
+		errorMsg: '',
+		fromController: TextEditingController(),
+		toController: TextEditingController(),
+	);
 
 	void submitSearch() {
 		final searchPayload = <String,Object>{};
@@ -44,6 +49,16 @@ class _SearchFormState extends State<SearchForm> {
 			}
 
 			searchPayload['prepTime'] = _prepTimeParams.intRange;
+		}
+		if (_enabledSearches['cookTime']!) {
+			setState(() {
+				_cookTimeParams.validateInputs();
+			});
+			if (_cookTimeParams.hasError) {
+				return;
+			}
+
+			searchPayload['cookTime'] = _cookTimeParams.intRange;
 		}
 
 		Navigator.of(context).pushReplacementNamed('/', arguments: searchPayload.isEmpty ? null : searchPayload);
@@ -190,24 +205,12 @@ class _SearchFormState extends State<SearchForm> {
 						),
 						const SizedBox(width: 5,),
 						Expanded(
-							child: ExpansionTile(
-								title: Text('Cooking Time', style: appTheme.textTheme.titleMedium,),
-								controlAffinity: ListTileControlAffinity.leading,
-								leading: Switch(value: true, onChanged: (_) {}),
-								children: const [
-									ListTile(
-										leading: Text('From'),
-										title: TextField(
-											keyboardType: TextInputType.numberWithOptions(signed: false, decimal: false),
-										),
-									),
-									ListTile(
-										leading: Text('To'),
-										title: TextField(
-											keyboardType: TextInputType.numberWithOptions(signed: false, decimal: false),
-										),
-									),
-								],
+							child: _buildIntRange(
+								titleStr: 'Cooking Time',
+								searchName: 'cookTime',
+								inputParams: _cookTimeParams,
+								appTheme: appTheme,
+								unitName: 'min',
 							),
 						),
 					],
