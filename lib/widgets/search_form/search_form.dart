@@ -80,6 +80,69 @@ class _SearchFormState extends State<SearchForm> {
 			),
 		).toList(),
 	);
+
+	Widget _buildIntRange({
+		required String titleStr,
+		required String searchName,
+		required MinuteRangeParams inputParams,
+		required ThemeData appTheme,
+		String? unitName,
+	}) => ExpansionTile(
+		title: Text(titleStr, style: appTheme.textTheme.titleMedium,),
+		controlAffinity: ListTileControlAffinity.leading,
+		leading: Switch(value: _enabledSearches[searchName]!, onChanged: (_) {}),
+		onExpansionChanged: (isExpanded) {
+			setState(() {
+				_enabledSearches[searchName] = isExpanded;
+			});
+		},
+		children: [
+			ListTile(
+				leading: const Text('From'),
+				title: TextField(
+					controller: inputParams.fromController,
+					keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
+					decoration: const InputDecoration(
+						hintText: '0',
+					),
+					onEditingComplete: () {
+						FocusScope.of(context).unfocus();
+						setState(() {
+							inputParams.validateInputs();
+						});
+					},
+				),
+				trailing: unitName != null ? Text(unitName) : null,
+			),
+			ListTile(
+				leading: const Text('To'),
+				title: TextField(
+					controller: inputParams.toController,
+					keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
+					decoration: const InputDecoration(
+						hintText: 'Infinity',
+					),
+					onEditingComplete: () {
+						FocusScope.of(context).unfocus();
+						setState(() {
+							inputParams.validateInputs();
+						});
+					},
+				),
+				trailing: unitName != null ? Text(unitName) : null,
+			),
+			if (_prepTimeParams.hasError) Padding(
+				padding: const EdgeInsets.symmetric(vertical: 8),
+				child: Text(
+					_prepTimeParams.errorMsg,
+					style: TextStyle(
+						color: appTheme.errorColor,
+					),
+					textAlign: TextAlign.center,
+				),
+			)
+		],
+	);
 	
 	@override
 	Widget build(BuildContext context) {
@@ -117,55 +180,12 @@ class _SearchFormState extends State<SearchForm> {
 					mainAxisAlignment: MainAxisAlignment.spaceAround,
 					children: [
 						Expanded(
-							child: ExpansionTile(
-								title: Text('Prep. Time', style: appTheme.textTheme.titleMedium,),
-								controlAffinity: ListTileControlAffinity.leading,
-								leading: Switch(value: _enabledSearches['prepTime']!, onChanged: (_) {}),
-								onExpansionChanged: (isExpanded) {
-									setState(() {
-										_enabledSearches['prepTime'] = isExpanded;
-									});
-								},
-								children: [
-									ListTile(
-										leading: const Text('From'),
-										title: TextField(
-											controller: _prepTimeParams.fromController,
-											keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
-											onEditingComplete: () {
-												FocusScope.of(context).unfocus();
-												setState(() {
-													_prepTimeParams.validateInputs();
-												});
-											},
-										),
-										trailing: const Text('min'),
-									),
-									ListTile(
-										leading: const Text('To'),
-										title: TextField(
-											controller: _prepTimeParams.toController,
-											keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
-											onEditingComplete: () {
-												FocusScope.of(context).unfocus();
-												setState(() {
-													_prepTimeParams.validateInputs();
-												});
-											},
-										),
-										trailing: const Text('min'),
-									),
-									if (_prepTimeParams.hasError) Padding(
-										padding: const EdgeInsets.symmetric(vertical: 8),
-										child: Text(
-											_prepTimeParams.errorMsg,
-											style: TextStyle(
-												color: appTheme.errorColor,
-											),
-											textAlign: TextAlign.center,
-										),
-									)
-								],
+							child: _buildIntRange(
+								titleStr: 'Prep. Time',
+								searchName: 'prepTime',
+								inputParams: _prepTimeParams,
+								appTheme: appTheme,
+								unitName: 'min',
 							),
 						),
 						const SizedBox(width: 5,),
