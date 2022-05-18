@@ -13,7 +13,9 @@ class SearchScreen extends StatelessWidget {
 				title: const Text('Search')
 			),
 			drawer: MainDrawer(),
-			body: SearchForm(),
+			body: SingleChildScrollView(
+				child: SearchForm()
+			),
 		);
 	}
 }
