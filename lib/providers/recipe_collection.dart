@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../models/entry_search_criteria.dart';
 import '../models/dummy_data.dart';
 import '../models/recipe_entry.dart';
 import '../models/entry_image.dart';
@@ -14,40 +15,8 @@ class RecipeCollection with ChangeNotifier {
 		return [..._entries];
 	}
 
-	bool _isWithinSet(Enum? enumValue, Set<Enum> enumSet) {
-		return enumSet.contains(enumValue);
-	}
-
-	bool _isWithinRange(int a, Map<String,int> range) {
-		return ((range['from'] == -1) || (a >= range['from']!)) && ((range['to'] == -1) || (a <= range['to']!));
-	}
-
-	List<RecipeEntry> searchForEntries(Map<String,Object> searchCriteria) {
-		final foundEntries = _entries.where((entry) {
-			var inComplexity = true;
-			var inDifficulty = true;
-			var inPrepTime = true;
-			var inCookTime = true;
-			var inServings = true;
-
-			if (searchCriteria.containsKey('complexity')) {
-				inComplexity = _isWithinSet(entry.complexity, searchCriteria['complexity'] as Set<RecipeComplexity>);
-			}
-			if (searchCriteria.containsKey('difficulty')) {
-				inDifficulty = _isWithinSet(entry.difficulty, searchCriteria['difficulty'] as Set<TechnicalDifficulty>);
-			}
-			if (searchCriteria.containsKey('prepTime')) {
-				inPrepTime = _isWithinRange(entry.prepTimeMins, searchCriteria['prepTime'] as Map<String,int>);
-			}
-			if (searchCriteria.containsKey('cookTime')) {
-				inCookTime = _isWithinRange(entry.cookTimeMins, searchCriteria['cookTime'] as Map<String,int>);
-			}
-			if (searchCriteria.containsKey('servings')) {
-				inServings = _isWithinRange(entry.servings, searchCriteria['servings'] as Map<String,int>);
-			}
-
-			return inComplexity && inDifficulty && inPrepTime && inCookTime && inServings;
-		}).toList();
+	List<RecipeEntry> searchForEntries(EntrySearchCriteria searchCriteria) {
+		final foundEntries = _entries.where((entry) => searchCriteria.fitsCriteria(entry)).toList();
 		return foundEntries;
 	}
 

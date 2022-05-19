@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/recipe_entry.dart';
+import '../models/entry_search_criteria.dart';
 import '../providers/recipe_collection.dart';
 import '../widgets/collection_list.dart';
 import '../widgets/main_drawer.dart';
@@ -49,7 +50,7 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 		final appNavigator = Navigator.of(context);
 
 		final searchCriteria = (modalRoute != null && modalRoute.settings.arguments != null)
-		? modalRoute.settings.arguments as Map<String,Object>
+		? modalRoute.settings.arguments as EntrySearchCriteria
 		: null;
 
 		return Scaffold(

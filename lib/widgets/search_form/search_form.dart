@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/recipe_complexity.dart';
 import '../../models/technical_difficulty.dart';
 import '../../models/minute_range_params.dart';
+import '../../models/entry_search_criteria.dart';
 
 class SearchForm extends StatefulWidget {
 	const SearchForm({ Key? key }) : super(key: key);
@@ -38,12 +39,15 @@ class _SearchFormState extends State<SearchForm> {
 	);
 
 	void submitSearch() {
-		final searchPayload = <String,Object>{};
+		var atLeastOneEnabled = false;
+		final searchPayload = EntrySearchCriteria();
 		if (_enabledSearches['complexity']! && _complexitySearch.isNotEmpty) {
-			searchPayload['complexity'] = _complexitySearch;
+			atLeastOneEnabled = true;
+			searchPayload.complexitySet = _complexitySearch;
 		}
 		if (_enabledSearches['difficulty']! && _difficultySearch.isNotEmpty) {
-			searchPayload['difficulty'] = _difficultySearch;
+			atLeastOneEnabled = true;
+			searchPayload.difficultySet = _difficultySearch;
 		}
 
 		if (_enabledSearches['prepTime']!) {
@@ -54,7 +58,8 @@ class _SearchFormState extends State<SearchForm> {
 				return;
 			}
 
-			searchPayload['prepTime'] = _prepTimeParams.intRange;
+			atLeastOneEnabled = true;
+			searchPayload.prepTimeRange = _prepTimeParams.intRange;
 		}
 		if (_enabledSearches['cookTime']!) {
 			setState(() {
@@ -64,7 +69,8 @@ class _SearchFormState extends State<SearchForm> {
 				return;
 			}
 
-			searchPayload['cookTime'] = _cookTimeParams.intRange;
+			atLeastOneEnabled = true;
+			searchPayload.cookTimeRange = _cookTimeParams.intRange;
 		}
 		if (_enabledSearches['servings']!) {
 			setState(() {
@@ -74,10 +80,11 @@ class _SearchFormState extends State<SearchForm> {
 				return;
 			}
 
-			searchPayload['servings'] = _servingParams.intRange;
+			atLeastOneEnabled = true;
+			searchPayload.servingsRange = _servingParams.intRange;
 		}
 
-		Navigator.of(context).pushReplacementNamed('/', arguments: searchPayload.isEmpty ? null : searchPayload);
+		Navigator.of(context).pushReplacementNamed('/', arguments: atLeastOneEnabled ? searchPayload : null);
 	}
 
 	Widget _buildEnumSearch({
