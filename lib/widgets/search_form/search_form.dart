@@ -24,18 +24,15 @@ class _SearchFormState extends State<SearchForm> {
 	final _difficultySearch = <TechnicalDifficulty>{};
 	final _prepTimeParams = MinuteRangeParams(
 		errorMsg: '',
-		fromController: TextEditingController(),
-		toController: TextEditingController(),
+		intRange: const RangeValues(0,100),
 	);
 	final _cookTimeParams = MinuteRangeParams(
 		errorMsg: '',
-		fromController: TextEditingController(),
-		toController: TextEditingController(),
+		intRange: const RangeValues(0,100),
 	);
 	final _servingParams = MinuteRangeParams(
 		errorMsg: '',
-		fromController: TextEditingController(),
-		toController: TextEditingController(),
+		intRange: const RangeValues(0,100),
 	);
 
 	void submitSearch() {
@@ -51,37 +48,16 @@ class _SearchFormState extends State<SearchForm> {
 		}
 
 		if (_enabledSearches['prepTime']!) {
-			setState(() {
-				_prepTimeParams.validateInputs();
-			});
-			if (_prepTimeParams.hasError) {
-				return;
-			}
-
 			atLeastOneEnabled = true;
-			searchPayload.prepTimeRange = _prepTimeParams.intRange;
+			searchPayload.prepTimeRange = _prepTimeParams.rangeMap;
 		}
 		if (_enabledSearches['cookTime']!) {
-			setState(() {
-				_cookTimeParams.validateInputs();
-			});
-			if (_cookTimeParams.hasError) {
-				return;
-			}
-
 			atLeastOneEnabled = true;
-			searchPayload.cookTimeRange = _cookTimeParams.intRange;
+			searchPayload.cookTimeRange = _cookTimeParams.rangeMap;
 		}
 		if (_enabledSearches['servings']!) {
-			setState(() {
-				_servingParams.validateInputs();
-			});
-			if (_servingParams.hasError) {
-				return;
-			}
-
 			atLeastOneEnabled = true;
-			searchPayload.servingsRange = _servingParams.intRange;
+			searchPayload.servingsRange = _servingParams.rangeMap;
 		}
 
 		Navigator.of(context).pushReplacementNamed('/', arguments: atLeastOneEnabled ? searchPayload : null);
@@ -136,49 +112,23 @@ class _SearchFormState extends State<SearchForm> {
 		},
 		children: [
 			ListTile(
-				leading: const Text('From'),
-				title: TextField(
-					controller: inputParams.fromController,
-					keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
-					decoration: const InputDecoration(
-						hintText: '0',
+				title: RangeSlider(
+					values: inputParams.intRange,
+					min: 0,
+					max: 100,
+					divisions: 20,
+					labels: RangeLabels(
+						inputParams.intRange.start.round().toString(),
+						inputParams.intRange.end.round().toString(),
 					),
-					onEditingComplete: () {
-						FocusScope.of(context).unfocus();
+					onChanged: (RangeValues values) {
 						setState(() {
-							inputParams.validateInputs();
+							inputParams.intRange = values;
 						});
 					},
 				),
 				trailing: unitName != null ? Text(unitName) : null,
 			),
-			ListTile(
-				leading: const Text('To'),
-				title: TextField(
-					controller: inputParams.toController,
-					keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
-					decoration: const InputDecoration(
-						hintText: 'Infinity',
-					),
-					onEditingComplete: () {
-						FocusScope.of(context).unfocus();
-						setState(() {
-							inputParams.validateInputs();
-						});
-					},
-				),
-				trailing: unitName != null ? Text(unitName) : null,
-			),
-			if (_prepTimeParams.hasError) Padding(
-				padding: const EdgeInsets.symmetric(vertical: 8),
-				child: Text(
-					_prepTimeParams.errorMsg,
-					style: TextStyle(
-						color: appTheme.errorColor,
-					),
-					textAlign: TextAlign.center,
-				),
-			)
 		],
 	);
 	
