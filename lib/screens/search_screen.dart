@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../providers/recipe_search_provider.dart';
 import '../widgets/search_form/search_form.dart';
 import '../widgets/main_drawer.dart';
 
@@ -13,8 +15,11 @@ class SearchScreen extends StatelessWidget {
 				title: const Text('Search')
 			),
 			drawer: MainDrawer(),
-			body: SingleChildScrollView(
-				child: SearchForm()
+			body: ChangeNotifierProvider(
+				create: (context) => RecipeSearchProvider(),
+				child: const SingleChildScrollView(
+					child: SearchForm()
+				),
 			),
 		);
 	}
