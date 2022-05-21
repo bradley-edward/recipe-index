@@ -44,29 +44,35 @@ class RecipeDetailsScreen extends StatelessWidget {
 		final appTheme = Theme.of(context);
 
 		final entryId = ModalRoute.of(context)!.settings.arguments as int;
-		var collectionProvider = Provider.of<RecipeCollection>(context, listen: false);
+		var collectionProvider = Provider.of<RecipeCollection>(context);
 		final entry = collectionProvider.findById(entryId);
 
 		return Scaffold(
 			appBar: AppBar(
-				title: Text(entry.idString),
+				title: Text(entry != null ? entry.idString : 'Entry Not Found'),
 				elevation: 0,
 				actions: <Widget>[
-					IconButton(onPressed: () async {
-						final bool confirmDelete = await showModalBottomSheet(
-							context: context,
-							builder: _buildConfirmDeleteModal,
-						);
+					if (entry != null) IconButton(
+						onPressed: () async {
+							final bool confirmDelete = await showModalBottomSheet(
+								context: context,
+								builder: _buildConfirmDeleteModal,
+							);
 
-						if (confirmDelete) {
-							await collectionProvider.deleteEntry(entryId);
-							appNav.pop();
-						}
-					},
-					icon: const Icon(Icons.delete)),
+							if (confirmDelete) {
+								await collectionProvider.deleteEntry(entryId);
+								appNav.pop();
+							}
+						},
+						icon: const Icon(Icons.delete)
+					),
 				],
 			),
-			body: SingleChildScrollView(
+			body: entry == null
+			? const Center(
+				child: Text('That entry cannot be found!'),
+			)
+			: SingleChildScrollView(
 				child: Column(
 					mainAxisAlignment: MainAxisAlignment.start,
 					children: <Widget>[
@@ -148,7 +154,9 @@ class RecipeDetailsScreen extends StatelessWidget {
 					],
 				),
 			),
-			floatingActionButton: Row(
+			floatingActionButton: entry == null
+			? null
+			: Row(
 				mainAxisAlignment: MainAxisAlignment.center,
 				children: <Widget>[
 					FloatingActionButton(

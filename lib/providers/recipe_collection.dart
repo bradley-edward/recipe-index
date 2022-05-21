@@ -20,8 +20,10 @@ class RecipeCollection with ChangeNotifier {
 		return foundEntries;
 	}
 
-	RecipeEntry findById(int id) {
-		return _entries.firstWhere((entry) => entry.id == id);
+	RecipeEntry? findById(int id) {
+		final entryIdx = _entries.indexWhere((entry) => entry.id == id);
+		if (entryIdx == -1) return null;
+		return _entries[entryIdx];
 	}
 
 	Future<void> addEntry(RecipeEntry entry) async {

@@ -49,7 +49,7 @@ class _RecipeFormState extends State<RecipeForm> {
 	void initState() {
 		super.initState();
 		if (widget.inputId != null) {
-			final fetchedEntry = Provider.of<RecipeCollection>(context, listen: false).findById(widget.inputId!);
+			final fetchedEntry = Provider.of<RecipeCollection>(context, listen: false).findById(widget.inputId!)!;
 			if (widget.formMode == 'New') {
 				_editedEntry = RecipeEntry(
 					id: null,
