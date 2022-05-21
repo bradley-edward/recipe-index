@@ -23,16 +23,19 @@ class _SearchFormState extends State<SearchForm> {
 	final _complexitySearch = <RecipeComplexity>{};
 	final _difficultySearch = <TechnicalDifficulty>{};
 	final _prepTimeParams = MinuteRangeParams(
-		errorMsg: '',
+		rangeMin: 0,
+		rangeMax: 100,
 		intRange: const RangeValues(0,100),
 	);
 	final _cookTimeParams = MinuteRangeParams(
-		errorMsg: '',
+		rangeMin: 0,
+		rangeMax: 100,
 		intRange: const RangeValues(0,100),
 	);
 	final _servingParams = MinuteRangeParams(
-		errorMsg: '',
-		intRange: const RangeValues(0,100),
+		rangeMin: 0,
+		rangeMax: 20,
+		intRange: const RangeValues(0,20),
 	);
 
 	void submitSearch() {
@@ -114,8 +117,8 @@ class _SearchFormState extends State<SearchForm> {
 			ListTile(
 				title: RangeSlider(
 					values: inputParams.intRange,
-					min: 0,
-					max: 100,
+					min: inputParams.rangeMin,
+					max: inputParams.rangeMax,
 					divisions: 20,
 					labels: RangeLabels(
 						inputParams.intRange.start.round().toString(),
@@ -173,7 +176,7 @@ class _SearchFormState extends State<SearchForm> {
 								searchName: 'prepTime',
 								inputParams: _prepTimeParams,
 								appTheme: appTheme,
-								unitName: 'min',
+								unitName: 'mins',
 							),
 						),
 						const SizedBox(width: 5,),
@@ -183,7 +186,7 @@ class _SearchFormState extends State<SearchForm> {
 								searchName: 'cookTime',
 								inputParams: _cookTimeParams,
 								appTheme: appTheme,
-								unitName: 'min',
+								unitName: 'mins',
 							),
 						),
 					],

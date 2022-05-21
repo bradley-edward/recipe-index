@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart' show RangeValues;
 
 class MinuteRangeParams {
-	String errorMsg;
+	double rangeMin;
+	double rangeMax;
 	RangeValues intRange;
 
 	MinuteRangeParams({
-		required this.errorMsg,
-		required this.intRange,
+		required this.rangeMin,
+		required this.rangeMax,
+		required this.intRange
 	});
 
 	Map<String,int> get rangeMap {
