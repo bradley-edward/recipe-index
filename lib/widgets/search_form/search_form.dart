@@ -104,36 +104,45 @@ class _SearchFormState extends State<SearchForm> {
 		required MinuteRangeParams inputParams,
 		required ThemeData appTheme,
 		String? unitName,
-	}) => ExpansionTile(
-		title: Text(titleStr, style: appTheme.textTheme.titleMedium,),
-		controlAffinity: ListTileControlAffinity.leading,
-		leading: Switch(value: _enabledSearches[searchName]!, onChanged: (_) {}),
-		onExpansionChanged: (isExpanded) {
-			setState(() {
-				_enabledSearches[searchName] = isExpanded;
-			});
-		},
-		children: [
-			ListTile(
-				title: RangeSlider(
-					values: inputParams.intRange,
-					min: inputParams.rangeMin,
-					max: inputParams.rangeMax,
-					divisions: 20,
-					labels: RangeLabels(
-						inputParams.intRange.start.round().toString(),
-						inputParams.intRange.end.round().toString(),
+	}) {
+		final startInt = inputParams.intRange.start.round();
+		final endInt = inputParams.intRange.end.round();
+		var rangeStr = '$startInt - $endInt';
+		if (unitName != null) {
+			rangeStr += ' $unitName';
+		}
+		return ExpansionTile(
+			title: Text(titleStr, style: appTheme.textTheme.titleMedium,),
+			controlAffinity: ListTileControlAffinity.leading,
+			leading: Switch(value: _enabledSearches[searchName]!, onChanged: (_) {}),
+			onExpansionChanged: (isExpanded) {
+				setState(() {
+					_enabledSearches[searchName] = isExpanded;
+				});
+			},
+			children: [
+				Padding(
+					padding: const EdgeInsets.symmetric(vertical: 2.5),
+					child: Center(
+						child: Text(rangeStr),
 					),
-					onChanged: (RangeValues values) {
-						setState(() {
-							inputParams.intRange = values;
-						});
-					},
 				),
-				trailing: unitName != null ? Text(unitName) : null,
-			),
-		],
-	);
+				ListTile(
+					title: RangeSlider(
+						values: inputParams.intRange,
+						min: inputParams.rangeMin,
+						max: inputParams.rangeMax,
+						divisions: 20,
+						onChanged: (RangeValues values) {
+							setState(() {
+								inputParams.intRange = values;
+							});
+						},
+					),
+				),
+			],
+		);
+	}
 	
 	@override
 	Widget build(BuildContext context) {
