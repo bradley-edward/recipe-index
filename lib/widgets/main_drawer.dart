@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../screens/tags_edit_screen.dart';
 import '../screens/recipe_backup_screen.dart';
 
 class MainDrawer extends StatelessWidget {
@@ -38,6 +39,13 @@ class MainDrawer extends StatelessWidget {
 					Icons.archive,
 					() {
 						appNavigator.pushReplacementNamed(RecipeBackupScreen.routeName);
+					}
+				),
+				buildListTile(
+					'Tags List',
+					Icons.tag,
+					() {
+						appNavigator.pushReplacementNamed(TagsEditScreen.routeName);
 					}
 				),
 			],),
