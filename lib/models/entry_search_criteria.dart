@@ -16,43 +16,27 @@ class EntrySearchCriteria {
 	}
 
 	bool fitsCriteria(RecipeEntry entry) {
-		var inComplexity = false;
-		var inDifficulty = false;
-		var inPrepTime = false;
-		var inCookTime = false;
-		var inServings = false;
-
 		final criterionList = <bool>[];
 
 		if (complexitySet != null) {
-			inComplexity = complexitySet!.contains(entry.complexity);
-			criterionList.add(inComplexity);
+			criterionList.add(complexitySet!.contains(entry.complexity));
 		}
 		if (difficultySet != null) {
-			inDifficulty = difficultySet!.contains(entry.difficulty);
-			criterionList.add(inDifficulty);
+			criterionList.add(difficultySet!.contains(entry.difficulty));
 		}
 		
 		if (prepTimeRange != null) {
-			inPrepTime = _isWithinRange(entry.prepTimeMins, prepTimeRange!);
-			criterionList.add(inPrepTime);
+			criterionList.add(_isWithinRange(entry.prepTimeMins, prepTimeRange!));
 		}
 		if (cookTimeRange != null) {
-			inCookTime = _isWithinRange(entry.cookTimeMins, cookTimeRange!);
-			criterionList.add(inCookTime);
+			criterionList.add(_isWithinRange(entry.cookTimeMins, cookTimeRange!));
 		}
 		if (servingsRange != null) {
-			inServings = _isWithinRange(entry.servings, servingsRange!);
-			criterionList.add(inServings);
+			criterionList.add(_isWithinRange(entry.servings, servingsRange!));
 		}
 
 		if (criterionList.isEmpty) return false;
 
-		for (final boolFlag in criterionList) {
-			if (boolFlag == false) {
-				return false;
-			}
-		}
-		return true;
+		return !criterionList.contains(false);
 	}
 }
