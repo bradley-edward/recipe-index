@@ -23,6 +23,8 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 
 	var _isInit = false;
 	var _isInEditMode = false;
+	var _usingSearchCriteria = false;
+	EntrySearchCriteria? _searchCriteria;
 	final Set<int> _selectedEntries = {};
 
 	void _selectEntry(int id) {
@@ -41,17 +43,20 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 		if (! _isInit) {
 			_recipesFuture = _obtainRecipesFuture();
 			_isInit = true;
+
+			final modalRoute = ModalRoute.of(context);
+			if (modalRoute != null && modalRoute.settings.arguments != null) {
+				_searchCriteria =  modalRoute.settings.arguments as EntrySearchCriteria;
+				_usingSearchCriteria = true;
+			} else {
+				_searchCriteria = null;
+			}
 		}
 	}
 
 	@override
 	Widget build(BuildContext context) {
-		final modalRoute = ModalRoute.of(context);
 		final appNavigator = Navigator.of(context);
-
-		final searchCriteria = (modalRoute != null && modalRoute.settings.arguments != null)
-		? modalRoute.settings.arguments as EntrySearchCriteria
-		: null;
 
 		return Scaffold(
 			appBar: AppBar(
@@ -64,6 +69,14 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 				: null,
 				title: const Text("Recipes"),
 				actions: <Widget>[
+					if (_usingSearchCriteria) IconButton(
+						icon: const Icon(Icons.search_off),
+						onPressed: () {
+							setState(() {
+								_usingSearchCriteria = false;
+							});
+						},
+					),
 					if (!_isInEditMode) ...<Widget>[
 						IconButton(
 							icon: const Icon(Icons.search),
@@ -137,14 +150,14 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 						} else {
 							return Consumer<RecipeCollection>(
 								child: Center(
-									child: (searchCriteria != null)
+									child: (_usingSearchCriteria)
 									? const Text('No recipes match the search!')
 									: const Text('Got no recipes yet; start adding some!'),
 								),
 								builder: (ctx, recipeCollection, ch) {
 									final List<RecipeEntry> fetchedEntries;
-									if (searchCriteria != null) {
-										fetchedEntries = recipeCollection.searchForEntries(searchCriteria);
+									if (_usingSearchCriteria) {
+										fetchedEntries = recipeCollection.searchForEntries(_searchCriteria!);
 									} else {
 										fetchedEntries = recipeCollection.entries;
 									}
