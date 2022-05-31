@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/recipe_entry.dart';
-import '../models/entry_search_criteria.dart';
 import '../providers/recipe_collection.dart';
 import '../widgets/collection_list.dart';
 import '../widgets/main_drawer.dart';
@@ -23,8 +22,6 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 
 	var _isInit = false;
 	var _isInEditMode = false;
-	var _usingSearchCriteria = false;
-	EntrySearchCriteria? _searchCriteria;
 	final Set<int> _selectedEntries = {};
 
 	void _selectEntry(int id) {
@@ -43,14 +40,6 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 		if (! _isInit) {
 			_recipesFuture = _obtainRecipesFuture();
 			_isInit = true;
-
-			final modalRoute = ModalRoute.of(context);
-			if (modalRoute != null && modalRoute.settings.arguments != null) {
-				_searchCriteria =  modalRoute.settings.arguments as EntrySearchCriteria;
-				_usingSearchCriteria = true;
-			} else {
-				_searchCriteria = null;
-			}
 		}
 	}
 
@@ -69,14 +58,6 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 				: null,
 				title: const Text("Recipes"),
 				actions: <Widget>[
-					if (_usingSearchCriteria) IconButton(
-						icon: const Icon(Icons.search_off),
-						onPressed: () {
-							setState(() {
-								_usingSearchCriteria = false;
-							});
-						},
-					),
 					if (!_isInEditMode) ...<Widget>[
 						IconButton(
 							icon: const Icon(Icons.search),
@@ -149,18 +130,11 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 							return const Center(child: Text('An error occurred!'),);
 						} else {
 							return Consumer<RecipeCollection>(
-								child: Center(
-									child: (_usingSearchCriteria)
-									? const Text('No recipes match the search!')
-									: const Text('Got no recipes yet; start adding some!'),
+								child: const Center(
+									child: Text('Got no recipes yet; start adding some!'),
 								),
 								builder: (ctx, recipeCollection, ch) {
-									final List<RecipeEntry> fetchedEntries;
-									if (_usingSearchCriteria) {
-										fetchedEntries = recipeCollection.searchForEntries(_searchCriteria!);
-									} else {
-										fetchedEntries = recipeCollection.entries;
-									}
+									final List<RecipeEntry> fetchedEntries = recipeCollection.entries;
 									final recipesCount = fetchedEntries.length;
 
 									if (recipesCount <= 0) {
