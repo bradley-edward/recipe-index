@@ -84,7 +84,7 @@ class SearchForm extends StatelessWidget {
 				),
 				ElevatedButton.icon(
 					onPressed: () {
-						Navigator.of(context).pushReplacementNamed('/', arguments: recipeSearchProvider.searchPayload);
+						recipeSearchProvider.notifySearchResults();
 					},
 					icon: const Icon(Icons.search),
 					label: const Text('Search'),

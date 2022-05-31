@@ -100,4 +100,8 @@ class RecipeSearchProvider with ChangeNotifier {
 		mapToModify['from'] = inputIntRange['from']!;
 		mapToModify['to'] = inputIntRange['to']!;
 	}
+
+	void notifySearchResults() {
+		notifyListeners();
+	}
 }
