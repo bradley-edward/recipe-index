@@ -40,4 +40,58 @@ final dummyData = <RecipeEntry>[
 			),
 		]
 	),
+	RecipeEntry(
+		name: 'Soy-Balsamic Glazed Sea Scallops',
+		difficulty: TechnicalDifficulty.easy,
+		complexity: RecipeComplexity.moderate,
+		prepTimeMins: 10,
+		cookTimeMins: 12,
+		servings: 2,
+		images: [
+			EntryImage(
+				imageLocation: 'https://withsaltandwit.com/wp-content/uploads/2014/11/28.jpg',
+				imageType: ImageType.fromInternet,
+			),
+			EntryImage(
+				imageLocation: 'https://withsaltandwit.com/wp-content/uploads/2014/11/18.jpg',
+				imageType: ImageType.fromInternet
+			),
+		]
+	),
+	RecipeEntry(
+		name: 'Philly Cheesesteak',
+		difficulty: TechnicalDifficulty.difficult,
+		complexity: RecipeComplexity.complex,
+		prepTimeMins: 30,
+		cookTimeMins: 30,
+		servings: 2,
+		images: [
+			EntryImage(
+				imageLocation: 'https://www.spendwithpennies.com/wp-content/uploads/2020/02/Philly-Cheesesteak-SWP-12.jpg',
+				imageType: ImageType.fromInternet,
+			),
+			EntryImage(
+				imageLocation: 'https://www.spendwithpennies.com/wp-content/uploads/2020/02/Philly-Cheesesteak-SWP-9.jpg',
+				imageType: ImageType.fromInternet
+			),
+		]
+	),
+	RecipeEntry(
+		name: 'Brown Sugar Mustard Glazed Ham',
+		difficulty: TechnicalDifficulty.difficult,
+		complexity: RecipeComplexity.complex,
+		prepTimeMins: 15,
+		cookTimeMins: 75,
+		servings: 10,
+		images: [
+			EntryImage(
+				imageLocation: 'https://cafedelites.com/wp-content/uploads/2017/12/Brown-Sugar-Garlic-Ham-406.jpg',
+				imageType: ImageType.fromInternet,
+			),
+			EntryImage(
+				imageLocation: 'https://cafedelites.com/wp-content/uploads/2017/12/HAM-HOW-TO-Image.jpg',
+				imageType: ImageType.fromInternet
+			),
+		]
+	),
 ];
