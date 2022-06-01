@@ -60,6 +60,39 @@ class RecipeSearchProvider with ChangeNotifier {
 		_enabledSearches[searchName] = newVal;
 	}
 
+	Set<Enum>? getEnumSearch(String searchName) {
+		switch (searchName) {
+			case 'complexity':
+				return (_enabledSearches['complexity']! && _complexitySearch.isNotEmpty) ? _complexitySearch : null;
+			case 'difficulty':
+				return (_enabledSearches['difficulty']! && _difficultySearch.isNotEmpty) ? _difficultySearch : null;
+			default:
+				return null;
+		}
+	}
+
+	Map<String, int>? getIntRange(String searchName) {
+		if (! _enabledSearches[searchName]!) return null;
+
+		Map<String, int>? mapToReturn;
+		switch (searchName) {
+			case 'prepTime':
+				mapToReturn = _prepTimeRange;
+				break;
+			case 'cookTime':
+				mapToReturn = _cookTimeRange;
+				break;
+			case 'servings':
+				mapToReturn = _servingRange;
+				break;
+			default:
+				return null;
+		}
+
+		if (mapToReturn['from'] == -1 && mapToReturn['to'] == -1) return null;
+		return mapToReturn;
+	}
+
 	void setEnumSearch(String searchName, List<Enum> inputEnumList) {
 		switch (searchName) {
 			case 'complexity':

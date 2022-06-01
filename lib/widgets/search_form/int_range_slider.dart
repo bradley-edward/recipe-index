@@ -39,6 +39,15 @@ class _IntRangeSliderState extends State<IntRangeSlider> {
 	Widget build(BuildContext context) {
 		final appTheme = Theme.of(context);
 		final recipeSearchProvider = Provider.of<RecipeSearchProvider>(context, listen: false);
+		final currentValues = recipeSearchProvider.getIntRange(widget.searchName);
+		final cvIsNotNull = currentValues != null;
+
+		if (cvIsNotNull) {
+			_intRange = RangeValues(
+				currentValues['from']!.toDouble(),
+				currentValues['to']!.toDouble(),
+			);
+		}
 
 		final startInt = _intRange!.start.round();
 		final endInt = _intRange!.end.round();
@@ -51,7 +60,8 @@ class _IntRangeSliderState extends State<IntRangeSlider> {
 		return ExpansionTile(
 			title: Text(widget.titleStr, style: appTheme.textTheme.titleMedium,),
 			controlAffinity: ListTileControlAffinity.leading,
-			leading: Switch(value: _isEnabled, onChanged: (_) {}),
+			leading: Switch(value: _isEnabled || cvIsNotNull, onChanged: (_) {}),
+			initiallyExpanded: cvIsNotNull,
 			onExpansionChanged: (isExpanded) {
 				recipeSearchProvider.toggleSearch(widget.searchName, isExpanded);
 				setState(() {
