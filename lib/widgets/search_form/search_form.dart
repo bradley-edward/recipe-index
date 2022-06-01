@@ -13,8 +13,10 @@ class SearchForm extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
 		final recipeSearchProvider = Provider.of<RecipeSearchProvider>(context, listen: false);
-		return Column(
-			children: <Widget>[
+		return ExpansionTile(
+			title: const Text('Search Options'),
+			initiallyExpanded: true,
+			children: [
 				Row(
 					crossAxisAlignment: CrossAxisAlignment.start,
 					mainAxisAlignment: MainAxisAlignment.spaceAround,
