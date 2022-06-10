@@ -14,6 +14,7 @@ class DBHelper {
 			onCreate: (db, version) async {
 				await db.execute('CREATE TABLE recipes(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT, complexity INTEGER, difficulty INTEGER, prepTime INTEGER, cookingTime INTEGER, servings INTEGER)');
 				await db.execute('CREATE TABLE images(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, listIndex INTEGER, imageType INTEGER, imageLocation TEXT, ownerId INTEGER NOT NULL, FOREIGN KEY(ownerId) REFERENCES recipes(id))');
+				await db.execute('CREATE TABLE tags(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT)');
 			},
 			version: 1,
 		);

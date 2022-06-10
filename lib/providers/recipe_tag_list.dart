@@ -1,0 +1,86 @@
+import 'package:flutter/material.dart';
+
+import '../models/recipe_tag.dart';
+import '../helpers/db_helper.dart';
+
+class RecipeTagList with ChangeNotifier {
+	List<RecipeTag> _tags = [];
+
+	List<RecipeTag> get tagList {
+		return [..._tags];
+	}
+
+	Future<void> addTag(RecipeTag tag) async {
+		final tagId = await DBHelper.insert('tags', {
+			'name': tag.name,
+		});
+		final newTag = RecipeTag(
+			id: tagId,
+			name: tag.name,
+		);
+
+		_tags.add(newTag);
+		notifyListeners();
+	}
+
+	Future<void> updateTag(int id, RecipeTag newTag) async {
+		final tagIndex = _tags.indexWhere((item) => item.id == id);
+		if (tagIndex == -1) {
+			return;
+		}
+
+		_tags[tagIndex] = newTag;
+		notifyListeners();
+
+		await DBHelper.update('tags', {
+			'id': newTag.id!,
+			'name': newTag.name,
+		});
+	}
+
+	Future<void> deleteTag(int id) async {
+		final tagIndex = _tags.indexWhere((item) => item.id == id);
+		if (tagIndex == -1) {
+			return;
+		}
+
+		final tagToDelete = _tags.removeAt(tagIndex);
+		notifyListeners();
+
+		await DBHelper.deleteById('tags', tagToDelete.id!);
+	}
+
+	Future<bool> fetchAndSetTags() async {
+		final tagList = await DBHelper.getData('tags');
+
+		_tags = tagList.map((tagItem) => RecipeTag(
+			id: tagItem['id'],
+			name: tagItem['name'],
+		)).toList();
+
+		notifyListeners();
+		return true;
+	}
+
+	Future<void> populateWithDummyData() async {
+		final dummyData = [
+			'Chicken',
+			'Beef',
+			'Carrot',
+			'Fish',
+			'Cheese',
+			'Apple',
+			'Ham',
+			'Pork',
+			'Vegan',
+			'Vegetarian',
+			'Milk',
+			'Banana',
+			'Bread'
+		];
+
+		for (final tagName in dummyData) {
+			await addTag(RecipeTag(name: tagName));
+		}
+	}
+}
