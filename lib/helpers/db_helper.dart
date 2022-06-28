@@ -13,8 +13,9 @@ class DBHelper {
 			path.join(dbPath, 'collection_indexer.db'),
 			onCreate: (db, version) async {
 				await db.execute('CREATE TABLE recipes(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT, complexity INTEGER, difficulty INTEGER, prepTime INTEGER, cookingTime INTEGER, servings INTEGER)');
-				await db.execute('CREATE TABLE images(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, listIndex INTEGER, imageType INTEGER, imageLocation TEXT, ownerId INTEGER NOT NULL, FOREIGN KEY(ownerId) REFERENCES recipes(id))');
+				await db.execute('CREATE TABLE images(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, listIndex INTEGER, imageType INTEGER, imageLocation TEXT, ownerId INTEGER NOT NULL, CONSTRAINT fk_recipes FOREIGN KEY(ownerId) REFERENCES recipes(id))');
 				await db.execute('CREATE TABLE tags(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT)');
+				await db.execute('CREATE TABLE mn_recipes_tags(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, recipeId INTEGER NOT NULL, tagId INTEGER NOT NULL, CONSTRAINT fk_recipes FOREIGN KEY (recipeId) REFERENCES recipes(id) ON DELETE CASCADE, CONSTRAINT fk_tags FOREIGN KEY (tagId) REFERENCES tags(id) ON DELETE CASCADE)');
 			},
 			version: 1,
 		);
