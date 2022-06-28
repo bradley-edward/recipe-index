@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../widgets/main_drawer.dart';
+import '../widgets/tags_edit/tags_edit_scaffold.dart';
+import '../providers/recipe_tag_list.dart';
 
 class TagsEditScreen extends StatelessWidget {
 	const TagsEditScreen({ Key? key }) : super(key: key);
@@ -9,14 +11,9 @@ class TagsEditScreen extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
-		return Scaffold(
-			appBar: AppBar(
-				title: const Text('Search')
-			),
-			drawer: MainDrawer(),
-			body: const Center(
-				child: Text('The screen to edit the tags is here.'),
-			),
+		return ChangeNotifierProvider(
+			create: (context) => RecipeTagList(),
+			child: const TagsEditScaffold(),
 		);
 	}
 }
