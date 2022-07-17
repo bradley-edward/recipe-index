@@ -85,14 +85,24 @@ class _TagsEditScaffoldState extends State<TagsEditScaffold> {
 				: null,
 				title: const Text('Tags Edit'),
 				actions: [
-					if (_selectedTags.length == 2) IconButton(
-						onPressed: () {},
-						icon: const Icon( Icons.merge ),
+					if (_isInEditMode) ...[
+						if (_selectedTags.length == 2) IconButton(
+							onPressed: () {},
+							icon: const Icon( Icons.merge ),
+						),
+						if (_selectedTags.isNotEmpty) IconButton(
+							onPressed: () {},
+							icon: const Icon(Icons.delete),
+						),
+					],
+					if (! _isInEditMode) IconButton(
+						onPressed: () {
+							setState(() {
+								_isInEditMode = true;
+							});
+						},
+						icon: const Icon(Icons.edit),
 					),
-					if (_selectedTags.isNotEmpty) IconButton(
-						onPressed: () {},
-						icon: const Icon(Icons.delete),
-					)
 				],
 			),
 			drawer: _isInEditMode ? null : MainDrawer(),
