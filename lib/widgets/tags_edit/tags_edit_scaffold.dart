@@ -75,10 +75,14 @@ class _TagsEditScaffoldState extends State<TagsEditScaffold> {
 				);
 			}
 		);
+		
+		if (confirmNewTag == null) return;
 
-		if (confirmNewTag == null) {
-			return;
-		}
+		final String strippedNewTag = confirmNewTag.trim();
+
+		if (strippedNewTag.isEmpty) return;
+
+		await Provider.of<RecipeTagList>(context, listen: false).addTag(RecipeTag(name: strippedNewTag));
 	}
 	
 	@override
