@@ -16,6 +16,10 @@ class RecipeTagList with ChangeNotifier {
 		return _tags[entryIdx];
 	}
 
+	bool containsTagWithName(String inputName) {
+		return _tags.indexWhere((tag) => tag.name == inputName) != -1;
+	}
+
 	Future<void> addTag(RecipeTag tag) async {
 		final tagId = await DBHelper.insert('tags', {
 			'name': tag.name,

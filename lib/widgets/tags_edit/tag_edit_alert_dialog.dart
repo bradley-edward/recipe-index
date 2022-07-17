@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../providers/recipe_tag_list.dart';
 import '../../models/recipe_tag.dart';
 
-class TagEditAlertDialog extends StatelessWidget {
+class TagEditAlertDialog extends StatefulWidget {
 	final RecipeTag? tagToEdit;
 
 	const TagEditAlertDialog({
@@ -11,17 +13,40 @@ class TagEditAlertDialog extends StatelessWidget {
 	}) : super(key: key);
 
 	@override
-	Widget build(BuildContext context) {
-		final tagController = TextEditingController(text: tagToEdit != null ? tagToEdit!.name : null);
+	State<TagEditAlertDialog> createState() => _TagEditAlertDialogState();
+}
 
-		final titleText = tagToEdit != null ? "Edit Tag '${tagToEdit!.name}'" : 'Add New Tag';
-		final actionButtonText = tagToEdit != null ? 'Save' : 'Add';
+class _TagEditAlertDialogState extends State<TagEditAlertDialog> {
+	final _form = GlobalKey<FormState>();
+	String? _tagInput = '';
+
+	@override
+	Widget build(BuildContext context) {
+		final titleText = widget.tagToEdit != null ? "Edit Tag '${widget.tagToEdit!.name}'" : 'Add New Tag';
+		final actionButtonText = widget.tagToEdit != null ? 'Save' : 'Add';
 
 		return AlertDialog(
 			title: Text(titleText),
-			content: Center(
-				child: TextField(
-					controller: tagController,
+			content: Form(
+				key: _form,
+				child: Center(
+					child: TextFormField(
+						initialValue: widget.tagToEdit != null ? widget.tagToEdit!.name : null,
+						validator: (tagName) {
+							if (tagName == null) return 'Please input a string.';
+							if (tagName.isEmpty) return 'Please input a string.';
+							final String strippedTagName = tagName.trim();
+							if (strippedTagName.isEmpty) return 'Please input a string that is not pure whitespace.';
+
+							final value = Provider.of<RecipeTagList>(context, listen: false).containsTagWithName(strippedTagName);
+							if (value) return 'That tag already exists.';
+
+							return null;
+						},
+						onSaved: (newValue) {
+							_tagInput = newValue;
+						},
+					),
 				),
 			),
 			actions: <Widget>[
@@ -33,7 +58,19 @@ class TagEditAlertDialog extends StatelessWidget {
 				),
 				TextButton(
 					onPressed: () {
-						Navigator.of(context).pop(tagController.text);
+						var currentFormState = _form.currentState;
+						if (currentFormState == null) {
+							return;
+						}
+
+						final isValid = currentFormState.validate();
+						if (!isValid) {
+							return;
+						}
+
+						currentFormState.save();
+
+						Navigator.of(context).pop(_tagInput);
 					},
 					child: Text(actionButtonText),
 				),
