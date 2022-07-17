@@ -10,6 +10,12 @@ class RecipeTagList with ChangeNotifier {
 		return [..._tags];
 	}
 
+	RecipeTag? findById(int id) {
+		final entryIdx = _tags.indexWhere((entry) => entry.id == id);
+		if (entryIdx == -1) return null;
+		return _tags[entryIdx];
+	}
+
 	Future<void> addTag(RecipeTag tag) async {
 		final tagId = await DBHelper.insert('tags', {
 			'name': tag.name,

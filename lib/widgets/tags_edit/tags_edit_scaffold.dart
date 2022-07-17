@@ -50,9 +50,7 @@ class _TagsEditScaffoldState extends State<TagsEditScaffold> {
 		final String? confirmNewTag = await showDialog(
 			context: context,
 			builder: (BuildContext ctx) {
-				final newTagController = TextEditingController();
-
-				return TagEditAlertDialog(tagController: newTagController,);
+				return const TagEditAlertDialog();
 			}
 		);
 		
