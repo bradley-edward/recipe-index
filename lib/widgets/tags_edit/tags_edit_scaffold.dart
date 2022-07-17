@@ -5,6 +5,7 @@ import '../main_drawer.dart';
 import '../../models/recipe_tag.dart';
 import '../../providers/recipe_tag_list.dart';
 import './display_tag_list.dart';
+import './tag_edit_alert_dialog.dart';
 
 class TagsEditScaffold extends StatefulWidget {
 	const TagsEditScaffold({ Key? key }) : super(key: key);
@@ -51,28 +52,7 @@ class _TagsEditScaffoldState extends State<TagsEditScaffold> {
 			builder: (BuildContext ctx) {
 				final newTagController = TextEditingController();
 
-				return AlertDialog(
-					title: const Text('Add New Tag'),
-					content: Center(
-						child: TextField(
-							controller: newTagController,
-						),
-					),
-					actions: <Widget>[
-						TextButton(
-							onPressed: () {
-								Navigator.of(context).pop(null);
-							},
-							child: const Text('Cancel'),
-						),
-						TextButton(
-							onPressed: () {
-								Navigator.of(context).pop(newTagController.text);
-							},
-							child: const Text('Add'),
-						),
-					],
-				);
+				return TagEditAlertDialog(tagController: newTagController,);
 			}
 		);
 		
