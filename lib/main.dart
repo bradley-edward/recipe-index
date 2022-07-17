@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import './providers/recipe_collection.dart';
+import '../providers/recipe_tag_list.dart';
+
 import './screens/recipe_list_screen.dart';
 import './screens/recipe_details_screen.dart';
 import './screens/search_screen.dart';
@@ -17,8 +19,11 @@ class MyApp extends StatelessWidget {
 	// This widget is the root of your application.
 	@override
 	Widget build(BuildContext context) {
-		return ChangeNotifierProvider(
-			create: (context) => RecipeCollection(),
+		return MultiProvider(
+			providers: [
+				ChangeNotifierProvider(create: (context) => RecipeCollection(),),
+				ChangeNotifierProvider(create: (context) => RecipeTagList()),
+			],
 			child: MaterialApp(
 				title: 'Flutter Demo',
 				theme: ThemeData(
