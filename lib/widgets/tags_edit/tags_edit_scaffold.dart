@@ -83,7 +83,17 @@ class _TagsEditScaffoldState extends State<TagsEditScaffold> {
 					});
 				}, icon: const Icon(Icons.arrow_back))
 				: null,
-				title: const Text('Tags Edit')
+				title: const Text('Tags Edit'),
+				actions: [
+					if (_selectedTags.length == 2) IconButton(
+						onPressed: () {},
+						icon: const Icon( Icons.merge ),
+					),
+					if (_selectedTags.isNotEmpty) IconButton(
+						onPressed: () {},
+						icon: const Icon(Icons.delete),
+					)
+				],
 			),
 			drawer: _isInEditMode ? null : MainDrawer(),
 			body: FutureBuilder<Object>(
