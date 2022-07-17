@@ -21,7 +21,7 @@ class DisplayTagList extends StatelessWidget {
 		Key? key
 	}) : super(key: key);
 
-	void _editTagAlertDialog(BuildContext context, RecipeTag tagToEdit) async {
+	Future<void> _editTagAlertDialog(BuildContext context, RecipeTag tagToEdit) async {
 		final String? tagNewName = await showDialog(
 			context: context,
 			builder: (BuildContext ctx) {

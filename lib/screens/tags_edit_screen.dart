@@ -48,7 +48,7 @@ class _TagsEditScreenState extends State<TagsEditScreen> {
 		});
 	}
 
-	void _addNewTagAlertDialog() async {
+	Future<void> _addNewTagAlertDialog() async {
 		final String? confirmNewTag = await showDialog(
 			context: context,
 			builder: (BuildContext ctx) {
