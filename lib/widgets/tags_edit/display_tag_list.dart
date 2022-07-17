@@ -38,36 +38,56 @@ class DisplayTagList extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
-		return ListView.builder(
-			itemCount: tagList.length,
-			itemBuilder: (ctx, index) {
-				final currTag = tagList[index];
-				return ListTile(
-					title: Text(currTag.name),
-					trailing: isInEditMode
-					? IconButton(
-						onPressed: () {
-							selectTagFn(currTag.id!);
-						},
-						icon: selectedTags.contains(currTag.id!)
-						? const Icon(Icons.check_circle)
-						: const Icon(Icons.circle_outlined),
-					)
-					: null,
-					onLongPress: () {
-						if (! isInEditMode) {
-							longPressSelectTagFn(currTag.id!);
-						}
-					},
-					onTap: () {
-						if (isInEditMode) {
-							selectTagFn(currTag.id!);
-						} else {
-							_editTagAlertDialog(context, currTag);
-						}
-					},
-				);
-			}
+		final appTheme = Theme.of(context);
+
+		return SingleChildScrollView(
+			child: Padding(
+				padding: const EdgeInsets.all(8.0),
+				child: Wrap(
+					spacing: 6.0,
+					children: tagList.map((currTag) {
+						final tagId = currTag.id!;
+						final isSelected = isInEditMode && selectedTags.contains(tagId);
+
+						final chipColor = isSelected
+						? appTheme.primaryColor
+						: const Color.fromARGB(255, 220, 220, 220);
+
+						final textColor = isSelected
+						? Colors.white
+						: Colors.black;
+
+						return GestureDetector(
+							onTap: () {
+								if (isInEditMode) {
+									selectTagFn(tagId);
+								} else {
+									_editTagAlertDialog(context, currTag);
+								}
+							},
+							onLongPress: () {
+								longPressSelectTagFn(tagId);
+							},
+							child: Chip(
+								avatar: CircleAvatar(
+									child: Text(
+										currTag.name.substring(0,2),
+										style: const TextStyle(
+											fontSize: 13,
+										),
+									),
+									foregroundColor: textColor,
+								),
+								label: Text(currTag.name),
+								backgroundColor: chipColor,
+								labelStyle: TextStyle(
+									color: textColor
+								),
+							),
+						);
+					}).toList(),
+				),
+			),
 		);
 	}
 }
