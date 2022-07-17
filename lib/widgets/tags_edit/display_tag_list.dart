@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../providers/recipe_tag_list.dart';
 import '../../models/recipe_tag.dart';
+import './tag_edit_alert_dialog.dart';
 
 class DisplayTagList extends StatelessWidget {
 	final List<RecipeTag> tagList;
@@ -17,6 +20,21 @@ class DisplayTagList extends StatelessWidget {
 		required this.selectedTags,
 		Key? key
 	}) : super(key: key);
+
+	void _editTagAlertDialog(BuildContext context, RecipeTag tagToEdit) async {
+		final String? tagNewName = await showDialog(
+			context: context,
+			builder: (BuildContext ctx) {
+				return TagEditAlertDialog(tagToEdit: tagToEdit,);
+			}
+		);
+
+		if (tagNewName == null) return;
+		final String strippedNewName = tagNewName.trim();
+		if (strippedNewName.isEmpty) return;
+
+		await Provider.of<RecipeTagList>(context, listen: false).updateTag(tagToEdit.id!, strippedNewName);
+	}
 
 	@override
 	Widget build(BuildContext context) {
@@ -44,6 +62,8 @@ class DisplayTagList extends StatelessWidget {
 					onTap: () {
 						if (isInEditMode) {
 							selectTagFn(currTag.id!);
+						} else {
+							_editTagAlertDialog(context, currTag);
 						}
 					},
 				);

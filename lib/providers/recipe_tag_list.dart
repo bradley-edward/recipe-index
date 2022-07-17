@@ -29,18 +29,20 @@ class RecipeTagList with ChangeNotifier {
 		notifyListeners();
 	}
 
-	Future<void> updateTag(int id, RecipeTag newTag) async {
+	Future<void> updateTag(int id, String newName) async {
 		final tagIndex = _tags.indexWhere((item) => item.id == id);
 		if (tagIndex == -1) {
 			return;
 		}
 
+		final newTag = RecipeTag(id: id, name: newName);
+
 		_tags[tagIndex] = newTag;
 		notifyListeners();
 
 		await DBHelper.update('tags', {
-			'id': newTag.id!,
-			'name': newTag.name,
+			'id': id,
+			'name': newName,
 		});
 	}
 
