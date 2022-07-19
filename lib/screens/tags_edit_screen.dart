@@ -21,6 +21,7 @@ class _TagsEditScreenState extends State<TagsEditScreen> {
 	var _isInit = false;
 	var _isInEditMode = false;
 	final Set<int> _selectedTags = {};
+	final _searchTEC = TextEditingController();
 
 	Future<Object>? _obtainTagsFuture() {
 		return Provider.of<RecipeTagList>(context).fetchAndSetTags();
@@ -122,22 +123,49 @@ class _TagsEditScreenState extends State<TagsEditScreen> {
 									child: Text('Got no Tags yet; start adding some!'),
 								),
 								builder: (ctx, tagCollection, ch) {
-									final List<RecipeTag> fetchedTags = tagCollection.tagList;
+									final searchString = _searchTEC.text;
+									final List<RecipeTag> fetchedTags = searchString.isNotEmpty ? tagCollection.search(searchString) : tagCollection.tagList;
 									final tagsCount = fetchedTags.length;
 
-									if (tagsCount <= 0) {
-										return ch!;
-									}
+									if (tagsCount <= 0 && searchString.isEmpty) return ch!;
 
 									return Container(
 										width: double.infinity,
 										height: 500,
-										child: DisplayTagList(
-											tagList: fetchedTags,
-											isInEditMode: _isInEditMode,
-											selectTagFn: _selectTag,
-											longPressSelectTagFn: _longPressSelectTag,
-											selectedTags: _selectedTags,
+										padding: const EdgeInsets.all(5),
+										child: Column(
+											children: <Widget>[
+												Container(
+													width: 320,
+													child: Row(
+														crossAxisAlignment: CrossAxisAlignment.end,
+														children: [
+															Expanded(
+																child: TextField(
+																	controller: _searchTEC,
+																),
+															),
+															const SizedBox(width: 20),
+															ElevatedButton.icon(
+																label: const Text('Search'),
+																onPressed: () {
+																	setState(() {});
+																},
+																icon: const Icon(Icons.search),
+															),
+														],
+													),
+												),
+												const SizedBox(height: 5),
+												if (tagsCount <= 0) const Text('No tags match your search.'),
+												if (tagsCount > 0) DisplayTagList(
+													tagList: fetchedTags,
+													isInEditMode: _isInEditMode,
+													selectTagFn: _selectTag,
+													longPressSelectTagFn: _longPressSelectTag,
+													selectedTags: _selectedTags,
+												),
+											],
 										),
 									);
 								}

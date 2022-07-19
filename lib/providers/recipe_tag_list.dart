@@ -16,6 +16,11 @@ class RecipeTagList with ChangeNotifier {
 		return _tags[entryIdx];
 	}
 
+	List<RecipeTag> search(String inputSearch) {
+		final searchRegex = RegExp(RegExp.escape(inputSearch), caseSensitive: false);
+		return _tags.where((tagItem) => searchRegex.hasMatch(tagItem.name)).toList();
+	}
+
 	bool containsTagWithName(String inputName) {
 		return _tags.indexWhere((tag) => tag.name == inputName) != -1;
 	}
