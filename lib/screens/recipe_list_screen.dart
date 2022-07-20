@@ -20,7 +20,7 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 		return Provider.of<RecipeCollection>(context).fetchAndSetRecipes();
 	}
 
-	var _isInit = false;
+	var _isInit = true;
 	var _isInEditMode = false;
 	final Set<int> _selectedEntries = {};
 
@@ -37,9 +37,9 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 	@override
 	void didChangeDependencies() {
 		super.didChangeDependencies();
-		if (! _isInit) {
+		if (_isInit) {
 			_recipesFuture = _obtainRecipesFuture();
-			_isInit = true;
+			_isInit = false;
 		}
 	}
 

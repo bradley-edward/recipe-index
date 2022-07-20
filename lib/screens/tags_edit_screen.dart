@@ -18,7 +18,7 @@ class TagsEditScreen extends StatefulWidget {
 
 class _TagsEditScreenState extends State<TagsEditScreen> {
 	Future<Object>? _tagsFuture;
-	var _isInit = false;
+	var _isInit = true;
 	var _isInEditMode = false;
 	final Set<int> _selectedTags = {};
 	final _searchTEC = TextEditingController();
@@ -69,9 +69,9 @@ class _TagsEditScreenState extends State<TagsEditScreen> {
 	@override
 	void didChangeDependencies() {
 		super.didChangeDependencies();
-		if (! _isInit) {
+		if (_isInit) {
 			_tagsFuture = _obtainTagsFuture();
-			_isInit = true;
+			_isInit = false;
 		}
 	}
 
