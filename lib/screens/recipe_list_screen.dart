@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../models/recipe_entry.dart';
 import '../providers/recipe_collection.dart';
+import '../providers/recipe_tag_list.dart';
 import '../widgets/collection_list.dart';
 import '../widgets/main_drawer.dart';
 import './search_screen.dart';
@@ -17,7 +18,11 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 	Future<Object>? _recipesFuture;
 
 	Future<Object>? _obtainRecipesFuture() {
-		return Provider.of<RecipeCollection>(context).fetchAndSetRecipes();
+		final futures = <Future>[
+			Provider.of<RecipeCollection>(context).fetchAndSetRecipes(),
+			Provider.of<RecipeTagList>(context).fetchAndSetTags()
+		];
+		return Future.wait(futures);
 	}
 
 	var _isInit = true;
