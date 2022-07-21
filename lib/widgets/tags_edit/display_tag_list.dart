@@ -51,7 +51,7 @@ class DisplayTagList extends StatelessWidget {
 
 						final chipColor = isSelected
 						? appTheme.primaryColor
-						: const Color.fromARGB(255, 220, 220, 220);
+						: Colors.white;
 
 						final textColor = isSelected
 						? Colors.white
@@ -80,6 +80,7 @@ class DisplayTagList extends StatelessWidget {
 								),
 								label: Text(currTag.name),
 								backgroundColor: chipColor,
+								elevation: 2,
 								labelStyle: TextStyle(
 									color: textColor
 								),
