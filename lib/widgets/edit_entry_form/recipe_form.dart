@@ -49,7 +49,35 @@ class _RecipeFormState extends State<RecipeForm> {
 	var _isLoading = false;
 
 	void tagSelectionUpdateHandler(Set<int> selectedTags) {
-		_editedEntry.tagIds = selectedTags;
+		_editedEntry = RecipeEntry(
+			id: _editedEntry.id,
+			name: _editedEntry.name,
+			complexity: _editedEntry.complexity,
+			difficulty: _editedEntry.difficulty,
+			prepTimeMins: _editedEntry.prepTimeMins,
+			cookTimeMins: _editedEntry.cookTimeMins,
+			servings: _editedEntry.servings,
+			images: _editedEntry.images,
+			tagIds: selectedTags,
+		);
+	}
+
+	void imageListUpdateHandler(List<EntryImage> newImagesList, [Set<int>? deletedImageIds]) {
+		_editedEntry = RecipeEntry(
+			id: _editedEntry.id,
+			name: _editedEntry.name,
+			complexity: _editedEntry.complexity,
+			difficulty: _editedEntry.difficulty,
+			prepTimeMins: _editedEntry.prepTimeMins,
+			cookTimeMins: _editedEntry.cookTimeMins,
+			servings: _editedEntry.servings,
+			images: newImagesList,
+			tagIds: _editedEntry.tagIds,
+		);
+
+		if (deletedImageIds != null) {
+			_imagesToDelete = deletedImageIds;
+		}
 	}
 	
 	@override
@@ -66,15 +94,12 @@ class _RecipeFormState extends State<RecipeForm> {
 					prepTimeMins: fetchedEntry.prepTimeMins,
 					cookTimeMins: fetchedEntry.cookTimeMins,
 					servings: fetchedEntry.servings,
-					images: [],
-					tagIds: <int>{},
-				);
-				for (final image in fetchedEntry.images) {
-					_editedEntry.images.add(EntryImage(
+					images: fetchedEntry.images.map((image) => EntryImage(
 						imageLocation: image.imageLocation,
 						imageType: image.imageType,
-					));
-				}
+					)).toList(),
+					tagIds: <int>{},
+				);
 			} else if (widget.formMode == 'Edit') {
 				_editedEntry = fetchedEntry;
 			}
@@ -364,12 +389,7 @@ class _RecipeFormState extends State<RecipeForm> {
 				const SizedBox(height: 25,),
 				ImageListEdit(
 					initialList: _initValues['images'],
-					onUpdateList: (List<EntryImage> newImagesList, [Set<int>? deletedImageIds]) {
-						_editedEntry.images = newImagesList;
-						if (deletedImageIds != null) {
-							_imagesToDelete = deletedImageIds;
-						}
-					}
+					onUpdateList: imageListUpdateHandler,
 				),
 				const SizedBox(height: 25,),
 				ElevatedButton.icon(
