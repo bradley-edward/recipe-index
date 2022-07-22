@@ -20,7 +20,8 @@ final dummyData = <RecipeEntry>[
 				imageLocation: 'https://www.recipetineats.com/wp-content/uploads/2018/11/Brown-Sugar-Roast-carrots.jpg',
 				imageType: ImageType.fromInternet,
 			),
-		]
+		],
+		tagIds: <int>{},
 	),
 	RecipeEntry(
 		name: 'Sweetcorn Soup',
@@ -38,7 +39,8 @@ final dummyData = <RecipeEntry>[
 				imageLocation: 'https://meaningfuleats.com/wp-content/uploads/2017/07/sweet-corn-soup.jpg',
 				imageType: ImageType.fromInternet
 			),
-		]
+		],
+		tagIds: <int>{},
 	),
 	RecipeEntry(
 		name: 'Soy-Balsamic Glazed Sea Scallops',
@@ -56,7 +58,8 @@ final dummyData = <RecipeEntry>[
 				imageLocation: 'https://withsaltandwit.com/wp-content/uploads/2014/11/18.jpg',
 				imageType: ImageType.fromInternet
 			),
-		]
+		],
+		tagIds: <int>{},
 	),
 	RecipeEntry(
 		name: 'Philly Cheesesteak',
@@ -74,7 +77,8 @@ final dummyData = <RecipeEntry>[
 				imageLocation: 'https://www.spendwithpennies.com/wp-content/uploads/2020/02/Philly-Cheesesteak-SWP-9.jpg',
 				imageType: ImageType.fromInternet
 			),
-		]
+		],
+		tagIds: <int>{},
 	),
 	RecipeEntry(
 		name: 'Brown Sugar Mustard Glazed Ham',
@@ -92,6 +96,7 @@ final dummyData = <RecipeEntry>[
 				imageLocation: 'https://cafedelites.com/wp-content/uploads/2017/12/HAM-HOW-TO-Image.jpg',
 				imageType: ImageType.fromInternet
 			),
-		]
+		],
+		tagIds: <int>{},
 	),
 ];

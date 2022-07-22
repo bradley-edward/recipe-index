@@ -11,6 +11,7 @@ class RecipeEntry {
 	final int cookTimeMins;
 	final int servings;
 	List<EntryImage> images;
+	Set<int> tagIds;
 
 	RecipeEntry({
 		this.id,
@@ -21,6 +22,7 @@ class RecipeEntry {
 		required this.cookTimeMins,
 		required this.servings,
 		required this.images,
+		required this.tagIds,
 	});
 
 	String _getHoursMinutesStr(inputMins) {

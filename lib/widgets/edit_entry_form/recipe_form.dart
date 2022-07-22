@@ -7,6 +7,7 @@ import '../../models/recipe_entry.dart';
 import '../../models/recipe_complexity.dart';
 import '../../models/technical_difficulty.dart';
 import './image_list_edit.dart';
+import './recipe_form_tag_selection.dart';
 
 class RecipeForm extends StatefulWidget {
 	final int? inputId;
@@ -30,6 +31,7 @@ class _RecipeFormState extends State<RecipeForm> {
 		cookTimeMins: 0,
 		servings: 0,
 		images: [],
+		tagIds: <int>{},
 	);
 	var _imagesToDelete = <int>{};
 	var _initValues = <String, dynamic>{
@@ -41,9 +43,14 @@ class _RecipeFormState extends State<RecipeForm> {
 		'prepTime': 0,
 		'cookingTime': 0,
 		'servings': 0,
+		'tagIds': <int>{},
 	};
 
 	var _isLoading = false;
+
+	void tagSelectionUpdateHandler(Set<int> selectedTags) {
+		_editedEntry.tagIds = selectedTags;
+	}
 	
 	@override
 	void initState() {
@@ -60,6 +67,7 @@ class _RecipeFormState extends State<RecipeForm> {
 					cookTimeMins: fetchedEntry.cookTimeMins,
 					servings: fetchedEntry.servings,
 					images: [],
+					tagIds: <int>{},
 				);
 				for (final image in fetchedEntry.images) {
 					_editedEntry.images.add(EntryImage(
@@ -73,6 +81,7 @@ class _RecipeFormState extends State<RecipeForm> {
 			_initValues = {
 				'name': _editedEntry.name,
 				'images': _editedEntry.images,
+				'tagIds': _editedEntry.tagIds,
 				'complexity': _editedEntry.complexity,
 				'difficulty': _editedEntry.difficulty,
 				'prepTime': _editedEntry.prepTimeMins,
@@ -151,6 +160,7 @@ class _RecipeFormState extends State<RecipeForm> {
 										cookTimeMins: _editedEntry.cookTimeMins,
 										servings: _editedEntry.servings,
 										images: _editedEntry.images,
+										tagIds: _editedEntry.tagIds,
 									);
 								},
 							),
@@ -187,6 +197,7 @@ class _RecipeFormState extends State<RecipeForm> {
 													cookTimeMins: _editedEntry.cookTimeMins,
 													servings: _editedEntry.servings,
 													images: _editedEntry.images,
+													tagIds: _editedEntry.tagIds,
 												);
 											},
 										),
@@ -223,6 +234,7 @@ class _RecipeFormState extends State<RecipeForm> {
 													cookTimeMins: _editedEntry.cookTimeMins,
 													servings: _editedEntry.servings,
 													images: _editedEntry.images,
+													tagIds: _editedEntry.tagIds,
 												);
 											},
 										),
@@ -263,6 +275,7 @@ class _RecipeFormState extends State<RecipeForm> {
 													cookTimeMins: _editedEntry.cookTimeMins,
 													servings: _editedEntry.servings,
 													images: _editedEntry.images,
+													tagIds: _editedEntry.tagIds,
 												);
 											},
 										),
@@ -300,6 +313,7 @@ class _RecipeFormState extends State<RecipeForm> {
 													cookTimeMins: int.parse(value!),
 													servings: _editedEntry.servings,
 													images: _editedEntry.images,
+													tagIds: _editedEntry.tagIds,
 												);
 											},
 										),
@@ -337,11 +351,15 @@ class _RecipeFormState extends State<RecipeForm> {
 										cookTimeMins: _editedEntry.cookTimeMins,
 										servings: int.parse(value!),
 										images: _editedEntry.images,
+										tagIds: _editedEntry.tagIds,
 									);
 								},
 							),
 						],
 					),
+				),
+				RecipeFormTagSelection(
+					onTagSelectionUpdate: tagSelectionUpdateHandler,
 				),
 				const SizedBox(height: 25,),
 				ImageListEdit(

@@ -44,6 +44,7 @@ class RecipeCollection with ChangeNotifier {
 			cookTimeMins: entry.cookTimeMins,
 			servings: entry.servings,
 			images: entry.images,
+			tagIds: <int>{},
 		);
 		
 		_entries.add(newEntry);
@@ -185,6 +186,7 @@ class RecipeCollection with ChangeNotifier {
 					imageLocation: image['imageLocation'],
 					imageType: ImageType.values[image['imageType']],
 				)).toList(),
+				tagIds: <int>{},
 			);
 		}).toList();
 		notifyListeners();
