@@ -35,6 +35,18 @@ class RecipeCollection with ChangeNotifier {
 			'cookingTime': entry.cookTimeMins,
 			'servings': entry.servings,
 		});
+
+		if (entry.tagIds.isNotEmpty) {
+			final mnRecipesTagsRecords = entry.tagIds.toList(growable: false).map((tagId) {
+				return {
+					'recipeId': entryId,
+					'tagId': tagId
+				};
+			}).toList(growable: false);
+
+			await DBHelper.insertMany('mn_recipes_tags', mnRecipesTagsRecords);
+		}
+
 		final newEntry = RecipeEntry(
 			id: entryId,
 			name: entry.name,
@@ -44,7 +56,7 @@ class RecipeCollection with ChangeNotifier {
 			cookTimeMins: entry.cookTimeMins,
 			servings: entry.servings,
 			images: entry.images,
-			tagIds: <int>{},
+			tagIds: entry.tagIds,
 		);
 		
 		_entries.add(newEntry);
@@ -165,6 +177,7 @@ class RecipeCollection with ChangeNotifier {
 	Future<bool> fetchAndSetRecipes() async {
 		final dataList = await DBHelper.getData('recipes');
 		final imageList = await DBHelper.getData('images');
+		final mnRecipeTags = await DBHelper.getData('mn_recipes_tags');
 
 		_entries = dataList.map((entry) {
 			final entryImageData = imageList.where(
@@ -172,6 +185,8 @@ class RecipeCollection with ChangeNotifier {
 			).toList()..sort(
 				(a, b) => a['listIndex'] - b['listIndex']
 			);
+
+			final tagsSet = mnRecipeTags.where((e) => e['recipeId'] == entry['id']).map((e) => e['tagId'] as int).toSet();
 
 			return RecipeEntry(
 				id: entry['id'],
@@ -186,7 +201,7 @@ class RecipeCollection with ChangeNotifier {
 					imageLocation: image['imageLocation'],
 					imageType: ImageType.values[image['imageType']],
 				)).toList(),
-				tagIds: <int>{},
+				tagIds: tagsSet,
 			);
 		}).toList();
 		notifyListeners();
