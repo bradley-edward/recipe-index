@@ -17,6 +17,9 @@ class DBHelper {
 				await db.execute('CREATE TABLE tags(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT)');
 				await db.execute('CREATE TABLE mn_recipes_tags(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, recipeId INTEGER NOT NULL, tagId INTEGER NOT NULL, CONSTRAINT fk_recipes FOREIGN KEY (recipeId) REFERENCES recipes(id) ON DELETE CASCADE, CONSTRAINT fk_tags FOREIGN KEY (tagId) REFERENCES tags(id) ON DELETE CASCADE)');
 			},
+			onConfigure: (db) async {
+				await db.execute('PRAGMA foreign_keys = ON');
+			},
 			version: 1,
 		);
 	}
