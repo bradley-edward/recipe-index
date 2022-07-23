@@ -141,7 +141,7 @@ class _RecipeFormState extends State<RecipeForm> {
 
 		if (_editedEntry.id != null) {
 			// Edit existing entry
-			await collectionProvider.updateEntry(_editedEntry.id!, _editedEntry, _imagesToDelete);
+			await collectionProvider.updateEntry(_editedEntry.id!, _editedEntry, _imagesToDelete, _initValues['tagIds']);
 		} else {
 			// Add new entry
 			await collectionProvider.addEntry(_editedEntry);

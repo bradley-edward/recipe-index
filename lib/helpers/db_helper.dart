@@ -78,6 +78,21 @@ class DBHelper {
 		return returnPayload;
 	}
 
+	static Future<bool> batchModifyMNRecipesTags(List<Map<String,int>> insertList, List<Map<String,int>> deleteList,) async {
+		final db = await DBHelper.database();
+		final stmtBatch = db.batch();
+
+		for (final record in insertList) {
+			stmtBatch.insert('mn_recipes_tags', record);
+		}
+
+		for (final record in deleteList) {
+			stmtBatch.delete('mn_recipes_tags', where: '"recipeId" = ? AND "tagId" = ?', whereArgs: [record['recipeId'], record['tagId']]);
+		}
+		await stmtBatch.commit();
+		return true;
+	}
+
 	static Future<List<Map<String, dynamic>>> getData(String table) async {
 		final db = await DBHelper.database();
 		return db.query(table);

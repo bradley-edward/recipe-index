@@ -114,7 +114,23 @@ class RecipeCollection with ChangeNotifier {
 		}
 	}
 
-	Future<void> updateEntry(int id, RecipeEntry newEntry, Set<int> imageIdsToRemove,) async {
+	Future<void> _updateEntryTags(int ownerId, Set<int> newTagSet, Set<int> oldTagSet) async {
+		final tagsToAdd = newTagSet.difference(oldTagSet);
+		final tagsToRemove = oldTagSet.difference(newTagSet);
+
+		final recordsToInsert = tagsToAdd.toList(growable: false).map((tagId) => {
+			'recipeId': ownerId,
+			'tagId': tagId
+		}).toList();
+		final recordsToDelete = tagsToRemove.toList(growable: false).map((tagId) => {
+			'recipeId': ownerId,
+			'tagId': tagId
+		}).toList();
+
+		await DBHelper.batchModifyMNRecipesTags(recordsToInsert, recordsToDelete,);
+	}
+
+	Future<void> updateEntry(int id, RecipeEntry newEntry, Set<int> imageIdsToRemove, Set<int> tagsOldSet,) async {
 		final entryIndex = _entries.indexWhere((entry) => entry.id == id);
 		if (entryIndex == -1) {
 			return;
@@ -134,6 +150,8 @@ class RecipeCollection with ChangeNotifier {
 			'cookingTime': newEntry.cookTimeMins,
 			'servings': newEntry.servings,
 		});
+
+		await _updateEntryTags(newEntry.id!, newEntry.tagIds, tagsOldSet);
 
 		await _updateEntryImages(newEntry.id!, newEntry.images, imageIdsToRemove,);
 	}
