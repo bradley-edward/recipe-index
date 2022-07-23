@@ -10,6 +10,10 @@ class RecipeTagList with ChangeNotifier {
 		return [..._tags];
 	}
 
+	List<RecipeTag> findByIdSet(Set<int> ids) {
+		return _tags.where((tagEntry) => ids.contains(tagEntry.id)).toList();
+	}
+
 	RecipeTag? findById(int id) {
 		final entryIdx = _tags.indexWhere((entry) => entry.id == id);
 		if (entryIdx == -1) return null;

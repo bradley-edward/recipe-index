@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/recipe_collection.dart';
+import '../providers/recipe_tag_list.dart';
 import '../screens/edit_recipe_screen.dart';
 import '../widgets/entry_image_carousel.dart';
+import '../widgets/tags_edit/display_tag_list_readonly.dart';
 import '../models/recipe_complexity.dart';
 import '../models/technical_difficulty.dart';
 
@@ -72,86 +74,99 @@ class RecipeDetailsScreen extends StatelessWidget {
 			? const Center(
 				child: Text('That entry cannot be found!'),
 			)
-			: SingleChildScrollView(
-				child: Column(
-					mainAxisAlignment: MainAxisAlignment.start,
-					children: <Widget>[
-						Container(
-							height: 240,
-							child: entryImageCarousel(entry.images),
-						),
-						const SizedBox(height: 10,),
-						Container(
-							child: Text(
-								entry.name,
-								textAlign: TextAlign.center,
-								style: appTheme.textTheme.titleLarge,
+			: Container(
+				height: 520,
+				child: SingleChildScrollView(
+					child: Column(
+						mainAxisAlignment: MainAxisAlignment.start,
+						children: <Widget>[
+							Container(
+								height: 240,
+								child: entryImageCarousel(entry.images),
 							),
-						),
-						const SizedBox(height: 40,),
-						Row(
-							mainAxisAlignment: MainAxisAlignment.spaceAround,
-							children: [
-								Column(
-									children: [
-										Text(
-											'Complexity',
-											style: appTheme.textTheme.headline6,
-										),
-										Text(complexityStrings[entry.complexity]!),
-									],
+							const SizedBox(height: 10,),
+							Container(
+								child: Text(
+									entry.name,
+									textAlign: TextAlign.center,
+									style: appTheme.textTheme.titleLarge,
 								),
-								Column(
-									children: [
-										Text(
-											'Expertise',
-											style: appTheme.textTheme.headline6,
-										),
-										Text(difficultyStrings[entry.difficulty]!),
-									],
+							),
+							const SizedBox(height: 40,),
+							Row(
+								mainAxisAlignment: MainAxisAlignment.spaceAround,
+								children: [
+									Column(
+										children: [
+											Text(
+												'Complexity',
+												style: appTheme.textTheme.headline6,
+											),
+											Text(complexityStrings[entry.complexity]!),
+										],
+									),
+									Column(
+										children: [
+											Text(
+												'Expertise',
+												style: appTheme.textTheme.headline6,
+											),
+											Text(difficultyStrings[entry.difficulty]!),
+										],
+									),
+								],
+							),
+							const SizedBox(height: 20,),
+							Row(
+								mainAxisAlignment: MainAxisAlignment.spaceAround,
+								children: [
+									Column(
+										children: [
+											Text(
+												'Prep. Time',
+												style: appTheme.textTheme.headline6,
+											),
+											Text(entry.prepTimeHrsMins),
+										],
+									),
+									Column(
+										children: [
+											Text(
+												'Cooking Time',
+												style: appTheme.textTheme.headline6,
+											),
+											Text(entry.cookingTimeHrsMins),
+										],
+									),
+								],
+							),
+							const SizedBox(height: 20,),
+							Row(
+								mainAxisAlignment: MainAxisAlignment.spaceAround,
+								children: [
+									Column(
+										children: [
+											Text(
+												'Servings',
+												style: appTheme.textTheme.headline6,
+											),
+											Text(entry.servings.toString()),
+										],
+									),
+								],
+							),
+							const SizedBox(height: 10,),
+							if (entry.tagIds.isNotEmpty) ...[
+								Text(
+									'Tags',
+									style: appTheme.textTheme.headline6,
+								),
+								DisplayTagListReadonly(
+									tagList: Provider.of<RecipeTagList>(context, listen: false).findByIdSet(entry.tagIds),
 								),
 							],
-						),
-						const SizedBox(height: 20,),
-						Row(
-							mainAxisAlignment: MainAxisAlignment.spaceAround,
-							children: [
-								Column(
-									children: [
-										Text(
-											'Prep. Time',
-											style: appTheme.textTheme.headline6,
-										),
-										Text(entry.prepTimeHrsMins),
-									],
-								),
-								Column(
-									children: [
-										Text(
-											'Cooking Time',
-											style: appTheme.textTheme.headline6,
-										),
-										Text(entry.cookingTimeHrsMins),
-									],
-								),
-							],
-						),
-						const SizedBox(height: 20,),
-						Row(
-							mainAxisAlignment: MainAxisAlignment.spaceAround,
-							children: [
-								Column(
-									children: [
-										Text(
-											'Servings',
-											style: appTheme.textTheme.headline6,
-										),
-										Text(entry.servings.toString()),
-									],
-								),
-							],
-						),
-					],
+						],
+					),
 				),
 			),
 			floatingActionButton: entry == null
