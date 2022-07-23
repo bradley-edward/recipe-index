@@ -6,10 +6,12 @@ import '../tags_edit/display_tag_list.dart';
 
 class RecipeFormTagSelection extends StatefulWidget {
 	final Function onTagSelectionUpdate;
+	final Set<int> initialSelection;
 
 	const RecipeFormTagSelection({
 		Key? key,
 		required this.onTagSelectionUpdate,
+		required this.initialSelection,
 	}) : super(key: key);
 
 	@override
@@ -18,6 +20,22 @@ class RecipeFormTagSelection extends StatefulWidget {
 
 class _RecipeFormTagSelectionState extends State<RecipeFormTagSelection> {
 	final Set<int> _selectedTags = {};
+	
+	@override
+	void initState() {
+		super.initState();
+
+		_selectedTags.addAll(widget.initialSelection);
+	}
+
+	void _resetToInitialSelection() {
+		setState(() {
+			_selectedTags.clear();
+			_selectedTags.addAll(widget.initialSelection);
+		});
+
+		widget.onTagSelectionUpdate(_selectedTags);
+	}
 
 	void _selectTag(int id) {
 		setState(() {
@@ -44,7 +62,7 @@ class _RecipeFormTagSelectionState extends State<RecipeFormTagSelection> {
 		final fetchedTags = Provider.of<RecipeTagList>(context).tagList;
 
 		return Container(
-			height: 240,
+			height: 320,
 			width: double.infinity,
 			decoration: const BoxDecoration(
 				border: Border.symmetric(
@@ -55,12 +73,20 @@ class _RecipeFormTagSelectionState extends State<RecipeFormTagSelection> {
 				),
 				color: Colors.black12,
 			),
-			child: DisplayTagList(
-				tagList: fetchedTags,
-				isInEditMode: true,
-				selectTagFn: _selectTag,
-				longPressSelectTagFn: _longPressSelectTag,
-				selectedTags: _selectedTags
+			child: Column(
+				children: [
+					ElevatedButton(
+						onPressed: _resetToInitialSelection,
+						child: const Text('Reset to Initial Tags'),
+					),
+					DisplayTagList(
+						tagList: fetchedTags,
+						isInEditMode: true,
+						selectTagFn: _selectTag,
+						longPressSelectTagFn: _longPressSelectTag,
+						selectedTags: _selectedTags
+					),
+				],
 			),
 		);
 	}

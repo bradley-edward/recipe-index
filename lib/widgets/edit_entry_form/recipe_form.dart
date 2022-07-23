@@ -98,7 +98,7 @@ class _RecipeFormState extends State<RecipeForm> {
 						imageLocation: image.imageLocation,
 						imageType: image.imageType,
 					)).toList(),
-					tagIds: <int>{},
+					tagIds: fetchedEntry.tagIds,
 				);
 			} else if (widget.formMode == 'Edit') {
 				_editedEntry = fetchedEntry;
@@ -385,6 +385,7 @@ class _RecipeFormState extends State<RecipeForm> {
 				),
 				RecipeFormTagSelection(
 					onTagSelectionUpdate: tagSelectionUpdateHandler,
+					initialSelection: _initValues['tagIds'],
 				),
 				const SizedBox(height: 25,),
 				ImageListEdit(
