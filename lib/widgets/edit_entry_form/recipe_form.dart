@@ -146,9 +146,6 @@ class _RecipeFormState extends State<RecipeForm> {
 			// Add new entry
 			await collectionProvider.addEntry(_editedEntry);
 		}
-		setState(() {
-			_isLoading = false;
-		});
 		Navigator.of(context).pop();
 	}
 
