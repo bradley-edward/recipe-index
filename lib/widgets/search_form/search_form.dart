@@ -6,6 +6,7 @@ import '../../models/recipe_complexity.dart';
 import '../../models/technical_difficulty.dart';
 import './enum_selector.dart';
 import './int_range_slider.dart';
+import './search_form_tag_selection.dart';
 
 class SearchForm extends StatelessWidget {
 	const SearchForm({ Key? key }) : super(key: key);
@@ -84,6 +85,8 @@ class SearchForm extends StatelessWidget {
 						),
 					],
 				),
+				const SizedBox(height: 20,),
+				const SearchFormTagSelection(),
 				ElevatedButton.icon(
 					onPressed: () {
 						recipeSearchProvider.notifySearchResults();

@@ -12,6 +12,7 @@ class RecipeSearchProvider with ChangeNotifier {
 		'prepTime': false,
 		'cookTime': false,
 		'servings': false,
+		'tagIds': false,
 	};
 	final Set<RecipeComplexity> _complexitySearch = {};
 	final Set<TechnicalDifficulty> _difficultySearch = {};
@@ -27,6 +28,7 @@ class RecipeSearchProvider with ChangeNotifier {
 		'from': -1,
 		'to': -1,
 	};
+	final Set<int> _tagIds = {};
 
 	EntrySearchCriteria? get searchPayload {
 		var atLeastOneEnabled = false;
@@ -51,6 +53,10 @@ class RecipeSearchProvider with ChangeNotifier {
 		if (_enabledSearches['servings']!) {
 			atLeastOneEnabled = true;
 			searchPayload.servingsRange = _servingRange;
+		}
+		if (_enabledSearches['tagIds']!) {
+			atLeastOneEnabled = true;
+			searchPayload.tagIdSet = _tagIds;
 		}
 
 		return atLeastOneEnabled ? searchPayload : null;
@@ -93,6 +99,15 @@ class RecipeSearchProvider with ChangeNotifier {
 		return mapToReturn;
 	}
 
+	Set<int>? getTagIdSet() {
+		if (! _enabledSearches['tagIds']!) return null;
+
+		final toReturn = <int>{};
+		toReturn.addAll(_tagIds);
+
+		return toReturn;
+	}
+
 	void setEnumSearch(String searchName, List<Enum> inputEnumList) {
 		switch (searchName) {
 			case 'complexity':
@@ -132,6 +147,11 @@ class RecipeSearchProvider with ChangeNotifier {
 
 		mapToModify['from'] = inputIntRange['from']!;
 		mapToModify['to'] = inputIntRange['to']!;
+	}
+
+	void setTagIdSet(Set<int> inputTagSet) {
+		_tagIds.clear();
+		_tagIds.addAll(inputTagSet);
 	}
 
 	void notifySearchResults() {

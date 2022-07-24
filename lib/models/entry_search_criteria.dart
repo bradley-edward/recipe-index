@@ -8,6 +8,7 @@ class EntrySearchCriteria {
 	Map<String,int>? prepTimeRange;
 	Map<String,int>? cookTimeRange;
 	Map<String,int>? servingsRange;
+	Set<int>? tagIdSet;
 
 	EntrySearchCriteria();
 
@@ -33,6 +34,10 @@ class EntrySearchCriteria {
 		}
 		if (servingsRange != null) {
 			criterionList.add(_isWithinRange(entry.servings, servingsRange!));
+		}
+
+		if (tagIdSet != null) {
+			criterionList.add(tagIdSet!.intersection(entry.tagIds).isNotEmpty);
 		}
 
 		if (criterionList.isEmpty) return false;
