@@ -6,6 +6,7 @@ import '../../providers/recipe_tag_list.dart';
 import '../widgets/main_drawer.dart';
 import '../widgets/tags_edit/display_tag_list.dart';
 import '../widgets/tags_edit/tag_edit_alert_dialog.dart';
+import '../widgets/tags_edit/merge_two_tags_alert_dialog.dart';
 
 class TagsEditScreen extends StatefulWidget {
 	const TagsEditScreen({ Key? key }) : super(key: key);
@@ -49,6 +50,17 @@ class _TagsEditScreenState extends State<TagsEditScreen> {
 		});
 	}
 
+	Future<void> _mergeTwoTagsAlertDialog(BuildContext context, Set<int> twoTagIds) async {
+		final twoTags = Provider.of<RecipeTagList>(context, listen: false).findByIdSet(twoTagIds);
+
+		final String? tagNewName = await showDialog(
+			context: context,
+			builder: (BuildContext ctx) {
+				return MergeTwoTagsAlertDialog(tag1: twoTags[0], tag2: twoTags[1]);
+			}
+		);
+	}
+
 	Future<void> _addNewTagAlertDialog() async {
 		final String? confirmNewTag = await showDialog(
 			context: context,
@@ -90,7 +102,9 @@ class _TagsEditScreenState extends State<TagsEditScreen> {
 				actions: [
 					if (_isInEditMode) ...[
 						if (_selectedTags.length == 2) IconButton(
-							onPressed: () {},
+							onPressed: () {
+								_mergeTwoTagsAlertDialog(context, _selectedTags);
+							},
 							icon: const Icon( Icons.merge ),
 						),
 						if (_selectedTags.isNotEmpty) IconButton(
