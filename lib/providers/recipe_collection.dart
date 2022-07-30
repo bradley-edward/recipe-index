@@ -29,6 +29,7 @@ class RecipeCollection with ChangeNotifier {
 	Future<void> addEntry(RecipeEntry entry) async {
 		final entryId = await DBHelper.insert('recipes', {
 			'name': entry.name,
+			'displayId': entry.displayId,
 			'complexity': entry.complexity!.index,
 			'difficulty': entry.difficulty!.index,
 			'prepTime': entry.prepTimeMins,
@@ -50,6 +51,7 @@ class RecipeCollection with ChangeNotifier {
 		final newEntry = RecipeEntry(
 			id: entryId,
 			name: entry.name,
+			displayId: entry.displayId,
 			complexity: entry.complexity,
 			difficulty: entry.difficulty,
 			prepTimeMins: entry.prepTimeMins,
@@ -144,6 +146,7 @@ class RecipeCollection with ChangeNotifier {
 		await DBHelper.update('recipes', {
 			'id': newEntry.id!,
 			'name': newEntry.name,
+			'displayId': newEntry.displayId,
 			'complexity': newEntry.complexity!.index,
 			'difficulty': newEntry.difficulty!.index,
 			'prepTime': newEntry.prepTimeMins,
@@ -209,6 +212,7 @@ class RecipeCollection with ChangeNotifier {
 			return RecipeEntry(
 				id: entry['id'],
 				name: entry['name'],
+				displayId: entry['displayId'],
 				complexity: RecipeComplexity.values[entry['complexity']],
 				difficulty: TechnicalDifficulty.values[entry['difficulty']],
 				prepTimeMins: entry['prepTime'],

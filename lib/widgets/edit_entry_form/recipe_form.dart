@@ -25,6 +25,7 @@ class _RecipeFormState extends State<RecipeForm> {
 	var _editedEntry = RecipeEntry(
 		id: null,
 		name: '',
+		displayId: '',
 		difficulty: null,
 		complexity: null,
 		prepTimeMins: 0,
@@ -37,6 +38,7 @@ class _RecipeFormState extends State<RecipeForm> {
 	var _initValues = <String, dynamic>{
 		'entryId': '',
 		'name': '',
+		'displayId': '',
 		'images': <EntryImage>[],
 		'difficulty': null,
 		'complexity': null,
@@ -51,6 +53,7 @@ class _RecipeFormState extends State<RecipeForm> {
 	void tagSelectionUpdateHandler(Set<int> selectedTags) {
 		_editedEntry = RecipeEntry(
 			id: _editedEntry.id,
+			displayId: _editedEntry.displayId,
 			name: _editedEntry.name,
 			complexity: _editedEntry.complexity,
 			difficulty: _editedEntry.difficulty,
@@ -65,6 +68,7 @@ class _RecipeFormState extends State<RecipeForm> {
 	void imageListUpdateHandler(List<EntryImage> newImagesList, [Set<int>? deletedImageIds]) {
 		_editedEntry = RecipeEntry(
 			id: _editedEntry.id,
+			displayId: _editedEntry.displayId,
 			name: _editedEntry.name,
 			complexity: _editedEntry.complexity,
 			difficulty: _editedEntry.difficulty,
@@ -89,6 +93,7 @@ class _RecipeFormState extends State<RecipeForm> {
 				_editedEntry = RecipeEntry(
 					id: null,
 					name: fetchedEntry.name,
+					displayId: fetchedEntry.displayId,
 					difficulty: fetchedEntry.difficulty,
 					complexity: fetchedEntry.complexity,
 					prepTimeMins: fetchedEntry.prepTimeMins,
@@ -105,6 +110,7 @@ class _RecipeFormState extends State<RecipeForm> {
 			}
 			_initValues = {
 				'name': _editedEntry.name,
+				'displayId': _editedEntry.displayId,
 				'images': _editedEntry.images,
 				'tagIds': _editedEntry.tagIds,
 				'complexity': _editedEntry.complexity,
@@ -159,32 +165,70 @@ class _RecipeFormState extends State<RecipeForm> {
 					key: _form,
 					child: Column(
 						children: <Widget>[
-							TextFormField(
-								initialValue: _initValues['name'],
-								decoration: const InputDecoration(labelText: 'Entry Name',),
-								textInputAction: TextInputAction.next,
-								validator: (value) {
-									if (value == null) {
-										return 'Please provide a value';
-									}
-									if (value.isEmpty) {
-										return 'Please provide a value';
-									}
-									return null;
-								},
-								onSaved: (value) {
-									_editedEntry = RecipeEntry(
-										id: _editedEntry.id,
-										name: value!,
-										complexity: _editedEntry.complexity,
-										difficulty: _editedEntry.difficulty,
-										prepTimeMins: _editedEntry.prepTimeMins,
-										cookTimeMins: _editedEntry.cookTimeMins,
-										servings: _editedEntry.servings,
-										images: _editedEntry.images,
-										tagIds: _editedEntry.tagIds,
-									);
-								},
+							Row(
+								children: [
+									Expanded(
+										child: TextFormField(
+											initialValue: _initValues['name'],
+											decoration: const InputDecoration(labelText: 'Entry Name',),
+											textInputAction: TextInputAction.next,
+											validator: (value) {
+												if (value == null) {
+													return 'Please provide a value';
+												}
+												if (value.isEmpty) {
+													return 'Please provide a value';
+												}
+												return null;
+											},
+											onSaved: (value) {
+												_editedEntry = RecipeEntry(
+													id: _editedEntry.id,
+													name: value!,
+													displayId: _editedEntry.displayId,
+													complexity: _editedEntry.complexity,
+													difficulty: _editedEntry.difficulty,
+													prepTimeMins: _editedEntry.prepTimeMins,
+													cookTimeMins: _editedEntry.cookTimeMins,
+													servings: _editedEntry.servings,
+													images: _editedEntry.images,
+													tagIds: _editedEntry.tagIds,
+												);
+											},
+										),
+									),
+									const SizedBox(width: 10,),
+									Expanded(
+										child: TextFormField(
+											initialValue: _initValues['displayId'],
+											decoration: const InputDecoration(labelText: 'Entry ID',),
+											textInputAction: TextInputAction.next,
+											validator: (value) {
+												if (value == null) {
+													return 'Please provide a value';
+												}
+												if (value.isEmpty) {
+													return 'Please provide a value';
+												}
+												return null;
+											},
+											onSaved: (value) {
+												_editedEntry = RecipeEntry(
+													id: _editedEntry.id,
+													name: _editedEntry.name,
+													displayId: value!,
+													complexity: _editedEntry.complexity,
+													difficulty: _editedEntry.difficulty,
+													prepTimeMins: _editedEntry.prepTimeMins,
+													cookTimeMins: _editedEntry.cookTimeMins,
+													servings: _editedEntry.servings,
+													images: _editedEntry.images,
+													tagIds: _editedEntry.tagIds,
+												);
+											},
+										),
+									),
+								],
 							),
 							Row(
 								children: [
@@ -213,6 +257,7 @@ class _RecipeFormState extends State<RecipeForm> {
 												_editedEntry = RecipeEntry(
 													id: _editedEntry.id,
 													name: _editedEntry.name,
+													displayId: _editedEntry.displayId,
 													complexity: value!,
 													difficulty: _editedEntry.difficulty,
 													prepTimeMins: _editedEntry.prepTimeMins,
@@ -250,6 +295,7 @@ class _RecipeFormState extends State<RecipeForm> {
 												_editedEntry = RecipeEntry(
 													id: _editedEntry.id,
 													name: _editedEntry.name,
+													displayId: _editedEntry.displayId,
 													complexity: _editedEntry.complexity,
 													difficulty: value!,
 													prepTimeMins: _editedEntry.prepTimeMins,
@@ -291,6 +337,7 @@ class _RecipeFormState extends State<RecipeForm> {
 												_editedEntry = RecipeEntry(
 													id: _editedEntry.id,
 													name: _editedEntry.name,
+													displayId: _editedEntry.displayId,
 													complexity: _editedEntry.complexity,
 													difficulty: _editedEntry.difficulty,
 													prepTimeMins: int.parse(value!),
@@ -329,6 +376,7 @@ class _RecipeFormState extends State<RecipeForm> {
 												_editedEntry = RecipeEntry(
 													id: _editedEntry.id,
 													name: _editedEntry.name,
+													displayId: _editedEntry.displayId,
 													complexity: _editedEntry.complexity,
 													difficulty: _editedEntry.difficulty,
 													prepTimeMins: _editedEntry.prepTimeMins,
@@ -367,6 +415,7 @@ class _RecipeFormState extends State<RecipeForm> {
 									_editedEntry = RecipeEntry(
 										id: _editedEntry.id,
 										name: _editedEntry.name,
+										displayId: _editedEntry.displayId,
 										complexity: _editedEntry.complexity,
 										difficulty: _editedEntry.difficulty,
 										prepTimeMins: _editedEntry.prepTimeMins,

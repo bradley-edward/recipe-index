@@ -5,6 +5,7 @@ import './technical_difficulty.dart';
 class RecipeEntry {
 	int? id;
 	final String name;
+	final String displayId;
 	final RecipeComplexity? complexity;
 	final TechnicalDifficulty? difficulty;
 	final int prepTimeMins;
@@ -16,6 +17,7 @@ class RecipeEntry {
 	RecipeEntry({
 		this.id,
 		required this.name,
+		required this.displayId,
 		required this.difficulty,
 		required this.complexity,
 		required this.prepTimeMins,
@@ -33,10 +35,7 @@ class RecipeEntry {
 	}
 
 	String get idString {
-		if (id == null) {
-			return '#NaN';
-		}
-		return '#${id.toString().padLeft(4,'0')}';
+		return '#$displayId';
 	}
 
 	String get prepTimeHrsMins {

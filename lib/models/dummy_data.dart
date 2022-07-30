@@ -6,6 +6,7 @@ import './entry_image.dart';
 final dummyData = <RecipeEntry>[
 	RecipeEntry(
 		name: 'Glazed Carrots',
+		displayId: '0001',
 		difficulty: TechnicalDifficulty.easy,
 		complexity: RecipeComplexity.moderate,
 		prepTimeMins: 10,
@@ -25,6 +26,7 @@ final dummyData = <RecipeEntry>[
 	),
 	RecipeEntry(
 		name: 'Sweetcorn Soup',
+		displayId: '0002',
 		difficulty: TechnicalDifficulty.easy,
 		complexity: RecipeComplexity.moderate,
 		prepTimeMins: 5,
@@ -44,6 +46,7 @@ final dummyData = <RecipeEntry>[
 	),
 	RecipeEntry(
 		name: 'Soy-Balsamic Glazed Sea Scallops',
+		displayId: '0003',
 		difficulty: TechnicalDifficulty.easy,
 		complexity: RecipeComplexity.moderate,
 		prepTimeMins: 10,
@@ -63,6 +66,7 @@ final dummyData = <RecipeEntry>[
 	),
 	RecipeEntry(
 		name: 'Philly Cheesesteak',
+		displayId: '0004',
 		difficulty: TechnicalDifficulty.difficult,
 		complexity: RecipeComplexity.complex,
 		prepTimeMins: 30,
@@ -82,6 +86,7 @@ final dummyData = <RecipeEntry>[
 	),
 	RecipeEntry(
 		name: 'Brown Sugar Mustard Glazed Ham',
+		displayId: '0005',
 		difficulty: TechnicalDifficulty.difficult,
 		complexity: RecipeComplexity.complex,
 		prepTimeMins: 15,
