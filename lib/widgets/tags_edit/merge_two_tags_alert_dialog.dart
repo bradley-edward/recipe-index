@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/recipe_tag.dart';
 
-class MergeTwoTagsAlertDialog extends StatelessWidget {
+class MergeTwoTagsAlertDialog extends StatefulWidget {
 	final RecipeTag tag1;
 	final RecipeTag tag2;
 
@@ -11,6 +11,13 @@ class MergeTwoTagsAlertDialog extends StatelessWidget {
 		required this.tag2,
 		Key? key
 	}) : super(key: key);
+
+	@override
+	State<MergeTwoTagsAlertDialog> createState() => _MergeTwoTagsAlertDialogState();
+}
+
+class _MergeTwoTagsAlertDialogState extends State<MergeTwoTagsAlertDialog> {
+	bool _mergeDirectionIsRTL = true;
 
 	@override
 	Widget build(BuildContext context) {
@@ -22,16 +29,23 @@ class MergeTwoTagsAlertDialog extends StatelessWidget {
 					Card(
 						child: Padding(
 							padding: const EdgeInsets.all(8.0),
-							child: Text(tag1.name),
+							child: Text(widget.tag1.name),
 						),
 					),
 					Card(
-						child: IconButton(onPressed: () {}, icon: const Icon(Icons.arrow_back)),
+						child: IconButton(
+							onPressed: () {
+								setState(() {
+									_mergeDirectionIsRTL = ! _mergeDirectionIsRTL;
+								});
+							},
+							icon: Icon(_mergeDirectionIsRTL ? Icons.arrow_back : Icons.arrow_forward)
+						),
 					),
 					Card(
 						child: Padding(
 							padding: const EdgeInsets.all(8.0),
-							child: Text(tag2.name),
+							child: Text(widget.tag2.name),
 						),
 					),
 				],
@@ -45,7 +59,7 @@ class MergeTwoTagsAlertDialog extends StatelessWidget {
 				),
 				TextButton(
 					onPressed: () {
-						//Navigator.of(context).pop(tagController.text);
+						Navigator.of(context).pop(_mergeDirectionIsRTL);
 					},
 					child: const Text('Combine'),
 				),

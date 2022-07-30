@@ -51,14 +51,19 @@ class _TagsEditScreenState extends State<TagsEditScreen> {
 	}
 
 	Future<void> _mergeTwoTagsAlertDialog(BuildContext context, Set<int> twoTagIds) async {
-		final twoTags = Provider.of<RecipeTagList>(context, listen: false).findByIdSet(twoTagIds);
+		final tagListProvider = Provider.of<RecipeTagList>(context, listen: false);
+		final twoTags = tagListProvider.findByIdSet(twoTagIds);
 
-		final String? tagNewName = await showDialog(
+		final bool? isMergeRTL = await showDialog(
 			context: context,
 			builder: (BuildContext ctx) {
 				return MergeTwoTagsAlertDialog(tag1: twoTags[0], tag2: twoTags[1]);
 			}
 		);
+
+		if (isMergeRTL == null) return;
+
+		print(isMergeRTL);
 	}
 
 	Future<void> _addNewTagAlertDialog() async {
