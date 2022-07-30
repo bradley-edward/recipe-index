@@ -20,6 +20,7 @@ class RecipeFormTagSelection extends StatefulWidget {
 
 class _RecipeFormTagSelectionState extends State<RecipeFormTagSelection> {
 	final Set<int> _selectedTags = {};
+	final _searchTEC = TextEditingController();
 	
 	@override
 	void initState() {
@@ -59,10 +60,12 @@ class _RecipeFormTagSelectionState extends State<RecipeFormTagSelection> {
 
 	@override
 	Widget build(BuildContext context) {
-		final fetchedTags = Provider.of<RecipeTagList>(context).tagList;
+		final tagListProvider = Provider.of<RecipeTagList>(context);
+		final searchString = _searchTEC.text;
+		final fetchedTags = searchString.isNotEmpty ? tagListProvider.search(searchString) : tagListProvider.tagList;
 
 		return Container(
-			height: 320,
+			height: 400,
 			width: double.infinity,
 			decoration: const BoxDecoration(
 				border: Border.symmetric(
@@ -79,7 +82,31 @@ class _RecipeFormTagSelectionState extends State<RecipeFormTagSelection> {
 						onPressed: _resetToInitialSelection,
 						child: const Text('Reset to Initial Tags'),
 					),
-					DisplayTagList(
+					Container(
+						width: 320,
+						child: Row(
+							crossAxisAlignment: CrossAxisAlignment.end,
+							children: [
+								Expanded(
+									child: TextField(
+										controller: _searchTEC,
+									),
+								),
+								const SizedBox(width: 20),
+								ElevatedButton.icon(
+									label: const Text('Search'),
+									onPressed: () {
+										setState(() {});
+									},
+									icon: const Icon(Icons.search),
+								),
+							],
+						),
+					),
+					if (searchString.isNotEmpty && fetchedTags.isEmpty) const Center(
+						child: Text('No tags match your search.'),
+					),
+					if (fetchedTags.isNotEmpty) DisplayTagList(
 						tagList: fetchedTags,
 						isInEditMode: true,
 						selectTagFn: _selectTag,
