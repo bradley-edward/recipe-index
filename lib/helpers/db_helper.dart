@@ -45,6 +45,22 @@ class DBHelper {
 		await db.update(table, data, where: '"id" = ?', whereArgs: [data['id'],]);
 	}
 
+	static Future<void> mergeTwoTags(int tagIdAbsorber, int tagIdAbsorbed) async {
+		final db = await DBHelper.database();
+		final stmtBatch = db.batch();
+
+		// Replace all instances of the 'absorbed' tag with the 'absorber' tag, in 'mn_recipes_tags' table
+		stmtBatch.update('mn_recipes_tags', {
+			'tagId': tagIdAbsorber,
+		}, where: '"tagId" = ?', whereArgs: [tagIdAbsorbed]);
+
+		// Delete the 'absorbed' tag from 'tags' table
+		stmtBatch.delete('tags', where: '"id" = ?', whereArgs: [tagIdAbsorbed]);
+
+		await stmtBatch.commit();
+		return;
+	}
+
 	static Future<void> deleteById(String table, int id) async {
 		final db = await DBHelper.database();
 		int deletedCount = await db.delete(table, where: '"id" = ?', whereArgs: [id]);

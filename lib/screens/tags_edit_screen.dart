@@ -63,7 +63,7 @@ class _TagsEditScreenState extends State<TagsEditScreen> {
 
 		if (isMergeRTL == null) return;
 
-		print(isMergeRTL);
+		final didMergeWork = tagListProvider.mergeTwoTags(twoTags[0].id!, twoTags[1].id!, isMergeRTL);
 	}
 
 	Future<void> _addNewTagAlertDialog() async {
