@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/recipe_tag.dart';
 import '../../providers/recipe_tag_list.dart';
 import '../tags_edit/display_tag_list.dart';
 
@@ -59,6 +60,18 @@ class _RecipeFormTagSelectionState extends State<RecipeFormTagSelection> {
 		widget.onTagSelectionUpdate(_selectedTags);
 	}
 
+	void _quickAdd(RecipeTagList rtlProvider, TextEditingController tec) async {
+		final newTagName = tec.text;
+
+		if (rtlProvider.search(newTagName).isNotEmpty) return;
+
+		final String strippedNewTag = newTagName.trim();
+
+		if (strippedNewTag.isEmpty) return;
+
+		await rtlProvider.addTag(RecipeTag(name: strippedNewTag));
+	}
+
 	@override
 	Widget build(BuildContext context) {
 		final tagListProvider = Provider.of<RecipeTagList>(context);
@@ -87,6 +100,14 @@ class _RecipeFormTagSelectionState extends State<RecipeFormTagSelection> {
 						child: Row(
 							crossAxisAlignment: CrossAxisAlignment.end,
 							children: [
+								ElevatedButton.icon(
+									label: const Text('Add'),
+									onPressed: () {
+										_quickAdd(tagListProvider, _searchTEC);
+									},
+									icon: const Icon(Icons.add),
+								),
+								const SizedBox(width: 20),
 								Expanded(
 									child: TextField(
 										controller: _searchTEC,
