@@ -7,6 +7,7 @@ import '../widgets/main_drawer.dart';
 import '../widgets/tags_edit/display_tag_list.dart';
 import '../widgets/tags_edit/tag_edit_alert_dialog.dart';
 import '../widgets/tags_edit/merge_two_tags_alert_dialog.dart';
+import '../widgets/tags_edit/delete_tags_alert_dialog.dart';
 
 class TagsEditScreen extends StatefulWidget {
 	const TagsEditScreen({ Key? key }) : super(key: key);
@@ -91,7 +92,24 @@ class _TagsEditScreenState extends State<TagsEditScreen> {
 
 		await Provider.of<RecipeTagList>(context, listen: false).addTag(RecipeTag(name: strippedNewTag));
 	}
-	
+
+	Future<void> _deleteTagsAlertDialog(BuildContext context, Set<int> tagsToDelete) async {
+		final tagListProvider = Provider.of<RecipeTagList>(context, listen: false);
+		final bool? confirmDeleteTags = await showDialog(
+			context: context,
+			builder: (BuildContext ctx) {
+				return DeleteTagsAlertDialog(tagsToDelete: tagListProvider.findByIdSet(tagsToDelete));
+			}
+		);
+		
+		if (confirmDeleteTags == null) return;
+		if (! confirmDeleteTags) return;
+
+		await tagListProvider.deleteMultipleTags(tagsToDelete);
+
+		_selectedTags.clear();
+	}
+
 	@override
 	void didChangeDependencies() {
 		super.didChangeDependencies();
@@ -122,7 +140,9 @@ class _TagsEditScreenState extends State<TagsEditScreen> {
 							icon: const Icon( Icons.merge ),
 						),
 						if (_selectedTags.isNotEmpty) IconButton(
-							onPressed: () {},
+							onPressed: () {
+								_deleteTagsAlertDialog(context, Set.from(_selectedTags));
+							},
 							icon: const Icon(Icons.delete),
 						),
 					],

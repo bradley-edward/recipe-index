@@ -66,6 +66,14 @@ class DBHelper {
 		int deletedCount = await db.delete(table, where: '"id" = ?', whereArgs: [id]);
 	}
 
+	static Future<void> deleteByIdSet(String table, Set<int> idSet) async {
+		final db = await DBHelper.database();
+
+		final placeholderArrStr = List.filled(idSet.length, '?').join(',');
+
+		int deletedCount = await db.delete(table, where: '"id" IN ($placeholderArrStr)', whereArgs: idSet.toList());
+	}
+
 	static Future<void> deleteWhere(String table, String whereStr, List<Object?>? whereArr) async {
 		final db = await DBHelper.database();
 		int deletedCount = await db.delete(table, where: whereStr, whereArgs: whereArr);

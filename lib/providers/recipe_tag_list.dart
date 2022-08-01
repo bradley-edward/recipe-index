@@ -82,6 +82,29 @@ class RecipeTagList with ChangeNotifier {
 		await DBHelper.deleteById('tags', tagToDelete.id!);
 	}
 
+	Future<void> deleteMultipleTags(Set<int> idSet) async {
+		// Make sure all the tags we want to delete are inside the _tags list.
+		final idxsDelete = <int>[];
+		for (final tagId in idSet.toList()) {
+			final tagIdx = _tags.indexWhere((item) => item.id == tagId);
+			if (tagIdx == -1) {
+				return;
+			}
+
+			idxsDelete.add(tagIdx);
+		}
+
+		idxsDelete.sort();
+
+		for (final idx in idxsDelete.reversed) {
+			_tags.removeAt(idx);
+		}
+
+		notifyListeners();
+
+		await DBHelper.deleteByIdSet('tags', idSet);
+	}
+
 	Future<bool> fetchAndSetTags() async {
 		final tagList = await DBHelper.getData('tags');
 
