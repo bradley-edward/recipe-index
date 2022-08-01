@@ -63,7 +63,16 @@ class _TagsEditScreenState extends State<TagsEditScreen> {
 
 		if (isMergeRTL == null) return;
 
-		final didMergeWork = tagListProvider.mergeTwoTags(twoTags[0].id!, twoTags[1].id!, isMergeRTL);
+		var tagIdAbsorber = twoTags[0].id!, tagIdAbsorbed = twoTags[1].id!;
+
+		if (! isMergeRTL) {
+			tagIdAbsorber = twoTags[1].id!;
+			tagIdAbsorbed = twoTags[0].id!;
+		}
+
+		final didMergeWork = tagListProvider.mergeTwoTags(tagIdAbsorber, tagIdAbsorbed);
+
+		_selectedTags.remove(tagIdAbsorbed);
 	}
 
 	Future<void> _addNewTagAlertDialog() async {

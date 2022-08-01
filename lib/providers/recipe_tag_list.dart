@@ -29,15 +29,8 @@ class RecipeTagList with ChangeNotifier {
 		return _tags.indexWhere((tag) => tag.name == inputName) != -1;
 	}
 
-	Future<bool> mergeTwoTags(int tagId1, int tagId2, bool isMergeRTL) async {
+	Future<bool> mergeTwoTags(int tagIdAbsorber, int tagIdAbsorbed) async {
 		// Replace the 'absorbed' tag with the 'absorber' tag, in the MN recipes tags table.
-		var tagIdAbsorber = tagId1, tagIdAbsorbed = tagId2;
-
-		if (! isMergeRTL) {
-			tagIdAbsorber = tagId2;
-			tagIdAbsorbed = tagId1;
-		}
-
 		await DBHelper.mergeTwoTags(tagIdAbsorber, tagIdAbsorbed);
 
 		// Remove the absorbed id tag from the list.
