@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../screens/tags_edit_screen.dart';
-import '../screens/recipe_backup_screen.dart';
+import '../screens/csv_export_import_screen.dart';
 
 class MainDrawer extends StatelessWidget {
 	Widget buildListTile(String title, IconData icon, VoidCallback tapHandler) {
@@ -35,10 +35,10 @@ class MainDrawer extends StatelessWidget {
 					}
 				),
 				buildListTile(
-					'Backup',
+					'CSV Export/Import',
 					Icons.archive,
 					() {
-						appNavigator.pushReplacementNamed(RecipeBackupScreen.routeName);
+						appNavigator.pushReplacementNamed(CsvExportImportScreen.routeName);
 					}
 				),
 				buildListTile(

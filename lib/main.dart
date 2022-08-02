@@ -8,7 +8,7 @@ import './screens/recipe_list_screen.dart';
 import './screens/recipe_details_screen.dart';
 import './screens/search_screen.dart';
 import './screens/edit_recipe_screen.dart';
-import './screens/recipe_backup_screen.dart';
+import './screens/csv_export_import_screen.dart';
 import './screens/tags_edit_screen.dart';
 
 void main() => runApp(const MyApp());
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
 					RecipeDetailsScreen.routeName: (ctx) => RecipeDetailsScreen(),
 					SearchScreen.routeName: (ctx) => SearchScreen(),
 					EditRecipeScreen.routeName: (ctx) => EditRecipeScreen(),
-					RecipeBackupScreen.routeName: (ctx) => RecipeBackupScreen(),
+					CsvExportImportScreen.routeName: (ctx) => const CsvExportImportScreen(),
 					TagsEditScreen.routeName: (ctx) => TagsEditScreen(),
 				},
 			),
