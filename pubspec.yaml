@@ -43,6 +43,7 @@ dependencies:
   path: ^1.8.0
   encrypt: ^5.0.1
   csv: ^5.0.1
+  file_picker: ^5.0.1
 
 dev_dependencies:
   flutter_test:
