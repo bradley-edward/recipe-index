@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/main_drawer.dart';
+import '../helpers/csv_helper.dart';
+
+Future<void> exportDbToCsvFile() async {
+	final didSucceed = await CsvHelper.exportDbToCsv();
+}
 
 class CsvExportImportScreen extends StatelessWidget {
 	static const routeName = '/csv-export-import';
@@ -20,9 +25,9 @@ class CsvExportImportScreen extends StatelessWidget {
 					crossAxisAlignment: CrossAxisAlignment.center,
 					mainAxisAlignment: MainAxisAlignment.center,
 					children: <Widget>[
-						ElevatedButton(
-							onPressed: () {},
-							child: const Text('Export Data to CSV'),
+						const ElevatedButton(
+							onPressed: exportDbToCsvFile,
+							child: Text('Export Data to CSV'),
 						),
 						const SizedBox(height: 20,),
 						ElevatedButton(
