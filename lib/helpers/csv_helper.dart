@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:csv/csv.dart' as csv;
 
 import '../helpers/db_helper.dart';
@@ -21,6 +22,17 @@ class CsvHelper {
 
 		final csvString = const csv.ListToCsvConverter().convert(csvLoL);
 		
+		String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+
+		if (selectedDirectory == null) {
+			return false;
+		}
+
+		final dtNow = DateTime.now();
+
+		final csvFileName = 'recipeTagindexer_DbSave_${(dtNow.millisecondsSinceEpoch / 1000).floor()}.csv';
+		final csvSavePath = '$selectedDirectory/$csvFileName';
+
 		return true;
 	}
 }
