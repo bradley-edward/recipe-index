@@ -1,10 +1,14 @@
-import 'package:file_picker/file_picker.dart';
+import 'dart:io';
+
+import 'package:path_provider/path_provider.dart' as syspaths;
 import 'package:csv/csv.dart' as csv;
 
 import '../helpers/db_helper.dart';
 
 class CsvHelper {
 	static Future<bool> exportDbToCsv() async {
+		final secondsSinceEpoch = (DateTime.now().millisecondsSinceEpoch / 1000).floor();
+
 		final db = await DBHelper.database();
 		// Need to convert our data into lists-of-lists. One per table.
 		final tables = ['recipes', 'tags', 'mn_recipes_tags'];
@@ -21,17 +25,16 @@ class CsvHelper {
 		}
 
 		final csvString = const csv.ListToCsvConverter().convert(csvLoL);
-		
-		String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
 
-		if (selectedDirectory == null) {
+		final csvFileName = 'recipeTagindexer_DbSave_$secondsSinceEpoch.csv';
+
+		try {
+			final appDir = await syspaths.getApplicationDocumentsDirectory();
+			File file = File('${appDir.path}/$csvFileName');
+			await file.writeAsString(csvString);
+		} catch (error) {
 			return false;
 		}
-
-		final dtNow = DateTime.now();
-
-		final csvFileName = 'recipeTagindexer_DbSave_${(dtNow.millisecondsSinceEpoch / 1000).floor()}.csv';
-		final csvSavePath = '$selectedDirectory/$csvFileName';
 
 		return true;
 	}

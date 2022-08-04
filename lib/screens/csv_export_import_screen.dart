@@ -3,8 +3,18 @@ import 'package:flutter/material.dart';
 import '../widgets/main_drawer.dart';
 import '../helpers/csv_helper.dart';
 
-Future<void> exportDbToCsvFile() async {
+Future<void> exportDbToCsvFile(BuildContext ctx) async {
 	final didSucceed = await CsvHelper.exportDbToCsv();
+
+	final msnger = ScaffoldMessenger.of(ctx);
+
+	msnger.hideCurrentSnackBar();
+	ScaffoldMessenger.of(ctx).showSnackBar(
+		SnackBar(
+			content: Text(didSucceed ? 'CSV Export successfully saved!' : 'Failed to save CSV export'),
+			backgroundColor: didSucceed ? Colors.black54 : Theme.of(ctx).errorColor,
+		)
+	);
 }
 
 class CsvExportImportScreen extends StatelessWidget {
@@ -25,9 +35,9 @@ class CsvExportImportScreen extends StatelessWidget {
 					crossAxisAlignment: CrossAxisAlignment.center,
 					mainAxisAlignment: MainAxisAlignment.center,
 					children: <Widget>[
-						const ElevatedButton(
-							onPressed: exportDbToCsvFile,
-							child: Text('Export Data to CSV'),
+						ElevatedButton(
+							onPressed: () { exportDbToCsvFile(context); },
+							child: const Text('Export Data to CSV'),
 						),
 						const SizedBox(height: 20,),
 						ElevatedButton(
