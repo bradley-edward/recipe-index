@@ -38,4 +38,23 @@ class CsvHelper {
 
 		return true;
 	}
+
+	static Future<List<String>> getImportCsvList() async {
+		final appDir = await syspaths.getApplicationDocumentsDirectory();
+
+		final listToReturn = <String>[];
+
+		final regExp = RegExp(r'.*\.csv');
+
+		await for (final entity in appDir.list()) {
+			final currPath = entity.path;
+			if (regExp.matchAsPrefix(currPath) == null) {
+				continue;
+			}
+
+			listToReturn.add(entity.path);
+		}
+
+		return listToReturn;
+	}
 }

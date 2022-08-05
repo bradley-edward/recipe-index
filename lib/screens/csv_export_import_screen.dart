@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/main_drawer.dart';
+import '../widgets/csv_import_export/csv_import_alert_dialog.dart';
 import '../helpers/csv_helper.dart';
 
 Future<void> exportDbToCsvFile(BuildContext ctx) async {
@@ -24,6 +25,19 @@ class CsvExportImportScreen extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
+		Future<void> _csvImportAlertDialog() async {
+			final csvImportList = await CsvHelper.getImportCsvList();
+
+			await showDialog(
+				context: context,
+				builder: (BuildContext ctx) {
+					return CsvImportAlertDialog(
+						csvImportList: csvImportList
+					);
+				}
+			);
+		}
+
 		return Scaffold(
 			appBar: AppBar(
 				title: const Text('CSV Export/Import'),
@@ -41,7 +55,7 @@ class CsvExportImportScreen extends StatelessWidget {
 						),
 						const SizedBox(height: 20,),
 						ElevatedButton(
-							onPressed: () {},
+							onPressed: _csvImportAlertDialog,
 							child: const Text('Import Data from CSV'),
 						),
 					],
