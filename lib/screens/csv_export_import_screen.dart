@@ -28,7 +28,7 @@ class CsvExportImportScreen extends StatelessWidget {
 		Future<void> _csvImportAlertDialog() async {
 			final csvImportList = await CsvHelper.getImportCsvList();
 
-			await showDialog(
+			final selectedIdx = await showDialog(
 				context: context,
 				builder: (BuildContext ctx) {
 					return CsvImportAlertDialog(
@@ -36,6 +36,10 @@ class CsvExportImportScreen extends StatelessWidget {
 					);
 				}
 			);
+
+			if (selectedIdx < 0) return;
+
+			print(csvImportList[selectedIdx]);
 		}
 
 		return Scaffold(
