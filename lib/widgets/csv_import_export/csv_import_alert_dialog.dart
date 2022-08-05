@@ -18,8 +18,16 @@ class CsvImportAlertDialog extends StatelessWidget {
 				child: ListView.builder(
 					itemCount: csvImportList.length,
 					itemBuilder: (ctx, index) {
-						return ListTile(
-							title: Text(csvImportList[index]),
+						final currPath = csvImportList[index];
+
+						final regExp = RegExp(r'[0-9]+\.csv');
+
+						final timestamp = int.parse(regExp.firstMatch(currPath)![0]!.split('.')[0]);
+						final fileDateTime = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+
+						return ElevatedButton(
+							child: Text(fileDateTime.toString()),
+							onPressed: () {},
 						);
 					}
 				),
