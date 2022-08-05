@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart' as syspaths;
@@ -56,5 +57,44 @@ class CsvHelper {
 		}
 
 		return listToReturn;
+	}
+
+	static Future<bool> importFromCsvFile(String csvAbsPath) async {
+		File csvFile = File(csvAbsPath);
+
+		const csvConvertor = csv.CsvToListConverter();
+
+		String currentTable = '';
+		final tableColumnNames = <String>[];
+		int tableRecordLength = -1;
+
+		final dataToImport = <String,List<Map<String,dynamic>>>{};
+
+		csvFile.openRead().transform(utf8.decoder).transform(csvConvertor).listen((csvRow) {
+			if (csvRow[0] == 'tableName') {
+				currentTable = csvRow[1] as String;
+				dataToImport[currentTable] = <Map<String,dynamic>>[];
+				tableColumnNames.clear();
+				tableRecordLength = -1;
+				return;
+			}
+
+			if (tableColumnNames.isEmpty) {
+				tableColumnNames.addAll(csvRow.map((e) => e.toString()));
+				tableRecordLength = csvRow.length;
+				return;
+			}
+
+			final dataRecord = <String,dynamic>{};
+			for (var i = 0; i < tableRecordLength; i++ ) {
+				dataRecord[tableColumnNames[i]] = csvRow[i];
+			}
+
+			dataToImport[currentTable]!.add(dataRecord);
+		});
+
+		print(dataToImport);
+		
+		return false;
 	}
 }
