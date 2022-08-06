@@ -19,6 +19,9 @@ class CsvHelper {
 		final csvLoL = <List<dynamic>>[];
 		for (final tableName in tables) {
 			final listMap = await db.query(tableName);
+
+			if (listMap.isEmpty) continue;
+
 			final columnNames = listMap[0].keys.toList();
 			
 			csvLoL.add([_keyTableName, tableName]);
@@ -27,6 +30,8 @@ class CsvHelper {
 				csvLoL.add(columnNames.map((col) => record[col]).toList());
 			}
 		}
+
+		if (csvLoL.isEmpty) return false;
 
 		final csvString = const csv.ListToCsvConverter().convert(csvLoL);
 
