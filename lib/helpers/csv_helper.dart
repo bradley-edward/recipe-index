@@ -89,7 +89,7 @@ class CsvHelper {
 
 			if (csvRow[0] == _keyTableColumns) {
 				tableColumnNames.addAll(csvRow.sublist(1).map((e) => e.toString()));
-				tableRecordLength = csvRow.length;
+				tableRecordLength = tableColumnNames.length;
 				return;
 			}
 
