@@ -78,7 +78,7 @@ class CsvHelper {
 
 		final dataToImport = <String,List<Map<String,dynamic>>>{};
 
-		csvFile.openRead().transform(utf8.decoder).transform(csvConvertor).listen((csvRow) {
+		await csvFile.openRead().transform(utf8.decoder).transform(csvConvertor).listen((csvRow) {
 			if (csvRow[0] == _keyTableName) {
 				currentTable = csvRow[1] as String;
 				dataToImport[currentTable] = <Map<String,dynamic>>[];
@@ -99,7 +99,7 @@ class CsvHelper {
 			}
 
 			dataToImport[currentTable]!.add(dataRecord);
-		});
+		}).asFuture();
 
 		print(dataToImport);
 		
