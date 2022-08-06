@@ -7,6 +7,9 @@ import 'package:csv/csv.dart' as csv;
 import '../helpers/db_helper.dart';
 
 class CsvHelper {
+	static const _keyTableName = 'TABLE_NAME';
+	static const _keyTableColumns = 'TABLE_COLUMNS';
+
 	static Future<bool> exportDbToCsv() async {
 		final secondsSinceEpoch = (DateTime.now().millisecondsSinceEpoch / 1000).floor();
 
@@ -18,8 +21,8 @@ class CsvHelper {
 			final listMap = await db.query(tableName);
 			final columnNames = listMap[0].keys.toList();
 			
-			csvLoL.add(['tableName', tableName]);
-			csvLoL.add(columnNames);
+			csvLoL.add([_keyTableName, tableName]);
+			csvLoL.add([_keyTableColumns, ...columnNames]);
 			for (final record in listMap) {
 				csvLoL.add(columnNames.map((col) => record[col]).toList());
 			}
@@ -71,7 +74,7 @@ class CsvHelper {
 		final dataToImport = <String,List<Map<String,dynamic>>>{};
 
 		csvFile.openRead().transform(utf8.decoder).transform(csvConvertor).listen((csvRow) {
-			if (csvRow[0] == 'tableName') {
+			if (csvRow[0] == _keyTableName) {
 				currentTable = csvRow[1] as String;
 				dataToImport[currentTable] = <Map<String,dynamic>>[];
 				tableColumnNames.clear();
@@ -79,8 +82,8 @@ class CsvHelper {
 				return;
 			}
 
-			if (tableColumnNames.isEmpty) {
-				tableColumnNames.addAll(csvRow.map((e) => e.toString()));
+			if (csvRow[0] == _keyTableColumns) {
+				tableColumnNames.addAll(csvRow.sublist(1).map((e) => e.toString()));
 				tableRecordLength = csvRow.length;
 				return;
 			}
