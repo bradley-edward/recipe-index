@@ -101,8 +101,7 @@ class CsvHelper {
 			dataToImport[currentTable]!.add(dataRecord);
 		}).asFuture();
 
-		print(dataToImport);
-		
-		return false;
+		final didSucceed = DBHelper.dbImportFullOverwrite(dataToImport);
+		return didSucceed;
 	}
 }

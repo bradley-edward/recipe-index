@@ -24,6 +24,28 @@ class DBHelper {
 		);
 	}
 
+	static Future<bool> dbImportFullOverwrite (Map<String,List<Map<String,dynamic>>> dataToImport) async {
+		final db = await DBHelper.database();
+		final importOverwriteBatch = db.batch();
+
+		final tablesToClear = ['mn_recipes_tags', 'recipes', 'images', 'tags'];
+
+		// First, clear out all tables in the DB.
+		for (final tableName in tablesToClear) {
+			importOverwriteBatch.delete(tableName);
+		}
+
+		// Next, begin inserting the records into the tables, from the dataToImport.
+		for (final tableName in dataToImport.keys) {
+			for (final tableRecord in dataToImport[tableName]!) {
+				importOverwriteBatch.insert(tableName, tableRecord);
+			}
+		}
+
+		final batchResult = await importOverwriteBatch.commit();
+		return true;
+	}
+
 	static Future<int> insert(String table, Map<String, Object> data) async {
 		final db = await DBHelper.database();
 		final insertedRecordId = await db.insert(table, data, conflictAlgorithm: sql.ConflictAlgorithm.replace);
