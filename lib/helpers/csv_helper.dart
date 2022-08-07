@@ -64,7 +64,7 @@ class CsvHelper {
 			listToReturn.add(entity.path);
 		}
 
-		return listToReturn;
+		return listToReturn.reversed.toList();
 	}
 
 	static Future<bool> importFromCsvFile(String csvAbsPath) async {
