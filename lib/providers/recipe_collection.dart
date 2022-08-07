@@ -175,7 +175,7 @@ class RecipeCollection with ChangeNotifier {
 			if (entryToDelete.images.isNotEmpty) {
 				await DBHelper.deleteWhere('images', '"ownerId" = ?', [entryToDelete.id!]);
 			}
-			await DBHelper.deleteById('recipes', entryToDelete.id!);
+			await DBHelper.deleteRecipesById({entryToDelete.id!});
 		}
 	}
 
@@ -192,7 +192,7 @@ class RecipeCollection with ChangeNotifier {
 		if (entryToDelete.images.isNotEmpty) {
 			await DBHelper.deleteWhere('images', '"ownerId" = ?', [entryToDelete.id!]);
 		}
-		await DBHelper.deleteById('recipes', entryToDelete.id!);
+		await DBHelper.deleteRecipesById({entryToDelete.id!});
 	}
 
 	Future<bool> fetchAndSetRecipes() async {

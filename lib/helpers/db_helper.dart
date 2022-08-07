@@ -15,7 +15,7 @@ class DBHelper {
 				await db.execute('CREATE TABLE recipes(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, displayId TEXT, name TEXT, complexity INTEGER, difficulty INTEGER, prepTime INTEGER, cookingTime INTEGER, servings INTEGER)');
 				await db.execute('CREATE TABLE images(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, listIndex INTEGER, imageType INTEGER, imageLocation TEXT, ownerId INTEGER NOT NULL, CONSTRAINT fk_recipes FOREIGN KEY(ownerId) REFERENCES recipes(id))');
 				await db.execute('CREATE TABLE tags(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT)');
-				await db.execute('CREATE TABLE mn_recipes_tags(recipeId INTEGER NOT NULL, tagId INTEGER NOT NULL, CONSTRAINT fk_recipes FOREIGN KEY (recipeId) REFERENCES recipes(id) ON DELETE CASCADE, CONSTRAINT fk_tags FOREIGN KEY (tagId) REFERENCES tags(id) ON DELETE CASCADE)');
+				await db.execute('CREATE TABLE mn_recipes_tags(recipeId INTEGER NOT NULL, tagId INTEGER NOT NULL)');
 			},
 			onConfigure: (db) async {
 				await db.execute('PRAGMA foreign_keys = ON');
@@ -83,17 +83,30 @@ class DBHelper {
 		return;
 	}
 
-	static Future<void> deleteById(String table, int id) async {
+	static Future<void> deleteRecipesById(Set<int> idSet) async {
 		final db = await DBHelper.database();
-		int deletedCount = await db.delete(table, where: '"id" = ?', whereArgs: [id]);
-	}
-
-	static Future<void> deleteByIdSet(String table, Set<int> idSet) async {
-		final db = await DBHelper.database();
+		final stmtBatch = db.batch();
 
 		final placeholderArrStr = List.filled(idSet.length, '?').join(',');
 
-		int deletedCount = await db.delete(table, where: '"id" IN ($placeholderArrStr)', whereArgs: idSet.toList());
+		stmtBatch.delete('recipes', where: '"id" IN ($placeholderArrStr)', whereArgs: idSet.toList());
+		stmtBatch.delete('mn_recipes_tags', where: '"recipeId" IN ($placeholderArrStr)', whereArgs: idSet.toList());
+
+		await stmtBatch.commit();
+		return;
+	}
+
+	static Future<void> deleteTagsById(Set<int> idSet) async {
+		final db = await DBHelper.database();
+		final stmtBatch = db.batch();
+
+		final placeholderArrStr = List.filled(idSet.length, '?').join(',');
+
+		stmtBatch.delete('tags', where: '"id" IN ($placeholderArrStr)', whereArgs: idSet.toList());
+		stmtBatch.delete('mn_recipes_tags', where: '"tagId" IN ($placeholderArrStr)', whereArgs: idSet.toList());
+
+		await stmtBatch.commit();
+		return;
 	}
 
 	static Future<void> deleteWhere(String table, String whereStr, List<Object?>? whereArr) async {

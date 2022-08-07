@@ -79,7 +79,7 @@ class RecipeTagList with ChangeNotifier {
 		final tagToDelete = _tags.removeAt(tagIndex);
 		notifyListeners();
 
-		await DBHelper.deleteById('tags', tagToDelete.id!);
+		await DBHelper.deleteTagsById({tagToDelete.id!});
 	}
 
 	Future<void> deleteMultipleTags(Set<int> idSet) async {
@@ -102,7 +102,7 @@ class RecipeTagList with ChangeNotifier {
 
 		notifyListeners();
 
-		await DBHelper.deleteByIdSet('tags', idSet);
+		await DBHelper.deleteTagsById(idSet);
 	}
 
 	Future<bool> fetchAndSetTags() async {
