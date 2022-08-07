@@ -90,9 +90,11 @@ class DBHelper {
 		final stmtBatch = db.batch();
 
 		final placeholderArrStr = List.filled(idSet.length, '?').join(',');
+		final idList = idSet.toList();
 
-		stmtBatch.delete('recipes', where: '"id" IN ($placeholderArrStr)', whereArgs: idSet.toList());
-		stmtBatch.delete('mn_recipes_tags', where: '"recipeId" IN ($placeholderArrStr)', whereArgs: idSet.toList());
+		stmtBatch.delete('recipes', where: '"id" IN ($placeholderArrStr)', whereArgs: idList);
+		stmtBatch.delete('images', where: '"ownerId" IN ($placeholderArrStr)', whereArgs: idList);
+		stmtBatch.delete('mn_recipes_tags', where: '"recipeId" IN ($placeholderArrStr)', whereArgs: idList);
 
 		await stmtBatch.commit();
 		return;

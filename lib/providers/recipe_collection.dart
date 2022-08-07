@@ -170,13 +170,9 @@ class RecipeCollection with ChangeNotifier {
 
 		notifyListeners();
 
-		// Delete the images associated with this entry, if any.
-		for (final entryToDelete in entriesToDelete) {
-			if (entryToDelete.images.isNotEmpty) {
-				await DBHelper.deleteWhere('images', '"ownerId" = ?', [entryToDelete.id!]);
-			}
-			await DBHelper.deleteRecipesById({entryToDelete.id!});
-		}
+		await DBHelper.deleteRecipesById(
+			entriesToDelete.map((e) => e.id!).toSet()
+		);
 	}
 
 	Future<void> deleteEntry(int id) async {
@@ -188,10 +184,6 @@ class RecipeCollection with ChangeNotifier {
 		final entryToDelete = _entries.removeAt(entryIndex);
 		notifyListeners();
 
-		// Delete the images associated with this entry, if any.
-		if (entryToDelete.images.isNotEmpty) {
-			await DBHelper.deleteWhere('images', '"ownerId" = ?', [entryToDelete.id!]);
-		}
 		await DBHelper.deleteRecipesById({entryToDelete.id!});
 	}
 
