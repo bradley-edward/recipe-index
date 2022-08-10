@@ -39,7 +39,10 @@ class CsvExportImportScreen extends StatelessWidget {
 
 			if (selectedIdx < 0) return;
 
-			final didSucceed = CsvHelper.importFromCsvFile(csvImportList[selectedIdx]);
+			final didSucceed = await CsvHelper.importFromCsvFile(csvImportList[selectedIdx]);
+			if (didSucceed) {
+				Navigator.of(context).pushReplacementNamed('/');
+			}
 		}
 
 		return Scaffold(
