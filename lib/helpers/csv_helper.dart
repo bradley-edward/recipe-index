@@ -70,7 +70,9 @@ class CsvHelper {
 	static Future<bool> importFromCsvFile(String csvAbsPath) async {
 		File csvFile = File(csvAbsPath);
 
-		const csvConvertor = csv.CsvToListConverter();
+		const csvConvertor = csv.CsvToListConverter(
+			shouldParseNumbers: false
+		);
 
 		String currentTable = '';
 		final tableColumnNames = <String>[];
