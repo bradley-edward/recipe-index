@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart' as syspaths;
 import 'package:csv/csv.dart' as csv;
 
 import '../helpers/db_helper.dart';
+import '../models/entry_image.dart' show ImageType;
 
 class CsvHelper {
 	static const _keyTableName = 'TABLE_NAME';
@@ -28,6 +29,21 @@ class CsvHelper {
 			csvLoL.add([_keyTableColumns, ...columnNames]);
 			for (final record in listMap) {
 				csvLoL.add(columnNames.map((col) => record[col]).toList());
+			}
+		}
+
+		// Export INTERNET images
+		final imageList = await db.query('images');
+		if (imageList.isNotEmpty) {
+			final columnNames = imageList[0].keys.toList();
+
+			csvLoL.add([_keyTableName, 'images']);
+			csvLoL.add([_keyTableColumns, ...columnNames]);
+
+			for (final record in imageList) {
+				if ((record['imageType'] as int) == ImageType.fromInternet.index) {
+					csvLoL.add(columnNames.map((col) => record[col]).toList());
+				}
 			}
 		}
 
