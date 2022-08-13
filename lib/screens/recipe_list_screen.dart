@@ -31,6 +31,7 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 
 	void _selectEntry(int id) {
 		setState(() {
+			_isInEditMode = true;
 			if (_selectedEntries.contains(id)) {
 				_selectedEntries.remove(id);
 			} else {

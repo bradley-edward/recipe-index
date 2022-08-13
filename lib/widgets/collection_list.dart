@@ -41,6 +41,9 @@ class CollectionList extends StatelessWidget {
 						: const Icon(Icons.circle_outlined),
 					)
 					: null,
+					onLongPress: () {
+						selectEntryFn(currEntry.id!);
+					},
 					onTap: () {
 						if (!isInEditMode) {
 							Navigator.of(context).pushNamed(RecipeDetailsScreen.routeName, arguments: currEntry.id!);
