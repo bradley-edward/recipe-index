@@ -74,100 +74,104 @@ class RecipeDetailsScreen extends StatelessWidget {
 			? const Center(
 				child: Text('That entry cannot be found!'),
 			)
-			: Container(
-				height: 520,
-				child: SingleChildScrollView(
-					child: Column(
-						mainAxisAlignment: MainAxisAlignment.start,
-						children: <Widget>[
-							Container(
-								height: 240,
-								child: entryImageCarousel(entry.images),
-							),
-							const SizedBox(height: 10,),
-							Container(
-								child: Text(
-									entry.name,
-									textAlign: TextAlign.center,
-									style: appTheme.textTheme.titleLarge,
-								),
-							),
-							const SizedBox(height: 40,),
-							Row(
-								mainAxisAlignment: MainAxisAlignment.spaceAround,
-								children: [
-									Column(
+			: LayoutBuilder(
+				builder: (context, constraints) {
+					return Container(
+						height: constraints.maxHeight * 0.86,
+						child: SingleChildScrollView(
+							child: Column(
+								mainAxisAlignment: MainAxisAlignment.start,
+								children: <Widget>[
+									Container(
+										height: 240,
+										child: entryImageCarousel(entry.images),
+									),
+									const SizedBox(height: 10,),
+									Container(
+										child: Text(
+											entry.name,
+											textAlign: TextAlign.center,
+											style: appTheme.textTheme.titleLarge,
+										),
+									),
+									const SizedBox(height: 40,),
+									Row(
+										mainAxisAlignment: MainAxisAlignment.spaceAround,
 										children: [
-											Text(
-												'Complexity',
-												style: appTheme.textTheme.headline6,
+											Column(
+												children: [
+													Text(
+														'Complexity',
+														style: appTheme.textTheme.headline6,
+													),
+													Text(complexityStrings[entry.complexity]!),
+												],
 											),
-											Text(complexityStrings[entry.complexity]!),
+											Column(
+												children: [
+													Text(
+														'Expertise',
+														style: appTheme.textTheme.headline6,
+													),
+													Text(difficultyStrings[entry.difficulty]!),
+												],
+											),
 										],
 									),
-									Column(
+									const SizedBox(height: 20,),
+									Row(
+										mainAxisAlignment: MainAxisAlignment.spaceAround,
 										children: [
-											Text(
-												'Expertise',
-												style: appTheme.textTheme.headline6,
+											Column(
+												children: [
+													Text(
+														'Prep. Time',
+														style: appTheme.textTheme.headline6,
+													),
+													Text(entry.prepTimeHrsMins),
+												],
 											),
-											Text(difficultyStrings[entry.difficulty]!),
+											Column(
+												children: [
+													Text(
+														'Cooking Time',
+														style: appTheme.textTheme.headline6,
+													),
+													Text(entry.cookingTimeHrsMins),
+												],
+											),
 										],
 									),
+									const SizedBox(height: 20,),
+									Row(
+										mainAxisAlignment: MainAxisAlignment.spaceAround,
+										children: [
+											Column(
+												children: [
+													Text(
+														'Servings',
+														style: appTheme.textTheme.headline6,
+													),
+													Text(entry.servings.toString()),
+												],
+											),
+										],
+									),
+									const SizedBox(height: 10,),
+									if (entry.tagIds.isNotEmpty) ...[
+										Text(
+											'Tags',
+											style: appTheme.textTheme.headline6,
+										),
+										DisplayTagListReadonly(
+											tagList: Provider.of<RecipeTagList>(context, listen: false).findByIdSet(entry.tagIds),
+										),
+									],
 								],
 							),
-							const SizedBox(height: 20,),
-							Row(
-								mainAxisAlignment: MainAxisAlignment.spaceAround,
-								children: [
-									Column(
-										children: [
-											Text(
-												'Prep. Time',
-												style: appTheme.textTheme.headline6,
-											),
-											Text(entry.prepTimeHrsMins),
-										],
-									),
-									Column(
-										children: [
-											Text(
-												'Cooking Time',
-												style: appTheme.textTheme.headline6,
-											),
-											Text(entry.cookingTimeHrsMins),
-										],
-									),
-								],
-							),
-							const SizedBox(height: 20,),
-							Row(
-								mainAxisAlignment: MainAxisAlignment.spaceAround,
-								children: [
-									Column(
-										children: [
-											Text(
-												'Servings',
-												style: appTheme.textTheme.headline6,
-											),
-											Text(entry.servings.toString()),
-										],
-									),
-								],
-							),
-							const SizedBox(height: 10,),
-							if (entry.tagIds.isNotEmpty) ...[
-								Text(
-									'Tags',
-									style: appTheme.textTheme.headline6,
-								),
-								DisplayTagListReadonly(
-									tagList: Provider.of<RecipeTagList>(context, listen: false).findByIdSet(entry.tagIds),
-								),
-							],
-						],
-					),
-				),
+						),
+					);
+				}
 			),
 			floatingActionButton: entry == null
 			? null

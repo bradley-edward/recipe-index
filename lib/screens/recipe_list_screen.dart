@@ -147,15 +147,19 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 										return ch!;
 									}
 
-									return Container(
-										width: double.infinity,
-										height: 500,
-										child: CollectionList(
-											entryList: fetchedEntries,
-											isInEditMode: _isInEditMode,
-											selectEntryFn: _selectEntry,
-											selectedEntries: _selectedEntries
-										),
+									return LayoutBuilder(
+										builder: (ctx, constraints) {
+											return Container(
+												width: double.infinity,
+												height: constraints.maxHeight * 0.86,
+												child: CollectionList(
+													entryList: fetchedEntries,
+													isInEditMode: _isInEditMode,
+													selectEntryFn: _selectEntry,
+													selectedEntries: _selectedEntries
+												),
+											);
+										},
 									);
 								}
 							);
