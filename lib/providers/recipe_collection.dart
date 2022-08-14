@@ -26,7 +26,7 @@ class RecipeCollection with ChangeNotifier {
 		return _entries[entryIdx];
 	}
 
-	Future<void> addEntry(RecipeEntry entry) async {
+	Future<int> addEntry(RecipeEntry entry) async {
 		final entryId = await DBHelper.insert('recipes', {
 			'name': entry.name,
 			'displayId': entry.displayId,
@@ -65,7 +65,7 @@ class RecipeCollection with ChangeNotifier {
 		notifyListeners();
 
 		if (newEntry.images.isEmpty) {
-			return;
+			return entryId;
 		}
 
 		List<Map<String, Object>> imagesData = [];
@@ -82,6 +82,8 @@ class RecipeCollection with ChangeNotifier {
 		for (var i = 0, len = newEntry.images.length; i < len; i++) {
 			newEntry.images[i].id = insertedImageIds[i] as int;
 		}
+
+		return entryId;
 	}
 
 	Future<void> _updateEntryImages(int ownerId, List<EntryImage> imageList, Set<int> deleteIds) async {

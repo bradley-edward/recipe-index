@@ -6,6 +6,7 @@ import '../../providers/recipe_collection.dart';
 import '../../models/recipe_entry.dart';
 import '../../models/recipe_complexity.dart';
 import '../../models/technical_difficulty.dart';
+import '../../screens/recipe_details_screen.dart';
 import './image_list_edit.dart';
 import './recipe_form_tag_selection.dart';
 
@@ -145,14 +146,32 @@ class _RecipeFormState extends State<RecipeForm> {
 			_isLoading = true;
 		});
 
-		if (_editedEntry.id != null) {
+		final appNav = Navigator.of(context);
+
+		if (widget.formMode == 'Edit') {
 			// Edit existing entry
 			await collectionProvider.updateEntry(_editedEntry.id!, _editedEntry, _imagesToDelete, _initValues['tagIds']);
+			appNav.pop();
 		} else {
 			// Add new entry
-			await collectionProvider.addEntry(_editedEntry);
+			final newEntryId = await collectionProvider.addEntry(_editedEntry);
+
+			if (widget.inputId != null) {
+				// We have entered this form via a recipe details screen.
+				// So back out once to go to the details screen of the first recipe, then pushReplacement on it.
+				appNav..pop()..pushReplacementNamed(
+					RecipeDetailsScreen.routeName,
+					arguments: newEntryId
+				);
+			} else {
+				// We have entered this form via the recipe list screen.
+				// pushReplacement to go right to the new recipe.
+				appNav.pushReplacementNamed(
+					RecipeDetailsScreen.routeName,
+					arguments: newEntryId
+				);
+			}
 		}
-		Navigator.of(context).pop();
 	}
 
 	@override
