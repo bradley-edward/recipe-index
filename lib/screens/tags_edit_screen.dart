@@ -120,6 +120,13 @@ class _TagsEditScreenState extends State<TagsEditScreen> {
 	}
 
 	@override
+	void dispose() {
+		_searchTEC.dispose();
+
+		super.dispose();
+	}
+
+	@override
 	Widget build(BuildContext context) {
 		return Scaffold(
 			appBar: AppBar(

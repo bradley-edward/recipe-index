@@ -31,6 +31,13 @@ class _RecipeFormTagSelectionState extends State<RecipeFormTagSelection> {
 		_selectedTags.addAll(widget.initialSelection);
 	}
 
+	@override
+	void dispose() {
+		_searchTEC.dispose();
+
+		super.dispose();
+	}
+
 	void _resetToInitialSelection() {
 		setState(() {
 			_selectedTags.clear();
