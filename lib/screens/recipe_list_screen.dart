@@ -152,28 +152,15 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 					}
 				}
 			),
-			floatingActionButton: Row(
-				mainAxisAlignment: MainAxisAlignment.center,
-				children: <Widget>[
-					FloatingActionButton(
-						heroTag: 'addNew',
-						child: const Icon(Icons.add),
-						onPressed: () {
-							appNavigator.pushNamed(EditRecipeScreen.routeName, arguments: {
-								'entryId': null,
-								'formMode': 'New'
-							});
-						},
-					),
-					const SizedBox(width: 20),
-					FloatingActionButton(
-						heroTag: 'addDummyData',
-						child: const Icon(Icons.add_box),
-						onPressed: () async {
-							await Provider.of<RecipeCollection>(context, listen: false).populateWithDummyData();
-						},
-					),
-				],
+			floatingActionButton: FloatingActionButton(
+				heroTag: 'addNew',
+				child: const Icon(Icons.add),
+				onPressed: () {
+					appNavigator.pushNamed(EditRecipeScreen.routeName, arguments: {
+						'entryId': null,
+						'formMode': 'New'
+					});
+				},
 			),
 			floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
 		);

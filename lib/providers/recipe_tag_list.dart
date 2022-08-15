@@ -181,26 +181,4 @@ class RecipeTagList with ChangeNotifier {
 		notifyListeners();
 		return true;
 	}
-
-	Future<void> populateWithDummyData() async {
-		final dummyData = [
-			'Chicken',
-			'Beef',
-			'Carrot',
-			'Fish',
-			'Cheese',
-			'Apple',
-			'Ham',
-			'Pork',
-			'Vegan',
-			'Vegetarian',
-			'Milk',
-			'Banana',
-			'Bread'
-		];
-
-		for (final tagName in dummyData) {
-			await addTag(RecipeTag(name: tagName));
-		}
-	}
 }

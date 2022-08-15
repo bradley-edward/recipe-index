@@ -229,25 +229,12 @@ class _TagsEditScreenState extends State<TagsEditScreen> {
 					}
 				}
 			),
-			floatingActionButton: Row(
-				mainAxisAlignment: MainAxisAlignment.center,
-				children: <Widget>[
-					FloatingActionButton(
-						heroTag: 'addNew',
-						child: const Icon(Icons.add),
-						onPressed: () {
-							_addNewTagAlertDialog();
-						},
-					),
-					const SizedBox(width: 20),
-					FloatingActionButton(
-						heroTag: 'addDummyData',
-						child: const Icon(Icons.add_box),
-						onPressed: () async {
-							await Provider.of<RecipeTagList>(context, listen: false).populateWithDummyData();
-						},
-					),
-				],
+			floatingActionButton: FloatingActionButton(
+				heroTag: 'addNew',
+				child: const Icon(Icons.add),
+				onPressed: () {
+					_addNewTagAlertDialog();
+				},
 			),
 			floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
 		);

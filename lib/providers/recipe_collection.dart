@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../models/entry_search_criteria.dart';
-import '../models/dummy_data.dart';
 import '../models/recipe_entry.dart';
 import '../models/entry_image.dart';
 import '../models/recipe_complexity.dart';
@@ -297,11 +296,5 @@ class RecipeCollection with ChangeNotifier {
 		}
 		notifyListeners();
 		return true;
-	}
-
-	Future<void> populateWithDummyData() async {
-		for (final entryInfo in dummyData) {
-			await addEntry(entryInfo);
-		}
 	}
 }
