@@ -18,6 +18,7 @@ class _CsvImportAlertDialogState extends State<CsvImportAlertDialog> {
 	@override
 	Widget build(BuildContext context) {
 		final appNav = Navigator.of(context);
+		final appTheme = Theme.of(context);
 
 		return AlertDialog(
 			title: const Text('Import from CSV'),
@@ -41,10 +42,13 @@ class _CsvImportAlertDialogState extends State<CsvImportAlertDialog> {
 									_selectedIdx = index;
 								});
 							},
-							style: ButtonStyle(
-								backgroundColor: _selectedIdx == index
-								? MaterialStateProperty.all(Colors.green)
-								: MaterialStateProperty.all(Theme.of(context).primaryColor),
+							style: ElevatedButton.styleFrom(
+								primary: _selectedIdx == index
+								? appTheme.primaryColor
+								: appTheme.cardColor,
+								onPrimary: _selectedIdx == index
+								? Colors.white
+								: Colors.black,
 							),
 						);
 					}
