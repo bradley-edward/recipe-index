@@ -76,7 +76,8 @@ class _RecipeFormTagSelectionState extends State<RecipeFormTagSelection> {
 
 		if (strippedNewTag.isEmpty) return;
 
-		await rtlProvider.addTag(RecipeTag(name: strippedNewTag));
+		final newTagId = await rtlProvider.addTag(RecipeTag(name: strippedNewTag));
+		_selectTag(newTagId);
 	}
 
 	@override

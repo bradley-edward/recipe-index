@@ -40,7 +40,7 @@ class RecipeTagList with ChangeNotifier {
 		return true;
 	}
 
-	Future<void> addTag(RecipeTag tag) async {
+	Future<int> addTag(RecipeTag tag) async {
 		final tagId = await DBHelper.insert('tags', {
 			'name': tag.name,
 		});
@@ -51,6 +51,8 @@ class RecipeTagList with ChangeNotifier {
 
 		_tags.add(newTag);
 		notifyListeners();
+
+		return tagId;
 	}
 
 	Future<void> updateTag(int id, String newName) async {
