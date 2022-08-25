@@ -189,7 +189,7 @@ class _RecipeFormState extends State<RecipeForm> {
 									Expanded(
 										child: TextFormField(
 											initialValue: _initValues['name'],
-											decoration: const InputDecoration(labelText: 'Entry Name',),
+											decoration: const InputDecoration(labelText: 'Title',),
 											textInputAction: TextInputAction.next,
 											validator: (value) {
 												if (value == null) {
@@ -461,7 +461,7 @@ class _RecipeFormState extends State<RecipeForm> {
 				ElevatedButton.icon(
 					onPressed: _saveForm,
 					icon: const Icon(Icons.save),
-					label: const Text('Submit')
+					label: const Text('Save')
 				),
 			],
 		);
