@@ -11,6 +11,8 @@ import './search_form_tag_selection.dart';
 class SearchForm extends StatelessWidget {
 	const SearchForm({ Key? key }) : super(key: key);
 
+	static const _spacingSizedBox = SizedBox(height: 0,);
+
 	@override
 	Widget build(BuildContext context) {
 		final recipeSearchProvider = Provider.of<RecipeSearchProvider>(context, listen: false);
@@ -41,7 +43,7 @@ class SearchForm extends StatelessWidget {
 						),
 					],
 				),
-				const SizedBox(height: 20,),
+				_spacingSizedBox,
 				Row(
 					crossAxisAlignment: CrossAxisAlignment.start,
 					mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -69,7 +71,7 @@ class SearchForm extends StatelessWidget {
 						),
 					],
 				),
-				const SizedBox(height: 20,),
+				_spacingSizedBox,
 				Row(
 					crossAxisAlignment: CrossAxisAlignment.start,
 					mainAxisAlignment: MainAxisAlignment.start,
@@ -85,7 +87,7 @@ class SearchForm extends StatelessWidget {
 						),
 					],
 				),
-				const SizedBox(height: 20,),
+				_spacingSizedBox,
 				const SearchFormTagSelection(),
 				ElevatedButton.icon(
 					onPressed: () {
