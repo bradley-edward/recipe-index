@@ -27,25 +27,29 @@ class _TagEditAlertDialogState extends State<TagEditAlertDialog> {
 
 		return AlertDialog(
 			title: Text(titleText),
-			content: Form(
-				key: _form,
-				child: Center(
-					child: TextFormField(
-						initialValue: widget.tagToEdit != null ? widget.tagToEdit!.name : null,
-						validator: (tagName) {
-							if (tagName == null) return 'Please input a string.';
-							if (tagName.isEmpty) return 'Please input a string.';
-							final String strippedTagName = tagName.trim();
-							if (strippedTagName.isEmpty) return 'Please input a string that is not pure whitespace.';
+			content: Container(
+				height: 100,
+				width: 200,
+				child: Form(
+					key: _form,
+					child: Center(
+						child: TextFormField(
+							initialValue: widget.tagToEdit != null ? widget.tagToEdit!.name : null,
+							validator: (tagName) {
+								if (tagName == null) return 'Please input a string.';
+								if (tagName.isEmpty) return 'Please input a string.';
+								final String strippedTagName = tagName.trim();
+								if (strippedTagName.isEmpty) return 'Please input a string that is not pure whitespace.';
 
-							final value = Provider.of<RecipeTagList>(context, listen: false).containsTagWithName(strippedTagName);
-							if (value) return 'That tag already exists.';
+								final value = Provider.of<RecipeTagList>(context, listen: false).containsTagWithName(strippedTagName);
+								if (value) return 'That tag already exists.';
 
-							return null;
-						},
-						onSaved: (newValue) {
-							_tagInput = newValue;
-						},
+								return null;
+							},
+							onSaved: (newValue) {
+								_tagInput = newValue;
+							},
+						),
 					),
 				),
 			),
