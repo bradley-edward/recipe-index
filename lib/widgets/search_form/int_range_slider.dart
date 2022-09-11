@@ -26,7 +26,6 @@ class IntRangeSlider extends StatefulWidget {
 }
 
 class _IntRangeSliderState extends State<IntRangeSlider> {
-	bool _isEnabled = false;
 	RangeValues? _intRange;
 
 	@override
@@ -59,14 +58,9 @@ class _IntRangeSliderState extends State<IntRangeSlider> {
 
 		return ExpansionTile(
 			title: Text(widget.titleStr, style: appTheme.textTheme.titleMedium,),
-			controlAffinity: ListTileControlAffinity.leading,
-			leading: Switch(value: _isEnabled || cvIsNotNull, onChanged: (_) {}),
 			initiallyExpanded: cvIsNotNull,
 			onExpansionChanged: (isExpanded) {
 				recipeSearchProvider.toggleSearch(widget.searchName, isExpanded);
-				setState(() {
-					_isEnabled = isExpanded;
-				});
 			},
 			children: [
 				Padding(

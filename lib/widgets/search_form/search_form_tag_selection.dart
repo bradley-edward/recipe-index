@@ -16,7 +16,6 @@ class SearchFormTagSelection extends StatefulWidget {
 }
 
 class _SearchFormTagSelectionState extends State<SearchFormTagSelection> {
-	bool _isEnabled = false;
 	final Set<int> _selectedTags = {};
 
 	@override
@@ -53,14 +52,9 @@ class _SearchFormTagSelectionState extends State<SearchFormTagSelection> {
 
 		return ExpansionTile(
 			title: const Text('Tags'),
-			controlAffinity: ListTileControlAffinity.leading,
-			leading: Switch(value: _isEnabled || cvIsNotNull, onChanged: (_) {}),
 			initiallyExpanded: cvIsNotNull,
 			onExpansionChanged: (isExpanded) {
 				recipeSearchProvider.toggleSearch('tagIds', isExpanded);
-				setState(() {
-					_isEnabled = isExpanded;
-				});
 			},
 			children: [
 				Container(

@@ -22,7 +22,6 @@ class EnumSelector extends StatefulWidget {
 }
 
 class _EnumSelectorState extends State<EnumSelector> {
-	bool _isEnabled = false;
 	final _chosenEnumSet = <Enum>{};
 
 	@override
@@ -39,14 +38,9 @@ class _EnumSelectorState extends State<EnumSelector> {
 
 		return ExpansionTile(
 			title: Text(widget.titleStr, style: appTheme.textTheme.titleMedium),
-			controlAffinity: ListTileControlAffinity.leading,
-			leading: Switch(value: _isEnabled || cvIsNotNull, onChanged: (_) {}),
 			initiallyExpanded: cvIsNotNull,
 			onExpansionChanged: (isExpanded) {
 				recipeSearchProvider.toggleSearch(widget.searchName, isExpanded);
-				setState(() {
-					_isEnabled = isExpanded;
-				});
 			},
 			children: widget.enumValues.map((enumVal) =>
 				CheckboxListTile(
