@@ -6,6 +6,7 @@ import '../providers/recipe_collection.dart';
 import '../providers/recipe_tag_list.dart';
 import '../widgets/collection_list.dart';
 import '../widgets/main_drawer.dart';
+import '../widgets/delete_entries_alert_dialog.dart';
 import './search_screen.dart';
 import './edit_recipe_screen.dart';
 
@@ -87,25 +88,9 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
 								final confirmDelete = await showDialog(
 									context: context,
 									builder: (BuildContext ctx) {
-										return AlertDialog(
+										return DeleteEntriesAlertDialog(
 											title: const Text('Deleting entries...'),
-											content: const Center(
-												child: Text('Delete the selected entries?'),
-											),
-											actions: <Widget>[
-												TextButton(
-													onPressed: () {
-														Navigator.of(context).pop(false);
-													},
-													child: const Text('No'),
-												),
-												TextButton(
-													onPressed: () {
-														Navigator.of(context).pop(true);
-													},
-													child: const Text('Yes'),
-												),
-											],
+											content: const Text('Delete the selected entries?'),
 										);
 									}
 								);
