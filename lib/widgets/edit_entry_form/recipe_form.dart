@@ -181,6 +181,23 @@ class _RecipeFormState extends State<RecipeForm> {
 			appBar: AppBar(
 				title: Text('${widget.formMode} Recipe'),
 				actions: [
+					IconButton(
+						onPressed: () async {
+							final confirmSave = await showDialog(
+								context: context,
+								builder: (BuildContext ctx) {
+									return DeleteEntriesAlertDialog(
+										title: const Text('Confirm Save'),
+										content: const Text('Save changes?')
+									);
+								}
+							);
+							if (confirmSave) {
+								_saveForm();
+							}
+						},
+						icon: const Icon(Icons.save),
+					),
 					if (widget.formMode == 'Edit' && widget.inputId != null) IconButton(
 						icon: const Icon(Icons.delete),
 						onPressed: () async {
@@ -486,12 +503,6 @@ class _RecipeFormState extends State<RecipeForm> {
 							ImageListEdit(
 								initialList: _initValues['images'],
 								onUpdateList: imageListUpdateHandler,
-							),
-							const SizedBox(height: 25,),
-							ElevatedButton.icon(
-								onPressed: _saveForm,
-								icon: const Icon(Icons.save),
-								label: const Text('Save')
 							),
 						],
 					),
