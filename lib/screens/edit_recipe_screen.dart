@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../providers/recipe_collection.dart';
 import '../widgets/edit_entry_form/recipe_form.dart';
-import '../widgets/delete_entries_alert_dialog.dart';
 
 class EditRecipeScreen extends StatelessWidget {
 	static const routeName = '/edit-recipe';
@@ -23,38 +20,6 @@ class EditRecipeScreen extends StatelessWidget {
 			formMode = 'New';
 		}
 
-		return Scaffold(
-			appBar: AppBar(
-				title: Text('$formMode Recipe'),
-				actions: [
-					if (formMode == 'Edit' && inputEntryId != null) IconButton(
-						icon: const Icon(Icons.delete),
-						onPressed: () async {
-							final confirmDelete = await showDialog(
-								context: context,
-								builder: (BuildContext ctx) {
-									return DeleteEntriesAlertDialog(
-										title: Text('Deleting entry ${inputEntryId!}...'),
-										content: const Text('Delete this entry?')
-									);
-								}
-							);
-							if (confirmDelete) {
-								await Provider.of<RecipeCollection>(context, listen: false).deleteEntries({inputEntryId!});
-								Navigator.of(context).popUntil(
-									ModalRoute.withName('/')
-								);
-							}
-						},
-					),
-				],
-			),
-			body: Padding(
-				padding: const EdgeInsets.all(16),
-				child: SingleChildScrollView(
-					child: RecipeForm(inputId: inputEntryId, formMode: formMode,)
-				),
-			),
-		);
+		return RecipeForm(inputId: inputEntryId, formMode: formMode,);
 	}
 }

@@ -9,6 +9,7 @@ import '../../models/technical_difficulty.dart';
 import '../../screens/recipe_details_screen.dart';
 import './image_list_edit.dart';
 import './recipe_form_tag_selection.dart';
+import '../delete_entries_alert_dialog.dart';
 
 class RecipeForm extends StatefulWidget {
 	final int? inputId;
@@ -176,294 +177,326 @@ class _RecipeFormState extends State<RecipeForm> {
 
 	@override
 	Widget build(BuildContext context) {
-		return _isLoading
-		? const Center(child: CircularProgressIndicator(),)
-		: Column(
-			children: [
-				Form(
-					key: _form,
-					child: Column(
-						children: <Widget>[
-							Row(
-								children: [
-									Expanded(
-										child: TextFormField(
-											initialValue: _initValues['name'],
-											decoration: const InputDecoration(labelText: 'Title',),
-											textInputAction: TextInputAction.next,
-											validator: (value) {
-												if (value == null) {
-													return 'Please provide a value';
-												}
-												if (value.isEmpty) {
-													return 'Please provide a value';
-												}
-												return null;
-											},
-											onSaved: (value) {
-												_editedEntry = RecipeEntry(
-													id: _editedEntry.id,
-													name: value!,
-													displayId: _editedEntry.displayId,
-													complexity: _editedEntry.complexity,
-													difficulty: _editedEntry.difficulty,
-													prepTimeMins: _editedEntry.prepTimeMins,
-													cookTimeMins: _editedEntry.cookTimeMins,
-													servings: _editedEntry.servings,
-													images: _editedEntry.images,
-													tagIds: _editedEntry.tagIds,
-												);
-											},
-										),
-									),
-									const SizedBox(width: 10,),
-									Expanded(
-										child: TextFormField(
-											initialValue: _initValues['displayId'],
-											decoration: const InputDecoration(labelText: 'Entry ID',),
-											textInputAction: TextInputAction.next,
-											validator: (value) {
-												if (value == null) {
-													return 'Please provide a value';
-												}
-												if (value.isEmpty) {
-													return 'Please provide a value';
-												}
-												return null;
-											},
-											onSaved: (value) {
-												_editedEntry = RecipeEntry(
-													id: _editedEntry.id,
-													name: _editedEntry.name,
-													displayId: value!,
-													complexity: _editedEntry.complexity,
-													difficulty: _editedEntry.difficulty,
-													prepTimeMins: _editedEntry.prepTimeMins,
-													cookTimeMins: _editedEntry.cookTimeMins,
-													servings: _editedEntry.servings,
-													images: _editedEntry.images,
-													tagIds: _editedEntry.tagIds,
-												);
-											},
-										),
-									),
-								],
-							),
-							Row(
-								children: [
-									Expanded(
-										child: DropdownButtonFormField<RecipeComplexity>(
-											value: _initValues['complexity'],
-											decoration: const InputDecoration(
-												label: Text('Complexity'),
-											),
-											items: <RecipeComplexity>[
-												RecipeComplexity.simple, RecipeComplexity.moderate, RecipeComplexity.complex
-												].map((RecipeComplexity value) =>
-												DropdownMenuItem(
-													value: value,
-													child: Text(complexityStrings[value]!),
-												)
-											).toList(),
-											validator: (RecipeComplexity? value) {
-												if (value == null) {
-													return 'Please provide a value.';
-												}
-												return null;
-											},
-											onChanged: (_) {},
-											onSaved: (RecipeComplexity? value) {
-												_editedEntry = RecipeEntry(
-													id: _editedEntry.id,
-													name: _editedEntry.name,
-													displayId: _editedEntry.displayId,
-													complexity: value!,
-													difficulty: _editedEntry.difficulty,
-													prepTimeMins: _editedEntry.prepTimeMins,
-													cookTimeMins: _editedEntry.cookTimeMins,
-													servings: _editedEntry.servings,
-													images: _editedEntry.images,
-													tagIds: _editedEntry.tagIds,
-												);
-											},
-										),
-									),
-									const SizedBox(width: 10,),
-									Expanded(
-										child: DropdownButtonFormField<TechnicalDifficulty>(
-											value: _initValues['difficulty'],
-											decoration: const InputDecoration(
-												label: Text('Expertise'),
-											),
-											items: <TechnicalDifficulty>[
-												TechnicalDifficulty.easy, TechnicalDifficulty.medium, TechnicalDifficulty.difficult
-												].map((TechnicalDifficulty value) =>
-												DropdownMenuItem(
-													value: value,
-													child: Text(difficultyStrings[value]!),
-												)
-											).toList(),
-											validator: (TechnicalDifficulty? value) {
-												if (value == null) {
-													return 'Please provide a value.';
-												}
-												return null;
-											},
-											onChanged: (_) {},
-											onSaved: (TechnicalDifficulty? value) {
-												_editedEntry = RecipeEntry(
-													id: _editedEntry.id,
-													name: _editedEntry.name,
-													displayId: _editedEntry.displayId,
-													complexity: _editedEntry.complexity,
-													difficulty: value!,
-													prepTimeMins: _editedEntry.prepTimeMins,
-													cookTimeMins: _editedEntry.cookTimeMins,
-													servings: _editedEntry.servings,
-													images: _editedEntry.images,
-													tagIds: _editedEntry.tagIds,
-												);
-											},
-										),
-									),
-								],
-							),
-							Row(
-								children: [
-									Expanded(
-										child: TextFormField(
-											initialValue: _initValues['prepTime'].toString(),
-											decoration: const InputDecoration(labelText: 'Prep. Time (mins)',),
-											keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
-											textInputAction: TextInputAction.next,
-											validator: (value) {
-												if (value == null) {
-													return 'Please provide a value';
-												}
-												if (value.isEmpty) {
-													return 'Please provide a value';
-												}
-												final valueInt = int.tryParse(value);
-												if (valueInt == null) {
-													return 'Please provide an integer';
-												}
-												if (valueInt < 1) {
-													return 'Please provide a value greater than 0';
-												}
-												return null;
-											},
-											onSaved: (value) {
-												_editedEntry = RecipeEntry(
-													id: _editedEntry.id,
-													name: _editedEntry.name,
-													displayId: _editedEntry.displayId,
-													complexity: _editedEntry.complexity,
-													difficulty: _editedEntry.difficulty,
-													prepTimeMins: int.parse(value!),
-													cookTimeMins: _editedEntry.cookTimeMins,
-													servings: _editedEntry.servings,
-													images: _editedEntry.images,
-													tagIds: _editedEntry.tagIds,
-												);
-											},
-										),
-									),
-									const SizedBox(width: 10,),
-									Expanded(
-										child: TextFormField(
-											initialValue: _initValues['cookingTime'].toString(),
-											decoration: const InputDecoration(labelText: 'Cooking Time (mins)',),
-											keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
-											textInputAction: TextInputAction.next,
-											validator: (value) {
-												if (value == null) {
-													return 'Please provide a value';
-												}
-												if (value.isEmpty) {
-													return 'Please provide a value';
-												}
-												final valueInt = int.tryParse(value);
-												if (valueInt == null) {
-													return 'Please provide an integer';
-												}
-												if (valueInt < 1) {
-													return 'Please provide a value greater than 0';
-												}
-												return null;
-											},
-											onSaved: (value) {
-												_editedEntry = RecipeEntry(
-													id: _editedEntry.id,
-													name: _editedEntry.name,
-													displayId: _editedEntry.displayId,
-													complexity: _editedEntry.complexity,
-													difficulty: _editedEntry.difficulty,
-													prepTimeMins: _editedEntry.prepTimeMins,
-													cookTimeMins: int.parse(value!),
-													servings: _editedEntry.servings,
-													images: _editedEntry.images,
-													tagIds: _editedEntry.tagIds,
-												);
-											},
-										),
-									),
-								],
-							),
-							TextFormField(
-								initialValue: _initValues['servings'].toString(),
-								decoration: const InputDecoration(labelText: 'Servings',),
-								keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
-								textInputAction: TextInputAction.next,
-								validator: (value) {
-									if (value == null) {
-										return 'Please provide a value';
-									}
-									if (value.isEmpty) {
-										return 'Please provide a value';
-									}
-									final valueInt = int.tryParse(value);
-									if (valueInt == null) {
-										return 'Please provide an integer';
-									}
-									if (valueInt < 1) {
-										return 'Please provide a value greater than 0';
-									}
-									return null;
-								},
-								onSaved: (value) {
-									_editedEntry = RecipeEntry(
-										id: _editedEntry.id,
-										name: _editedEntry.name,
-										displayId: _editedEntry.displayId,
-										complexity: _editedEntry.complexity,
-										difficulty: _editedEntry.difficulty,
-										prepTimeMins: _editedEntry.prepTimeMins,
-										cookTimeMins: _editedEntry.cookTimeMins,
-										servings: int.parse(value!),
-										images: _editedEntry.images,
-										tagIds: _editedEntry.tagIds,
+		return Scaffold(
+			appBar: AppBar(
+				title: Text('${widget.formMode} Recipe'),
+				actions: [
+					if (widget.formMode == 'Edit' && widget.inputId != null) IconButton(
+						icon: const Icon(Icons.delete),
+						onPressed: () async {
+							final confirmDelete = await showDialog(
+								context: context,
+								builder: (BuildContext ctx) {
+									return DeleteEntriesAlertDialog(
+										title: Text('Deleting entry ${widget.inputId!}...'),
+										content: const Text('Delete this entry?')
 									);
-								},
+								}
+							);
+							if (confirmDelete) {
+								await Provider.of<RecipeCollection>(context, listen: false).deleteEntries({widget.inputId!});
+								Navigator.of(context).popUntil(
+									ModalRoute.withName('/')
+								);
+							}
+						},
+					),
+				],
+			),
+			body: Padding(
+				padding: const EdgeInsets.all(16),
+				child: SingleChildScrollView(
+					child: _isLoading
+					? const Center(child: CircularProgressIndicator(),)
+					: Column(
+						children: [
+							Form(
+								key: _form,
+								child: Column(
+									children: <Widget>[
+										Row(
+											children: [
+												Expanded(
+													child: TextFormField(
+														initialValue: _initValues['name'],
+														decoration: const InputDecoration(labelText: 'Title',),
+														textInputAction: TextInputAction.next,
+														validator: (value) {
+															if (value == null) {
+																return 'Please provide a value';
+															}
+															if (value.isEmpty) {
+																return 'Please provide a value';
+															}
+															return null;
+														},
+														onSaved: (value) {
+															_editedEntry = RecipeEntry(
+																id: _editedEntry.id,
+																name: value!,
+																displayId: _editedEntry.displayId,
+																complexity: _editedEntry.complexity,
+																difficulty: _editedEntry.difficulty,
+																prepTimeMins: _editedEntry.prepTimeMins,
+																cookTimeMins: _editedEntry.cookTimeMins,
+																servings: _editedEntry.servings,
+																images: _editedEntry.images,
+																tagIds: _editedEntry.tagIds,
+															);
+														},
+													),
+												),
+												const SizedBox(width: 10,),
+												Expanded(
+													child: TextFormField(
+														initialValue: _initValues['displayId'],
+														decoration: const InputDecoration(labelText: 'Entry ID',),
+														textInputAction: TextInputAction.next,
+														validator: (value) {
+															if (value == null) {
+																return 'Please provide a value';
+															}
+															if (value.isEmpty) {
+																return 'Please provide a value';
+															}
+															return null;
+														},
+														onSaved: (value) {
+															_editedEntry = RecipeEntry(
+																id: _editedEntry.id,
+																name: _editedEntry.name,
+																displayId: value!,
+																complexity: _editedEntry.complexity,
+																difficulty: _editedEntry.difficulty,
+																prepTimeMins: _editedEntry.prepTimeMins,
+																cookTimeMins: _editedEntry.cookTimeMins,
+																servings: _editedEntry.servings,
+																images: _editedEntry.images,
+																tagIds: _editedEntry.tagIds,
+															);
+														},
+													),
+												),
+											],
+										),
+										Row(
+											children: [
+												Expanded(
+													child: DropdownButtonFormField<RecipeComplexity>(
+														value: _initValues['complexity'],
+														decoration: const InputDecoration(
+															label: Text('Complexity'),
+														),
+														items: <RecipeComplexity>[
+															RecipeComplexity.simple, RecipeComplexity.moderate, RecipeComplexity.complex
+															].map((RecipeComplexity value) =>
+															DropdownMenuItem(
+																value: value,
+																child: Text(complexityStrings[value]!),
+															)
+														).toList(),
+														validator: (RecipeComplexity? value) {
+															if (value == null) {
+																return 'Please provide a value.';
+															}
+															return null;
+														},
+														onChanged: (_) {},
+														onSaved: (RecipeComplexity? value) {
+															_editedEntry = RecipeEntry(
+																id: _editedEntry.id,
+																name: _editedEntry.name,
+																displayId: _editedEntry.displayId,
+																complexity: value!,
+																difficulty: _editedEntry.difficulty,
+																prepTimeMins: _editedEntry.prepTimeMins,
+																cookTimeMins: _editedEntry.cookTimeMins,
+																servings: _editedEntry.servings,
+																images: _editedEntry.images,
+																tagIds: _editedEntry.tagIds,
+															);
+														},
+													),
+												),
+												const SizedBox(width: 10,),
+												Expanded(
+													child: DropdownButtonFormField<TechnicalDifficulty>(
+														value: _initValues['difficulty'],
+														decoration: const InputDecoration(
+															label: Text('Expertise'),
+														),
+														items: <TechnicalDifficulty>[
+															TechnicalDifficulty.easy, TechnicalDifficulty.medium, TechnicalDifficulty.difficult
+															].map((TechnicalDifficulty value) =>
+															DropdownMenuItem(
+																value: value,
+																child: Text(difficultyStrings[value]!),
+															)
+														).toList(),
+														validator: (TechnicalDifficulty? value) {
+															if (value == null) {
+																return 'Please provide a value.';
+															}
+															return null;
+														},
+														onChanged: (_) {},
+														onSaved: (TechnicalDifficulty? value) {
+															_editedEntry = RecipeEntry(
+																id: _editedEntry.id,
+																name: _editedEntry.name,
+																displayId: _editedEntry.displayId,
+																complexity: _editedEntry.complexity,
+																difficulty: value!,
+																prepTimeMins: _editedEntry.prepTimeMins,
+																cookTimeMins: _editedEntry.cookTimeMins,
+																servings: _editedEntry.servings,
+																images: _editedEntry.images,
+																tagIds: _editedEntry.tagIds,
+															);
+														},
+													),
+												),
+											],
+										),
+										Row(
+											children: [
+												Expanded(
+													child: TextFormField(
+														initialValue: _initValues['prepTime'].toString(),
+														decoration: const InputDecoration(labelText: 'Prep. Time (mins)',),
+														keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
+														textInputAction: TextInputAction.next,
+														validator: (value) {
+															if (value == null) {
+																return 'Please provide a value';
+															}
+															if (value.isEmpty) {
+																return 'Please provide a value';
+															}
+															final valueInt = int.tryParse(value);
+															if (valueInt == null) {
+																return 'Please provide an integer';
+															}
+															if (valueInt < 1) {
+																return 'Please provide a value greater than 0';
+															}
+															return null;
+														},
+														onSaved: (value) {
+															_editedEntry = RecipeEntry(
+																id: _editedEntry.id,
+																name: _editedEntry.name,
+																displayId: _editedEntry.displayId,
+																complexity: _editedEntry.complexity,
+																difficulty: _editedEntry.difficulty,
+																prepTimeMins: int.parse(value!),
+																cookTimeMins: _editedEntry.cookTimeMins,
+																servings: _editedEntry.servings,
+																images: _editedEntry.images,
+																tagIds: _editedEntry.tagIds,
+															);
+														},
+													),
+												),
+												const SizedBox(width: 10,),
+												Expanded(
+													child: TextFormField(
+														initialValue: _initValues['cookingTime'].toString(),
+														decoration: const InputDecoration(labelText: 'Cooking Time (mins)',),
+														keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
+														textInputAction: TextInputAction.next,
+														validator: (value) {
+															if (value == null) {
+																return 'Please provide a value';
+															}
+															if (value.isEmpty) {
+																return 'Please provide a value';
+															}
+															final valueInt = int.tryParse(value);
+															if (valueInt == null) {
+																return 'Please provide an integer';
+															}
+															if (valueInt < 1) {
+																return 'Please provide a value greater than 0';
+															}
+															return null;
+														},
+														onSaved: (value) {
+															_editedEntry = RecipeEntry(
+																id: _editedEntry.id,
+																name: _editedEntry.name,
+																displayId: _editedEntry.displayId,
+																complexity: _editedEntry.complexity,
+																difficulty: _editedEntry.difficulty,
+																prepTimeMins: _editedEntry.prepTimeMins,
+																cookTimeMins: int.parse(value!),
+																servings: _editedEntry.servings,
+																images: _editedEntry.images,
+																tagIds: _editedEntry.tagIds,
+															);
+														},
+													),
+												),
+											],
+										),
+										TextFormField(
+											initialValue: _initValues['servings'].toString(),
+											decoration: const InputDecoration(labelText: 'Servings',),
+											keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
+											textInputAction: TextInputAction.next,
+											validator: (value) {
+												if (value == null) {
+													return 'Please provide a value';
+												}
+												if (value.isEmpty) {
+													return 'Please provide a value';
+												}
+												final valueInt = int.tryParse(value);
+												if (valueInt == null) {
+													return 'Please provide an integer';
+												}
+												if (valueInt < 1) {
+													return 'Please provide a value greater than 0';
+												}
+												return null;
+											},
+											onSaved: (value) {
+												_editedEntry = RecipeEntry(
+													id: _editedEntry.id,
+													name: _editedEntry.name,
+													displayId: _editedEntry.displayId,
+													complexity: _editedEntry.complexity,
+													difficulty: _editedEntry.difficulty,
+													prepTimeMins: _editedEntry.prepTimeMins,
+													cookTimeMins: _editedEntry.cookTimeMins,
+													servings: int.parse(value!),
+													images: _editedEntry.images,
+													tagIds: _editedEntry.tagIds,
+												);
+											},
+										),
+									],
+								),
+							),
+							RecipeFormTagSelection(
+								onTagSelectionUpdate: tagSelectionUpdateHandler,
+								initialSelection: _initValues['tagIds'],
+							),
+							const SizedBox(height: 25,),
+							ImageListEdit(
+								initialList: _initValues['images'],
+								onUpdateList: imageListUpdateHandler,
+							),
+							const SizedBox(height: 25,),
+							ElevatedButton.icon(
+								onPressed: _saveForm,
+								icon: const Icon(Icons.save),
+								label: const Text('Save')
 							),
 						],
 					),
 				),
-				RecipeFormTagSelection(
-					onTagSelectionUpdate: tagSelectionUpdateHandler,
-					initialSelection: _initValues['tagIds'],
-				),
-				const SizedBox(height: 25,),
-				ImageListEdit(
-					initialList: _initValues['images'],
-					onUpdateList: imageListUpdateHandler,
-				),
-				const SizedBox(height: 25,),
-				ElevatedButton.icon(
-					onPressed: _saveForm,
-					icon: const Icon(Icons.save),
-					label: const Text('Save')
-				),
-			],
+			),
 		);
 	}
 }
