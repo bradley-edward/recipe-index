@@ -6,8 +6,9 @@ import './entry_image_displayer.dart';
 
 class entryImageCarousel extends StatelessWidget {
 	List<EntryImage> imageList;
+	Function onImageDblTap;
 
-	entryImageCarousel(this.imageList, { Key? key }) : super(key: key);
+	entryImageCarousel({required this.imageList, required this.onImageDblTap, Key? key }) : super(key: key);
 
 	@override
 	Widget build(BuildContext context) {
@@ -17,9 +18,12 @@ class entryImageCarousel extends StatelessWidget {
 				var currImage = imageList[index];
 				return InkWell(
 					key: ValueKey(currImage.id),
-					child: EntryImageDisplayer(currImage),
+					child: Hero(
+						tag: currImage.id!,
+						child: EntryImageDisplayer(currImage),
+					),
 					onDoubleTap: () {
-						print('Double tapped image!');
+						onImageDblTap(currImage);
 					},
 				);
 			},

@@ -10,6 +10,7 @@ import './screens/search_screen.dart';
 import './screens/edit_recipe_screen.dart';
 import './screens/csv_export_import_screen.dart';
 import './screens/tags_edit_screen.dart';
+import './screens/image_view_screen.dart';
 
 void main() => runApp(const MyApp());
 
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
 					EditRecipeScreen.routeName: (ctx) => EditRecipeScreen(),
 					CsvExportImportScreen.routeName: (ctx) => const CsvExportImportScreen(),
 					TagsEditScreen.routeName: (ctx) => TagsEditScreen(),
+					ImageViewScreen.routeName: (ctx) => ImageViewScreen(),
 				},
 			),
 		);

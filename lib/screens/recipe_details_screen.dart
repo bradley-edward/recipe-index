@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../providers/recipe_collection.dart';
 import '../providers/recipe_tag_list.dart';
 import '../screens/edit_recipe_screen.dart';
+import './image_view_screen.dart';
 import '../widgets/entry_image_carousel.dart';
 import '../widgets/tags_edit/display_tag_list_readonly.dart';
 import '../models/recipe_complexity.dart';
@@ -84,7 +85,12 @@ class RecipeDetailsScreen extends StatelessWidget {
 								children: <Widget>[
 									Container(
 										height: 240,
-										child: entryImageCarousel(entry.images),
+										child: entryImageCarousel(
+											imageList: entry.images,
+											onImageDblTap: (img) {
+												appNav.pushNamed(ImageViewScreen.routeName, arguments: img);
+											},
+										),
 									),
 									const SizedBox(height: 10,),
 									Container(
