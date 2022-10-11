@@ -10,6 +10,24 @@ class RecipeTagList with ChangeNotifier {
 		return [..._tags];
 	}
 
+	int _tagNameCompare(String tagName1, String tagName2) {
+		return tagName1.toLowerCase().compareTo(tagName2.toLowerCase());
+	}
+
+	void _tagsInsertionSortOnePass() {
+		if (_tags.length < 2) return;
+
+		final int finalIdx = _tags.length - 1;
+		RecipeTag currTag = _tags[finalIdx];
+
+		int j = finalIdx - 1;
+		while (j >= 0 && _tagNameCompare(_tags[j].name, currTag.name) > 0) {
+			_tags[j+1] = _tags[j];
+			j--;
+		}
+		_tags[j+1] = currTag;
+	}
+
 	List<RecipeTag> findByIdSet(Set<int> ids) {
 		return _tags.where((tagEntry) => ids.contains(tagEntry.id)).toList();
 	}
@@ -50,6 +68,7 @@ class RecipeTagList with ChangeNotifier {
 		);
 
 		_tags.add(newTag);
+		_tagsInsertionSortOnePass();
 		notifyListeners();
 
 		return tagId;
@@ -108,12 +127,16 @@ class RecipeTagList with ChangeNotifier {
 	}
 
 	Future<bool> fetchAndSetTags() async {
+		_tags.clear();
 		final tagList = await DBHelper.getData('tags');
 
-		_tags = tagList.map((tagItem) => RecipeTag(
-			id: tagItem['id'],
-			name: tagItem['name'],
-		)).toList();
+		for (Map<String, dynamic> tagItem in tagList) {
+			_tags.add(RecipeTag(
+				id: tagItem['id'],
+				name: tagItem['name'],
+			));
+			_tagsInsertionSortOnePass();
+		}
 
 		notifyListeners();
 		return true;
