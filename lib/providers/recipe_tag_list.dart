@@ -14,18 +14,57 @@ class RecipeTagList with ChangeNotifier {
 		return tagName1.toLowerCase().compareTo(tagName2.toLowerCase());
 	}
 
-	void _tagsInsertionSortOnePass() {
+	void _insertionSortShuffle(int tagIndex) {
 		if (_tags.length < 2) return;
 
-		final int finalIdx = _tags.length - 1;
-		RecipeTag currTag = _tags[finalIdx];
-
-		int j = finalIdx - 1;
-		while (j >= 0 && _tagNameCompare(_tags[j].name, currTag.name) > 0) {
-			_tags[j+1] = _tags[j];
-			j--;
+		if (tagIndex == _tags.length - 1) {
+			return _tagsInsertionSortOnePass();
 		}
-		_tags[j+1] = currTag;
+
+		var goRight = false;
+		var rightCompare = _tagNameCompare(_tags[tagIndex].name, _tags[tagIndex + 1].name);
+		if (tagIndex == 0) {
+			if (rightCompare < 0) {
+				return;
+			}
+			goRight = true;	// The tag is bigger than its right neighbor. Must shift it right.
+		} else {
+			var leftCompare = _tagNameCompare(_tags[tagIndex - 1].name, _tags[tagIndex].name);
+			if (leftCompare < 0 && rightCompare < 0) return;	// The tag is already in its appropriate location.
+
+			if (leftCompare > 0 && rightCompare < 0) {
+				// The tag is smaller than both its neighbors. Must shift it left.
+				goRight = false;
+			} else if (leftCompare < 0 && rightCompare > 0) {
+				// The tag is bigger than both its neighbors. Must shift it right.
+				goRight = true;
+			}
+		}
+
+		return _tagsInsertionSortOnePass(tagIndex, goRight);
+	}
+
+	void _tagsInsertionSortOnePass([int? idxToShuffle, bool shiftRight = false]) {
+		final tagLen = _tags.length;
+		if (tagLen < 2) return;
+
+		idxToShuffle ??= shiftRight ? 0 : tagLen - 1;
+		RecipeTag currTag = _tags[idxToShuffle];
+
+		int j = idxToShuffle - (shiftRight ? -1 : 1);
+		if (shiftRight) {
+			while (j < tagLen && _tagNameCompare(currTag.name, _tags[j].name) > 0) {
+				_tags[j-1] = _tags[j];
+				j++;
+			}
+			_tags[j-1] = currTag;
+		} else {
+			while (j >= 0 && _tagNameCompare(_tags[j].name, currTag.name) > 0) {
+				_tags[j+1] = _tags[j];
+				j--;
+			}
+			_tags[j+1] = currTag;
+		}
 	}
 
 	List<RecipeTag> findByIdSet(Set<int> ids) {
@@ -83,6 +122,7 @@ class RecipeTagList with ChangeNotifier {
 		final newTag = RecipeTag(id: id, name: newName);
 
 		_tags[tagIndex] = newTag;
+		_insertionSortShuffle(tagIndex);
 		notifyListeners();
 
 		await DBHelper.update('tags', {
