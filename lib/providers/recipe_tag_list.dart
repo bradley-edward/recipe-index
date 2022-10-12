@@ -4,7 +4,7 @@ import '../models/recipe_tag.dart';
 import '../helpers/db_helper.dart';
 
 class RecipeTagList with ChangeNotifier {
-	List<RecipeTag> _tags = [];
+	final List<RecipeTag> _tags = [];
 
 	List<RecipeTag> get tagList {
 		return [..._tags];
