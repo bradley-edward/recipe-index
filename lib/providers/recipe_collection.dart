@@ -9,10 +9,67 @@ import '../models/technical_difficulty.dart';
 import '../helpers/db_helper.dart';
 
 class RecipeCollection with ChangeNotifier {
-	List<RecipeEntry> _entries = [];
+	final List<RecipeEntry> _entries = [];
 
 	List<RecipeEntry> get entries {
 		return [..._entries];
+	}
+
+	int _displayIdCompare(String displayId1, String displayId2) {
+		return displayId1.toLowerCase().compareTo(displayId2.toLowerCase());
+	}
+
+	void _insertionSortShuffle(int idx) {
+		if (_entries.length < 2) return;
+
+		if (idx == _entries.length - 1) {
+			return _entriesInsertionSortOnePass();
+		}
+
+		var goRight = false;
+		var rightCompare = _displayIdCompare(_entries[idx].displayId, _entries[idx + 1].displayId);
+		if (idx == 0) {
+			if (rightCompare < 0) {
+				return;
+			}
+			goRight = true;	// The tag is bigger than its right neighbor. Must shift it right.
+		} else {
+			var leftCompare = _displayIdCompare(_entries[idx - 1].displayId, _entries[idx].displayId);
+			if (leftCompare < 0 && rightCompare < 0) return;	// The tag is already in its appropriate location.
+
+			if (leftCompare > 0 && rightCompare < 0) {
+				// The tag is smaller than both its neighbors. Must shift it left.
+				goRight = false;
+			} else if (leftCompare < 0 && rightCompare > 0) {
+				// The tag is bigger than both its neighbors. Must shift it right.
+				goRight = true;
+			}
+		}
+
+		return _entriesInsertionSortOnePass(idx, goRight);
+	}
+
+	void _entriesInsertionSortOnePass([int? idxToShuffle, bool shiftRight = false]) {
+		final tagLen = _entries.length;
+		if (tagLen < 2) return;
+
+		idxToShuffle ??= shiftRight ? 0 : tagLen - 1;
+		RecipeEntry currEntry = _entries[idxToShuffle];
+
+		int j = idxToShuffle - (shiftRight ? -1 : 1);
+		if (shiftRight) {
+			while (j < tagLen && _displayIdCompare(currEntry.displayId, _entries[j].displayId) > 0) {
+				_entries[j-1] = _entries[j];
+				j++;
+			}
+			_entries[j-1] = currEntry;
+		} else {
+			while (j >= 0 && _displayIdCompare(_entries[j].displayId, currEntry.displayId) > 0) {
+				_entries[j+1] = _entries[j];
+				j--;
+			}
+			_entries[j+1] = currEntry;
+		}
 	}
 
 	List<RecipeEntry> searchForEntries(EntrySearchCriteria searchCriteria) {
@@ -62,6 +119,7 @@ class RecipeCollection with ChangeNotifier {
 		);
 		
 		_entries.add(newEntry);
+		_entriesInsertionSortOnePass();
 		notifyListeners();
 
 		if (newEntry.images.isEmpty) {
@@ -143,6 +201,7 @@ class RecipeCollection with ChangeNotifier {
 		// We should perhaps deal with deleting image files from the file-system, depending on how the images table is being updated.
 		newEntry.images.removeWhere((image) => imageIdsToRemove.contains(image.id));
 		_entries[entryIndex] = newEntry;
+		_insertionSortShuffle(entryIndex);
 		notifyListeners();
 
 		await DBHelper.update('recipes', {
@@ -194,7 +253,8 @@ class RecipeCollection with ChangeNotifier {
 		final imageList = await DBHelper.getData('images');
 		final mnRecipeTags = await DBHelper.getData('mn_recipes_tags');
 
-		_entries = dataList.map((entry) {
+		_entries.clear();
+		for (Map<String, dynamic> entry in dataList) {
 			final entryImageData = imageList.where(
 				(image) => image['ownerId'] == entry['id']
 			).toList()..sort(
@@ -203,23 +263,26 @@ class RecipeCollection with ChangeNotifier {
 
 			final tagsSet = mnRecipeTags.where((e) => e['recipeId'] == entry['id']).map((e) => e['tagId'] as int).toSet();
 
-			return RecipeEntry(
-				id: entry['id'],
-				name: entry['name'],
-				displayId: entry['displayId'],
-				complexity: RecipeComplexity.values[entry['complexity']],
-				difficulty: TechnicalDifficulty.values[entry['difficulty']],
-				prepTimeMins: entry['prepTime'],
-				cookTimeMins: entry['cookingTime'],
-				servings: entry['servings'],
-				images: entryImageData.map((image) => EntryImage(
-					id: image['id'],
-					imageLocation: image['imageLocation'],
-					imageType: ImageType.values[image['imageType']],
-				)).toList(),
-				tagIds: tagsSet,
+			_entries.add(
+					RecipeEntry(
+					id: entry['id'],
+					name: entry['name'],
+					displayId: entry['displayId'],
+					complexity: RecipeComplexity.values[entry['complexity']],
+					difficulty: TechnicalDifficulty.values[entry['difficulty']],
+					prepTimeMins: entry['prepTime'],
+					cookTimeMins: entry['cookingTime'],
+					servings: entry['servings'],
+					images: entryImageData.map((image) => EntryImage(
+						id: image['id'],
+						imageLocation: image['imageLocation'],
+						imageType: ImageType.values[image['imageType']],
+					)).toList(),
+					tagIds: tagsSet,
+				)
 			);
-		}).toList();
+			_entriesInsertionSortOnePass();
+		}
 		notifyListeners();
 		return true;
 	}
