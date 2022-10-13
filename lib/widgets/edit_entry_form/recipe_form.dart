@@ -177,6 +177,8 @@ class _RecipeFormState extends State<RecipeForm> {
 
 	@override
 	Widget build(BuildContext context) {
+		final providerRc = Provider.of<RecipeCollection>(context, listen: false);
+
 		return Scaffold(
 			appBar: AppBar(
 				title: Text('${widget.formMode} Recipe'),
@@ -211,7 +213,7 @@ class _RecipeFormState extends State<RecipeForm> {
 								}
 							);
 							if (confirmDelete) {
-								await Provider.of<RecipeCollection>(context, listen: false).deleteEntries({widget.inputId!});
+								await providerRc.deleteEntries({widget.inputId!});
 								Navigator.of(context).popUntil(
 									ModalRoute.withName('/')
 								);
@@ -276,6 +278,11 @@ class _RecipeFormState extends State<RecipeForm> {
 															if (value.isEmpty) {
 																return 'Please provide a value';
 															}
+
+															if (providerRc.isDisplayIdAlreadyUsed(value)) {
+																return "'$value' is already used. Try another.";
+															}
+
 															return null;
 														},
 														onSaved: (value) {
