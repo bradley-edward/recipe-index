@@ -32,7 +32,7 @@ class _RecipeFormState extends State<RecipeForm> {
 		complexity: null,
 		prepTimeMins: 0,
 		cookTimeMins: 0,
-		servings: 0,
+		servings: '0',
 		images: [],
 		tagIds: <int>{},
 	);
@@ -466,7 +466,7 @@ class _RecipeFormState extends State<RecipeForm> {
 										TextFormField(
 											initialValue: _initValues['servings'].toString(),
 											decoration: const InputDecoration(labelText: 'Servings',),
-											keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
+											keyboardType: TextInputType.text,
 											textInputAction: TextInputAction.next,
 											validator: (value) {
 												if (value == null) {
@@ -474,13 +474,6 @@ class _RecipeFormState extends State<RecipeForm> {
 												}
 												if (value.isEmpty) {
 													return 'Please provide a value';
-												}
-												final valueInt = int.tryParse(value);
-												if (valueInt == null) {
-													return 'Please provide an integer';
-												}
-												if (valueInt < 1) {
-													return 'Please provide a value greater than 0';
 												}
 												return null;
 											},
@@ -493,7 +486,7 @@ class _RecipeFormState extends State<RecipeForm> {
 													difficulty: _editedEntry.difficulty,
 													prepTimeMins: _editedEntry.prepTimeMins,
 													cookTimeMins: _editedEntry.cookTimeMins,
-													servings: int.parse(value!),
+													servings: value!,
 													images: _editedEntry.images,
 													tagIds: _editedEntry.tagIds,
 												);

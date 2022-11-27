@@ -12,7 +12,7 @@ class DBHelper {
 		return sql.openDatabase(
 			path.join(dbPath, 'collection_indexer.db'),
 			onCreate: (db, version) async {
-				await db.execute('CREATE TABLE recipes(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, displayId TEXT, name TEXT, complexity INTEGER, difficulty INTEGER, prepTime INTEGER, cookingTime INTEGER, servings INTEGER)');
+				await db.execute('CREATE TABLE recipes(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, displayId TEXT, name TEXT, complexity INTEGER, difficulty INTEGER, prepTime INTEGER, cookingTime INTEGER, servings TEXT)');
 				await db.execute('CREATE TABLE images(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, listIndex INTEGER, imageType INTEGER, imageLocation TEXT, ownerId INTEGER NOT NULL)');
 				await db.execute('CREATE TABLE tags(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT)');
 				await db.execute('CREATE TABLE mn_recipes_tags(recipeId INTEGER NOT NULL, tagId INTEGER NOT NULL)');

@@ -7,7 +7,7 @@ class EntrySearchCriteria {
 	Set<TechnicalDifficulty>? difficultySet;
 	Map<String,int>? prepTimeRange;
 	Map<String,int>? cookTimeRange;
-	Map<String,int>? servingsRange;
+  String? servingsText;
 	Set<int>? tagIdSet;
 
 	EntrySearchCriteria();
@@ -32,8 +32,8 @@ class EntrySearchCriteria {
 		if (cookTimeRange != null) {
 			criterionList.add(_isWithinRange(entry.cookTimeMins, cookTimeRange!));
 		}
-		if (servingsRange != null) {
-			criterionList.add(_isWithinRange(entry.servings, servingsRange!));
+		if (servingsText != null) {
+			criterionList.add(entry.servings.contains(RegExp(servingsText!, caseSensitive: false)));
 		}
 
 		if (tagIdSet != null) {

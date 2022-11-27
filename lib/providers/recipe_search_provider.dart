@@ -24,10 +24,7 @@ class RecipeSearchProvider with ChangeNotifier {
 		'from': -1,
 		'to': -1,
 	};
-	final Map<String, int> _servingRange = {
-		'from': -1,
-		'to': -1,
-	};
+	String _servingText = '';
 	final Set<int> _tagIds = {};
 
 	EntrySearchCriteria? get searchPayload {
@@ -52,7 +49,7 @@ class RecipeSearchProvider with ChangeNotifier {
 		}
 		if (_enabledSearches['servings']!) {
 			atLeastOneEnabled = true;
-			searchPayload.servingsRange = _servingRange;
+			searchPayload.servingsText = _servingText;
 		}
 		if (_enabledSearches['tagIds']!) {
 			atLeastOneEnabled = true;
@@ -77,6 +74,19 @@ class RecipeSearchProvider with ChangeNotifier {
 		}
 	}
 
+  String? getSearchText(String searchName) {
+    if (! _enabledSearches[searchName]! ) return null;
+
+    String? strToReturn;
+
+    switch (searchName) {
+      case 'servings':
+        return _servingText;
+    }
+
+    return strToReturn;
+  }
+
 	Map<String, int>? getIntRange(String searchName) {
 		if (! _enabledSearches[searchName]!) return null;
 
@@ -87,9 +97,6 @@ class RecipeSearchProvider with ChangeNotifier {
 				break;
 			case 'cookTime':
 				mapToReturn = _cookTimeRange;
-				break;
-			case 'servings':
-				mapToReturn = _servingRange;
 				break;
 			default:
 				return null;
@@ -136,9 +143,6 @@ class RecipeSearchProvider with ChangeNotifier {
 			case 'cookTime':
 				mapToModify = _cookTimeRange;
 				break;
-			case 'servings':
-				mapToModify = _servingRange;
-				break;
 			default:
 				break;
 		}
@@ -148,6 +152,14 @@ class RecipeSearchProvider with ChangeNotifier {
 		mapToModify['from'] = inputIntRange['from']!;
 		mapToModify['to'] = inputIntRange['to']!;
 	}
+
+  void setSearchText(String searchName, String inputSearchText) {
+    switch (searchName) {
+      case 'servings':
+        _servingText = inputSearchText;
+        break;
+    }
+  }
 
 	void setTagIdSet(Set<int> inputTagSet) {
 		_tagIds.clear();

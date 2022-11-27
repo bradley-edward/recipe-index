@@ -6,6 +6,7 @@ import '../../models/recipe_complexity.dart';
 import '../../models/technical_difficulty.dart';
 import './enum_selector.dart';
 import './int_range_slider.dart';
+import './search_text_input.dart';
 import './search_form_tag_selection.dart';
 
 class SearchForm extends StatelessWidget {
@@ -77,12 +78,9 @@ class SearchForm extends StatelessWidget {
 					mainAxisAlignment: MainAxisAlignment.start,
 					children: const [
 						Expanded(
-							child: IntRangeSlider(
+							child: SearchTextInput(
 								titleStr: 'Servings',
-								searchName: 'servings',
-								rangeMin: 0,
-								rangeMax: 20,
-								rangeStep: 1,
+								searchName: 'servings'
 							),
 						),
 					],

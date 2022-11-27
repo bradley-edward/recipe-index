@@ -10,7 +10,7 @@ class RecipeEntry {
 	final TechnicalDifficulty? difficulty;
 	final int prepTimeMins;
 	final int cookTimeMins;
-	final int servings;
+	final String servings;
 	List<EntryImage> images;
 	Set<int> tagIds;
 
