@@ -72,8 +72,8 @@ class RecipeCollection with ChangeNotifier {
 		}
 	}
 
-	bool isDisplayIdAlreadyUsed(String inputDisplayId) {
-		return _entries.any((entry) => _displayIdCompare(entry.displayId, inputDisplayId) == 0);
+	bool isDisplayIdAlreadyUsed(String inputDisplayId, int? inputEntryId) {
+    return _entries.where((entry) => entry.id != inputEntryId).any((entry) => _displayIdCompare(entry.displayId, inputDisplayId) == 0);
 	}
 
 	List<RecipeEntry> searchForEntries(EntrySearchCriteria searchCriteria) {

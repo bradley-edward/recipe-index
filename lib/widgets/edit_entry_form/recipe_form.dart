@@ -279,7 +279,7 @@ class _RecipeFormState extends State<RecipeForm> {
 																return 'Please provide a value';
 															}
 
-															if (providerRc.isDisplayIdAlreadyUsed(value)) {
+															if (providerRc.isDisplayIdAlreadyUsed(value, _editedEntry.id)) {
 																return "'$value' is already used. Try another.";
 															}
 
