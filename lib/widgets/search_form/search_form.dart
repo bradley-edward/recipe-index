@@ -23,6 +23,18 @@ class SearchForm extends StatelessWidget {
 			children: [
 				Row(
 					crossAxisAlignment: CrossAxisAlignment.start,
+					mainAxisAlignment: MainAxisAlignment.start,
+					children: const [
+						Expanded(
+							child: SearchTextInput(
+								titleStr: 'Name',
+								searchName: 'name'
+							),
+						),
+					],
+				),
+				Row(
+					crossAxisAlignment: CrossAxisAlignment.start,
 					mainAxisAlignment: MainAxisAlignment.spaceAround,
 					children: [
 						Expanded(
