@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import '../providers/recipe_collection.dart';
 import '../providers/recipe_tag_list.dart';
@@ -100,6 +101,15 @@ class RecipeDetailsScreen extends StatelessWidget {
 											style: appTheme.textTheme.titleLarge,
 										),
 									),
+									const SizedBox(height: 10,),
+                  RatingBarIndicator(
+                    rating: entry.rating,
+                    itemBuilder: (context, index) => const Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                    ),
+                    itemCount: 5,
+                  ),
 									const SizedBox(height: 40,),
 									Row(
 										mainAxisAlignment: MainAxisAlignment.spaceAround,

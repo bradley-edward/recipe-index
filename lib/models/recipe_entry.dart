@@ -11,6 +11,7 @@ class RecipeEntry {
 	final int prepTimeMins;
 	final int cookTimeMins;
 	final String servings;
+  final double rating;
 	List<EntryImage> images;
 	Set<int> tagIds;
 
@@ -23,6 +24,7 @@ class RecipeEntry {
 		required this.prepTimeMins,
 		required this.cookTimeMins,
 		required this.servings,
+    required this.rating,
 		required this.images,
 		required this.tagIds,
 	});

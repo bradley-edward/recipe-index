@@ -96,6 +96,7 @@ class RecipeCollection with ChangeNotifier {
 			'prepTime': entry.prepTimeMins,
 			'cookingTime': entry.cookTimeMins,
 			'servings': entry.servings,
+      'rating': entry.rating,
 		});
 
 		if (entry.tagIds.isNotEmpty) {
@@ -118,6 +119,7 @@ class RecipeCollection with ChangeNotifier {
 			prepTimeMins: entry.prepTimeMins,
 			cookTimeMins: entry.cookTimeMins,
 			servings: entry.servings,
+      rating: entry.rating,
 			images: entry.images,
 			tagIds: entry.tagIds,
 		);
@@ -217,6 +219,7 @@ class RecipeCollection with ChangeNotifier {
 			'prepTime': newEntry.prepTimeMins,
 			'cookingTime': newEntry.cookTimeMins,
 			'servings': newEntry.servings,
+			'rating': newEntry.rating,
 		});
 
 		await _updateEntryTags(newEntry.id!, newEntry.tagIds, tagsOldSet);
@@ -277,6 +280,7 @@ class RecipeCollection with ChangeNotifier {
 					prepTimeMins: entry['prepTime'],
 					cookTimeMins: entry['cookingTime'],
 					servings: entry['servings'],
+          rating: entry['rating'],
 					images: entryImageData.map((image) => EntryImage(
 						id: image['id'],
 						imageLocation: image['imageLocation'],

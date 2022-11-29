@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import '../../models/entry_image.dart';
 import '../../providers/recipe_collection.dart';
@@ -33,6 +34,7 @@ class _RecipeFormState extends State<RecipeForm> {
 		prepTimeMins: 0,
 		cookTimeMins: 0,
 		servings: '0',
+    rating: 0.0,
 		images: [],
 		tagIds: <int>{},
 	);
@@ -47,6 +49,7 @@ class _RecipeFormState extends State<RecipeForm> {
 		'prepTime': 0,
 		'cookingTime': 0,
 		'servings': 0,
+    'rating': 0.0,
 		'tagIds': <int>{},
 	};
 
@@ -62,6 +65,7 @@ class _RecipeFormState extends State<RecipeForm> {
 			prepTimeMins: _editedEntry.prepTimeMins,
 			cookTimeMins: _editedEntry.cookTimeMins,
 			servings: _editedEntry.servings,
+      rating: _editedEntry.rating,
 			images: _editedEntry.images,
 			tagIds: selectedTags,
 		);
@@ -77,6 +81,7 @@ class _RecipeFormState extends State<RecipeForm> {
 			prepTimeMins: _editedEntry.prepTimeMins,
 			cookTimeMins: _editedEntry.cookTimeMins,
 			servings: _editedEntry.servings,
+      rating: _editedEntry.rating,
 			images: newImagesList,
 			tagIds: _editedEntry.tagIds,
 		);
@@ -101,6 +106,7 @@ class _RecipeFormState extends State<RecipeForm> {
 					prepTimeMins: fetchedEntry.prepTimeMins,
 					cookTimeMins: fetchedEntry.cookTimeMins,
 					servings: fetchedEntry.servings,
+          rating: fetchedEntry.rating,
 					images: fetchedEntry.images.map((image) => EntryImage(
 						imageLocation: image.imageLocation,
 						imageType: image.imageType,
@@ -120,6 +126,7 @@ class _RecipeFormState extends State<RecipeForm> {
 				'prepTime': _editedEntry.prepTimeMins,
 				'cookingTime': _editedEntry.cookTimeMins,
 				'servings': _editedEntry.servings,
+        'rating': _editedEntry.rating,
 			};
 		}
 	}
@@ -259,6 +266,7 @@ class _RecipeFormState extends State<RecipeForm> {
 																prepTimeMins: _editedEntry.prepTimeMins,
 																cookTimeMins: _editedEntry.cookTimeMins,
 																servings: _editedEntry.servings,
+                                rating: _editedEntry.rating,
 																images: _editedEntry.images,
 																tagIds: _editedEntry.tagIds,
 															);
@@ -295,6 +303,7 @@ class _RecipeFormState extends State<RecipeForm> {
 																prepTimeMins: _editedEntry.prepTimeMins,
 																cookTimeMins: _editedEntry.cookTimeMins,
 																servings: _editedEntry.servings,
+                                rating: _editedEntry.rating,
 																images: _editedEntry.images,
 																tagIds: _editedEntry.tagIds,
 															);
@@ -336,6 +345,7 @@ class _RecipeFormState extends State<RecipeForm> {
 																prepTimeMins: _editedEntry.prepTimeMins,
 																cookTimeMins: _editedEntry.cookTimeMins,
 																servings: _editedEntry.servings,
+                                rating: _editedEntry.rating,
 																images: _editedEntry.images,
 																tagIds: _editedEntry.tagIds,
 															);
@@ -374,6 +384,7 @@ class _RecipeFormState extends State<RecipeForm> {
 																prepTimeMins: _editedEntry.prepTimeMins,
 																cookTimeMins: _editedEntry.cookTimeMins,
 																servings: _editedEntry.servings,
+                                rating: _editedEntry.rating,
 																images: _editedEntry.images,
 																tagIds: _editedEntry.tagIds,
 															);
@@ -416,6 +427,7 @@ class _RecipeFormState extends State<RecipeForm> {
 																prepTimeMins: int.parse(value!),
 																cookTimeMins: _editedEntry.cookTimeMins,
 																servings: _editedEntry.servings,
+                                rating: _editedEntry.rating,
 																images: _editedEntry.images,
 																tagIds: _editedEntry.tagIds,
 															);
@@ -455,6 +467,7 @@ class _RecipeFormState extends State<RecipeForm> {
 																prepTimeMins: _editedEntry.prepTimeMins,
 																cookTimeMins: int.parse(value!),
 																servings: _editedEntry.servings,
+                                rating: _editedEntry.rating,
 																images: _editedEntry.images,
 																tagIds: _editedEntry.tagIds,
 															);
@@ -487,11 +500,37 @@ class _RecipeFormState extends State<RecipeForm> {
 													prepTimeMins: _editedEntry.prepTimeMins,
 													cookTimeMins: _editedEntry.cookTimeMins,
 													servings: value!,
+                          rating: _editedEntry.rating,
 													images: _editedEntry.images,
 													tagIds: _editedEntry.tagIds,
 												);
 											},
 										),
+                    const SizedBox(height: 10,),
+                    const Text('Rating'),
+                    RatingBar.builder(
+                      initialRating: _initValues['rating'],
+                      allowHalfRating: true,
+                      itemBuilder: (context, _) => const Icon(
+                        Icons.star,
+                        color: Colors.amber
+                      ),
+                      onRatingUpdate: (rating) {
+                        _editedEntry = RecipeEntry(
+													id: _editedEntry.id,
+													name: _editedEntry.name,
+													displayId: _editedEntry.displayId,
+													complexity: _editedEntry.complexity,
+													difficulty: _editedEntry.difficulty,
+													prepTimeMins: _editedEntry.prepTimeMins,
+													cookTimeMins: _editedEntry.cookTimeMins,
+													servings: _editedEntry.servings,
+                          rating: rating,
+													images: _editedEntry.images,
+													tagIds: _editedEntry.tagIds,
+												);
+                      }
+                    )
 									],
 								),
 							),
