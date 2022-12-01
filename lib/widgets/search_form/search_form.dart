@@ -97,6 +97,22 @@ class SearchForm extends StatelessWidget {
 						),
 					],
 				),
+				Row(
+					crossAxisAlignment: CrossAxisAlignment.start,
+					mainAxisAlignment: MainAxisAlignment.start,
+					children: const [
+						Expanded(
+							child: IntRangeSlider(
+								titleStr: 'Rating',
+								searchName: 'rating',
+								rangeMin: 0,
+								rangeMax: 5,
+								rangeStep: 1,
+								unitName: 'Stars',
+							),
+						),
+					],
+				),
 				_spacingSizedBox,
 				const SearchFormTagSelection(),
 				ElevatedButton.icon(
