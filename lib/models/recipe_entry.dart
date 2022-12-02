@@ -12,6 +12,7 @@ class RecipeEntry {
 	final int cookTimeMins;
 	final String servings;
   final double rating;
+  final String notes;
 	List<EntryImage> images;
 	Set<int> tagIds;
 
@@ -27,6 +28,7 @@ class RecipeEntry {
     required this.rating,
 		required this.images,
 		required this.tagIds,
+    required this.notes,
 	});
 
 	String _getHoursMinutesStr(inputMins) {

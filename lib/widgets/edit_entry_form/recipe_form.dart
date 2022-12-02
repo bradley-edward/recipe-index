@@ -37,6 +37,7 @@ class _RecipeFormState extends State<RecipeForm> {
     rating: 0.0,
 		images: [],
 		tagIds: <int>{},
+    notes: '',
 	);
 	var _imagesToDelete = <int>{};
 	var _initValues = <String, dynamic>{
@@ -51,6 +52,7 @@ class _RecipeFormState extends State<RecipeForm> {
 		'servings': 0,
     'rating': 0.0,
 		'tagIds': <int>{},
+    'notes': '',
 	};
 
 	var _isLoading = false;
@@ -68,6 +70,7 @@ class _RecipeFormState extends State<RecipeForm> {
       rating: _editedEntry.rating,
 			images: _editedEntry.images,
 			tagIds: selectedTags,
+      notes: _editedEntry.notes,
 		);
 	}
 
@@ -84,6 +87,7 @@ class _RecipeFormState extends State<RecipeForm> {
       rating: _editedEntry.rating,
 			images: newImagesList,
 			tagIds: _editedEntry.tagIds,
+      notes: _editedEntry.notes,
 		);
 
 		if (deletedImageIds != null) {
@@ -112,6 +116,7 @@ class _RecipeFormState extends State<RecipeForm> {
 						imageType: image.imageType,
 					)).toList(),
 					tagIds: fetchedEntry.tagIds,
+          notes: fetchedEntry.notes,
 				);
 			} else if (widget.formMode == 'Edit') {
 				_editedEntry = fetchedEntry;
@@ -127,6 +132,7 @@ class _RecipeFormState extends State<RecipeForm> {
 				'cookingTime': _editedEntry.cookTimeMins,
 				'servings': _editedEntry.servings,
         'rating': _editedEntry.rating,
+        'notes': _editedEntry.notes,
 			};
 		}
 	}
@@ -269,6 +275,7 @@ class _RecipeFormState extends State<RecipeForm> {
                                 rating: _editedEntry.rating,
 																images: _editedEntry.images,
 																tagIds: _editedEntry.tagIds,
+                                notes: _editedEntry.notes,
 															);
 														},
 													),
@@ -306,6 +313,7 @@ class _RecipeFormState extends State<RecipeForm> {
                                 rating: _editedEntry.rating,
 																images: _editedEntry.images,
 																tagIds: _editedEntry.tagIds,
+                                notes: _editedEntry.notes,
 															);
 														},
 													),
@@ -348,6 +356,7 @@ class _RecipeFormState extends State<RecipeForm> {
                                 rating: _editedEntry.rating,
 																images: _editedEntry.images,
 																tagIds: _editedEntry.tagIds,
+                                notes: _editedEntry.notes,
 															);
 														},
 													),
@@ -387,6 +396,7 @@ class _RecipeFormState extends State<RecipeForm> {
                                 rating: _editedEntry.rating,
 																images: _editedEntry.images,
 																tagIds: _editedEntry.tagIds,
+                                notes: _editedEntry.notes,
 															);
 														},
 													),
@@ -430,6 +440,7 @@ class _RecipeFormState extends State<RecipeForm> {
                                 rating: _editedEntry.rating,
 																images: _editedEntry.images,
 																tagIds: _editedEntry.tagIds,
+                                notes: _editedEntry.notes,
 															);
 														},
 													),
@@ -470,6 +481,7 @@ class _RecipeFormState extends State<RecipeForm> {
                                 rating: _editedEntry.rating,
 																images: _editedEntry.images,
 																tagIds: _editedEntry.tagIds,
+                                notes: _editedEntry.notes,
 															);
 														},
 													),
@@ -503,9 +515,36 @@ class _RecipeFormState extends State<RecipeForm> {
                           rating: _editedEntry.rating,
 													images: _editedEntry.images,
 													tagIds: _editedEntry.tagIds,
+                          notes: _editedEntry.notes,
 												);
 											},
 										),
+                    const SizedBox(height: 10,),
+                    TextFormField(
+                      initialValue: _initValues['notes'].toString(),
+                      decoration: const InputDecoration(labelText: 'Notes',),
+                      keyboardType: TextInputType.multiline,
+                      minLines: 1,
+                      maxLines: 5,
+                      maxLength: 256,
+                      textInputAction: TextInputAction.newline,
+                      onSaved: (value) {
+                        _editedEntry = RecipeEntry(
+                          id: _editedEntry.id,
+                          name: _editedEntry.name,
+                          displayId: _editedEntry.displayId,
+                          complexity: _editedEntry.complexity,
+                          difficulty: _editedEntry.difficulty,
+                          prepTimeMins: _editedEntry.prepTimeMins,
+                          cookTimeMins: _editedEntry.cookTimeMins,
+                          servings: _editedEntry.servings,
+                          rating: _editedEntry.rating,
+                          images: _editedEntry.images,
+                          tagIds: _editedEntry.tagIds,
+                          notes: value!,
+                        );
+                      },
+                    ),
                     const SizedBox(height: 10,),
                     const Text('Rating'),
                     RatingBar.builder(
@@ -528,6 +567,7 @@ class _RecipeFormState extends State<RecipeForm> {
                           rating: rating,
 													images: _editedEntry.images,
 													tagIds: _editedEntry.tagIds,
+                          notes: _editedEntry.notes,
 												);
                       }
                     )

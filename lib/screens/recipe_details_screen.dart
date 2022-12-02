@@ -173,6 +173,15 @@ class RecipeDetailsScreen extends StatelessWidget {
 											),
 										],
 									),
+                  const SizedBox(height: 10,),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text(entry.notes),
+                  ),
+                  const SizedBox(height: 10,),
+                  DisplayTagListReadonly(
+                    tagList: Provider.of<RecipeTagList>(context, listen: false).findByIdSet(entry.tagIds),
+                  ),
 									const SizedBox(height: 10,),
 									if (entry.tagIds.isNotEmpty) ...[
 										Text(
