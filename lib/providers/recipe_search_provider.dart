@@ -14,6 +14,7 @@ class RecipeSearchProvider with ChangeNotifier {
 		'servings': false,
     'rating': false,
 		'name': false,
+    'notes': false,
 		'tagIds': false,
 	};
 	final Set<RecipeComplexity> _complexitySearch = {};
@@ -32,6 +33,7 @@ class RecipeSearchProvider with ChangeNotifier {
 	};
 	String _servingText = '';
 	String _nameText = '';
+  String _notesText = '';
 	final Set<int> _tagIds = {};
 
 	EntrySearchCriteria? get searchPayload {
@@ -66,6 +68,10 @@ class RecipeSearchProvider with ChangeNotifier {
 		if (_enabledSearches['name']!) {
 			atLeastOneEnabled = true;
 			searchPayload.nameText = _nameText;
+		}
+		if (_enabledSearches['notes']!) {
+			atLeastOneEnabled = true;
+			searchPayload.notesText = _notesText;
 		}
 
 		if (_enabledSearches['tagIds']!) {
@@ -102,6 +108,9 @@ class RecipeSearchProvider with ChangeNotifier {
         break;
       case 'name':
         strToReturn = _nameText;
+        break;
+      case 'notes':
+        strToReturn = _notesText;
         break;
     }
 
@@ -187,6 +196,9 @@ class RecipeSearchProvider with ChangeNotifier {
         break;
       case 'name':
         _nameText = inputSearchText;
+        break;
+      case 'notes':
+        _notesText = inputSearchText;
         break;
     }
   }

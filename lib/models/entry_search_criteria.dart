@@ -10,6 +10,7 @@ class EntrySearchCriteria {
 	Map<String,int>? ratingRange;
   String? servingsText;
   String? nameText;
+  String? notesText;
 	Set<int>? tagIdSet;
 
 	EntrySearchCriteria();
@@ -43,6 +44,9 @@ class EntrySearchCriteria {
 		}
 		if (nameText != null) {
 			criterionList.add(entry.name.contains(RegExp(nameText!, caseSensitive: false)));
+		}
+		if (notesText != null) {
+			criterionList.add(entry.notes.contains(RegExp(notesText!, caseSensitive: false)));
 		}
 
 		if (tagIdSet != null) {

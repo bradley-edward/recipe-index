@@ -113,6 +113,18 @@ class SearchForm extends StatelessWidget {
 						),
 					],
 				),
+				Row(
+					crossAxisAlignment: CrossAxisAlignment.start,
+					mainAxisAlignment: MainAxisAlignment.start,
+					children: const [
+						Expanded(
+							child: SearchTextInput(
+								titleStr: 'Notes',
+								searchName: 'notes'
+							),
+						),
+					],
+				),
 				_spacingSizedBox,
 				const SearchFormTagSelection(),
 				ElevatedButton.icon(
