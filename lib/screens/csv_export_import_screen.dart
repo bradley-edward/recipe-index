@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/main_drawer.dart';
-import '../widgets/csv_import_export/csv_import_alert_dialog.dart';
 import '../helpers/csv_helper.dart';
 
-Future<void> exportDbToCsvFile(BuildContext ctx) async {
-	final didSucceed = await CsvHelper.exportDbToCsv();
+Future<void> exportDbToCsvFile(BuildContext ctx, {bool useExternalStorage = false}) async {
+	final didSucceed = await CsvHelper.exportDbToCsv(useExternalStorage: useExternalStorage);
 
 	final msnger = ScaffoldMessenger.of(ctx);
 
@@ -18,6 +17,25 @@ Future<void> exportDbToCsvFile(BuildContext ctx) async {
 	);
 }
 
+Future<void> _csvImportFilePicker(BuildContext ctx) async {
+  final errorMsg = await CsvHelper.importFromArchiveFolder();
+  if (errorMsg == null) {
+    Navigator.of(ctx).pushReplacementNamed('/');
+  } else {
+    if (errorMsg == '') return;
+
+    final msnger = ScaffoldMessenger.of(ctx);
+
+    msnger.hideCurrentSnackBar();
+    ScaffoldMessenger.of(ctx).showSnackBar(
+      SnackBar(
+        content: Text('FAIL! [$errorMsg]'),
+        backgroundColor: Theme.of(ctx).errorColor,
+      )
+    );
+  }
+}
+
 class CsvExportImportScreen extends StatelessWidget {
 	static const routeName = '/csv-export-import';
 
@@ -25,27 +43,6 @@ class CsvExportImportScreen extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
-		Future<void> _csvImportAlertDialog() async {
-			final csvImportList = await CsvHelper.getImportCsvList();
-
-			final int? selectedIdx = await showDialog(
-				context: context,
-				builder: (BuildContext ctx) {
-					return CsvImportAlertDialog(
-						csvImportList: csvImportList
-					);
-				}
-			);
-
-			if (selectedIdx == null) return;
-
-			if (selectedIdx < 0) return;
-
-			final didSucceed = await CsvHelper.importFromCsvFile(csvImportList[selectedIdx]);
-			if (didSucceed) {
-				Navigator.of(context).pushReplacementNamed('/');
-			}
-		}
 
 		return Scaffold(
 			appBar: AppBar(
@@ -59,12 +56,12 @@ class CsvExportImportScreen extends StatelessWidget {
 					mainAxisAlignment: MainAxisAlignment.center,
 					children: <Widget>[
 						ElevatedButton(
-							onPressed: () { exportDbToCsvFile(context); },
+							onPressed: () { exportDbToCsvFile(context, useExternalStorage: true); },
 							child: const Text('Export Data to CSV'),
 						),
 						const SizedBox(height: 20,),
 						ElevatedButton(
-							onPressed: _csvImportAlertDialog,
+							onPressed: () { _csvImportFilePicker(context); },
 							child: const Text('Import Data from CSV'),
 						),
 					],

@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart' as syspaths;
+import 'package:path/path.dart' as path;
 import 'package:csv/csv.dart' as csv;
 
 import '../helpers/db_helper.dart';
@@ -10,9 +12,24 @@ import '../models/entry_image.dart' show ImageType;
 class CsvHelper {
 	static const _keyTableName = 'TABLE_NAME';
 	static const _keyTableColumns = 'TABLE_COLUMNS';
+  static const _archiveFolderName = 'recipeTagindexer_DbSave';
+  static const _localImagesFolderName = 'images_local';
 
-	static Future<bool> exportDbToCsv() async {
+	static Future<bool> exportDbToCsv({bool useExternalStorage = false}) async {
+    String? chosenDir = '';
+    if (useExternalStorage) {
+      chosenDir = await FilePicker.platform.getDirectoryPath();
+      if (chosenDir == null) return false;
+    } else {
+      chosenDir = (await syspaths.getApplicationDocumentsDirectory()).path;
+    }
+
 		final secondsSinceEpoch = (DateTime.now().millisecondsSinceEpoch / 1000).floor();
+
+    final exportFolderAbsPath = '$chosenDir/$_archiveFolderName';
+    Directory(exportFolderAbsPath).createSync();
+
+    final imagesLocalDirAbsPath = '$exportFolderAbsPath/$_localImagesFolderName';
 
 		final db = await DBHelper.database();
 		// Need to convert our data into lists-of-lists. One per table.
@@ -32,9 +49,13 @@ class CsvHelper {
 			}
 		}
 
-		// Export INTERNET images
+		// Export images
 		final imageList = await db.query('images');
 		if (imageList.isNotEmpty) {
+      if (imageList.any((record) => (record['imageType'] as int) == ImageType.onPhone.index)) {
+        Directory(imagesLocalDirAbsPath).createSync();
+      }
+
 			final columnNames = imageList[0].keys.toList();
 
 			csvLoL.add([_keyTableName, 'images']);
@@ -43,7 +64,17 @@ class CsvHelper {
 			for (final record in imageList) {
 				if ((record['imageType'] as int) == ImageType.fromInternet.index) {
 					csvLoL.add(columnNames.map((col) => record[col]).toList());
-				}
+				} else if ((record['imageType'] as int) == ImageType.onPhone.index) {
+          csvLoL.add(columnNames.map((col) {
+            if (col == 'imageLocation') {
+              final imageFileName = path.basename(record[col] as String);
+              File(record[col] as String).copySync('$imagesLocalDirAbsPath/$imageFileName');
+
+              return imageFileName;
+            }
+            return record[col];
+          }).toList());
+        }
 			}
 		}
 
@@ -51,11 +82,10 @@ class CsvHelper {
 
 		final csvString = const csv.ListToCsvConverter().convert(csvLoL);
 
-		final csvFileName = 'recipeTagindexer_DbSave_$secondsSinceEpoch.csv';
+		final csvFileName = '$secondsSinceEpoch.csv';
 
 		try {
-			final appDir = await syspaths.getApplicationDocumentsDirectory();
-			File file = File('${appDir.path}/$csvFileName');
+			File file = File('$exportFolderAbsPath/$csvFileName');
 			await file.writeAsString(csvString);
 		} catch (error) {
 			return false;
@@ -64,24 +94,47 @@ class CsvHelper {
 		return true;
 	}
 
-	static Future<List<String>> getImportCsvList() async {
-		final appDir = await syspaths.getApplicationDocumentsDirectory();
+  static Future<String?> importFromArchiveFolder() async {
+    String? archiveFolderAbsPath = await FilePicker.platform.getDirectoryPath(
+      dialogTitle: 'Select archive folder to use for import'
+    );
+    if (archiveFolderAbsPath == null) return '';
 
-		final listToReturn = <String>[];
+    // getDirectoryPath fails to detect the CSV data file and I don't know why,
+    // so selecting the CSV file with pickFiles here is a necessity.
+    FilePickerResult? csvFilePickResult = await FilePicker.platform.pickFiles(
+      initialDirectory: archiveFolderAbsPath,
+      dialogTitle: 'Select the CSV file to use for import',
+      type: FileType.custom,
+      allowedExtensions: ['csv'],
+    );
+    if (csvFilePickResult == null) return '';
+    final csvFileAbsPath = csvFilePickResult.paths.first;
+    if (csvFileAbsPath == null) return 'failed to find CSV file to import from!';
 
-		final regExp = RegExp(r'.*\.csv');
+    final File csvFile = File(csvFileAbsPath);
 
-		await for (final entity in appDir.list()) {
-			final currPath = entity.path;
-			if (regExp.matchAsPrefix(currPath) == null) {
-				continue;
-			}
+    // Import the CSV file's data.
+    if (! await importFromCsvFile(csvFile.absolute.path)) {
+      return 'Importing CSV data to directory failed!';
+    }
 
-			listToReturn.add(entity.path);
-		}
+    // Import the local images.
+    try {
+      final imagesDir = Directory('$archiveFolderAbsPath/$_localImagesFolderName');
+      if (imagesDir.existsSync()) {
+        final appDir = await syspaths.getApplicationDocumentsDirectory();
+        
+        for (final imageFile in imagesDir.listSync()) {
+          await (imageFile as File).copy('${appDir.path}/${path.basename(imageFile.path)}');
+        }
+      }
+    } catch (exception) {
+      return 'Failed to import local images [$exception]';
+    }
 
-		return listToReturn.reversed.toList();
-	}
+    return null;
+  }
 
 	static Future<bool> importFromCsvFile(String csvAbsPath) async {
 		File csvFile = File(csvAbsPath);
@@ -118,6 +171,14 @@ class CsvHelper {
 
 			dataToImport[currentTable]!.add(dataRecord);
 		}).asFuture();
+
+    final appDirPath = (await syspaths.getApplicationDocumentsDirectory()).path;
+    for (var i = 0, ilen = dataToImport['images']!.length; i < ilen ; i++) {
+      if (int.tryParse(dataToImport['images']![i]['imageType']) == ImageType.onPhone.index) {
+        final imgFileName = dataToImport['images']![i]['imageLocation'];
+        dataToImport['images']![i]['imageLocation'] = '$appDirPath/$imgFileName';
+      }
+    }
 
 		final didSucceed = DBHelper.dbImportFullOverwrite(dataToImport);
 		return didSucceed;
