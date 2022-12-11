@@ -10,9 +10,7 @@ class DeleteEntriesAlertDialog extends StatelessWidget {
 	Widget build(BuildContext context) {
 		return AlertDialog(
 			title: title,
-			content: Center(
-				child: content,
-			),
+			content: content,
 			actions: <Widget>[
 				TextButton(
 					onPressed: () {
