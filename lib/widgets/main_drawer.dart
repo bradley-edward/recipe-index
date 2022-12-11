@@ -4,6 +4,8 @@ import '../screens/tags_edit_screen.dart';
 import '../screens/csv_export_import_screen.dart';
 
 class MainDrawer extends StatelessWidget {
+  static const String _projectVersion = '';
+
 	Widget buildListTile(String title, IconData icon, VoidCallback tapHandler) {
 		return ListTile(
 			leading: Icon(
@@ -26,7 +28,18 @@ class MainDrawer extends StatelessWidget {
 		final appNavigator = Navigator.of(context);
 		return Drawer(
 			child: Column(children: <Widget>[
-				const SizedBox(height: 20,),
+        const DrawerHeader(
+          decoration: BoxDecoration(
+            color: Colors.blue,
+          ),
+          child: Text(
+            _projectVersion,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+            ),
+          ),
+        ),
 				buildListTile(
 					'Recipes',
 					Icons.collections,
