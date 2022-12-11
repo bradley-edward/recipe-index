@@ -8,6 +8,7 @@ import '../screens/edit_recipe_screen.dart';
 import './image_view_screen.dart';
 import '../widgets/entry_image_carousel.dart';
 import '../widgets/tags_edit/display_tag_list_readonly.dart';
+import '../widgets/recipe_details/recipe_dates.dart';
 import '../models/recipe_complexity.dart';
 import '../models/technical_difficulty.dart';
 
@@ -188,6 +189,13 @@ class RecipeDetailsScreen extends StatelessWidget {
 											tagList: Provider.of<RecipeTagList>(context, listen: false).findByIdSet(entry.tagIds),
 										),
 									],
+                  const SizedBox(height: 10,),
+                  RecipeDates(
+                    timestampCreate: entry.timestampCreate,
+                    timestampLastUpdate: entry.timestampLastUpdate,
+                    timestampLastExport: entry.timestampLastExport,
+                    timestampLastImport: entry.timestampLastImport,
+                  ),
 								],
 							),
 						),

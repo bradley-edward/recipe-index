@@ -15,6 +15,10 @@ class RecipeEntry {
   final String notes;
 	List<EntryImage> images;
 	Set<int> tagIds;
+  final int? timestampCreate;
+  final int? timestampLastUpdate;
+  final int? timestampLastExport;
+  final int? timestampLastImport;
 
 	RecipeEntry({
 		this.id,
@@ -29,6 +33,10 @@ class RecipeEntry {
 		required this.images,
 		required this.tagIds,
     required this.notes,
+    required this.timestampCreate,
+    required this.timestampLastUpdate,
+    required this.timestampLastExport,
+    required this.timestampLastImport,
 	});
 
 	String _getHoursMinutesStr(inputMins) {

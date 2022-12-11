@@ -4,6 +4,8 @@ import 'package:sqflite/sqlite_api.dart';
 import 'dart:convert' as convert;
 import 'package:encrypt/encrypt.dart' as encrypt;
 
+import './date_helper.dart';
+
 class DBHelper {
 	static const _backupKey = 'fyUNIYWM()*(*(KIOHRWOP)WR))BN%)R';
 
@@ -12,7 +14,7 @@ class DBHelper {
 		return sql.openDatabase(
 			path.join(dbPath, 'collection_indexer.db'),
 			onCreate: (db, version) async {
-				await db.execute('CREATE TABLE recipes(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, displayId TEXT, name TEXT, complexity INTEGER, difficulty INTEGER, prepTime INTEGER, cookingTime INTEGER, servings TEXT, rating REAL, notes TEXT)');
+				await db.execute('CREATE TABLE recipes(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, displayId TEXT, name TEXT, complexity INTEGER, difficulty INTEGER, prepTime INTEGER, cookingTime INTEGER, servings TEXT, rating REAL, notes TEXT, timestampCreate TEXT, timestampLastUpdate TEXT, timestampLastExport TEXT, timestampLastImport TEXT)');
 				await db.execute('CREATE TABLE images(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, listIndex INTEGER, imageType INTEGER, imageLocation TEXT, ownerId INTEGER NOT NULL)');
 				await db.execute('CREATE TABLE tags(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT)');
 				await db.execute('CREATE TABLE mn_recipes_tags(recipeId INTEGER NOT NULL, tagId INTEGER NOT NULL)');
@@ -63,6 +65,15 @@ class DBHelper {
 		final insertResults = await insertBatch.commit();	// Contains a list of IDs of the newly inserted records.
 		return insertResults;
 	}
+
+  static Future<void> updateRecipeLastDateExportAll() async {
+    final exportDate = nowSecondsEpoch();
+
+    final db = await DBHelper.database();
+    final recordsUpdated = await db.update('recipes', {'timestampLastExport': exportDate});
+
+    return;
+  }
 
 	static Future<void> update(String table, Map<String, Object> data) async {
 		final db = await DBHelper.database();

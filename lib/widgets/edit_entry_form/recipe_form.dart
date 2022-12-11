@@ -11,6 +11,7 @@ import '../../screens/recipe_details_screen.dart';
 import './image_list_edit.dart';
 import './recipe_form_tag_selection.dart';
 import '../delete_entries_alert_dialog.dart';
+import '../../helpers/date_helper.dart';
 
 class RecipeForm extends StatefulWidget {
 	final int? inputId;
@@ -35,9 +36,13 @@ class _RecipeFormState extends State<RecipeForm> {
 		cookTimeMins: 0,
 		servings: '0',
     rating: 0.0,
-		images: [],
+		images: <EntryImage>[],
 		tagIds: <int>{},
     notes: '',
+    timestampCreate: null,
+    timestampLastUpdate: null,
+    timestampLastExport: null,
+    timestampLastImport: null,
 	);
 	var _imagesToDelete = <int>{};
 	var _initValues = <String, dynamic>{
@@ -53,6 +58,10 @@ class _RecipeFormState extends State<RecipeForm> {
     'rating': 0.0,
 		'tagIds': <int>{},
     'notes': '',
+    'timestampCreate': null,
+    'timestampLastUpdate': null,
+    'timestampLastExport': null,
+    'timestampLastImport': null,
 	};
 
 	var _isLoading = false;
@@ -71,6 +80,10 @@ class _RecipeFormState extends State<RecipeForm> {
 			images: _editedEntry.images,
 			tagIds: selectedTags,
       notes: _editedEntry.notes,
+      timestampCreate: _editedEntry.timestampCreate,
+      timestampLastUpdate: _editedEntry.timestampLastUpdate,
+      timestampLastExport: _editedEntry.timestampLastExport,
+      timestampLastImport: _editedEntry.timestampLastImport,
 		);
 	}
 
@@ -88,6 +101,10 @@ class _RecipeFormState extends State<RecipeForm> {
 			images: newImagesList,
 			tagIds: _editedEntry.tagIds,
       notes: _editedEntry.notes,
+      timestampCreate: _editedEntry.timestampCreate,
+      timestampLastUpdate: _editedEntry.timestampLastUpdate,
+      timestampLastExport: _editedEntry.timestampLastExport,
+      timestampLastImport: _editedEntry.timestampLastImport,
 		);
 
 		if (deletedImageIds != null) {
@@ -117,6 +134,10 @@ class _RecipeFormState extends State<RecipeForm> {
 					)).toList(),
 					tagIds: fetchedEntry.tagIds,
           notes: fetchedEntry.notes,
+          timestampCreate: _editedEntry.timestampCreate,
+          timestampLastUpdate: _editedEntry.timestampLastUpdate,
+          timestampLastExport: _editedEntry.timestampLastExport,
+          timestampLastImport: _editedEntry.timestampLastImport,
 				);
 			} else if (widget.formMode == 'Edit') {
 				_editedEntry = fetchedEntry;
@@ -133,6 +154,10 @@ class _RecipeFormState extends State<RecipeForm> {
 				'servings': _editedEntry.servings,
         'rating': _editedEntry.rating,
         'notes': _editedEntry.notes,
+        'timestampCreate': _editedEntry.timestampCreate,
+        'timestampLastUpdate': _editedEntry.timestampLastUpdate,
+        'timestampLastExport': _editedEntry.timestampLastExport,
+        'timestampLastImport': _editedEntry.timestampLastImport,
 			};
 		}
 	}
@@ -163,8 +188,28 @@ class _RecipeFormState extends State<RecipeForm> {
 		final appNav = Navigator.of(context);
 
 		if (widget.formMode == 'Edit') {
+      final dateNow = nowSecondsEpoch();
+      final entryToAdd = RecipeEntry(
+        id: _editedEntry.id,
+        name: _editedEntry.name,
+        displayId: _editedEntry.displayId,
+        difficulty: _editedEntry.difficulty,
+        complexity: _editedEntry.complexity,
+        prepTimeMins: _editedEntry.prepTimeMins,
+        cookTimeMins: _editedEntry.cookTimeMins,
+        servings: _editedEntry.servings,
+        rating: _editedEntry.rating,
+        images: _editedEntry.images,
+        tagIds: _editedEntry.tagIds,
+        notes: _editedEntry.notes,
+        timestampCreate: _editedEntry.timestampCreate,
+        timestampLastUpdate: dateNow,
+        timestampLastExport: _editedEntry.timestampLastExport,
+        timestampLastImport: _editedEntry.timestampLastImport
+      );
+
 			// Edit existing entry
-			await collectionProvider.updateEntry(_editedEntry.id!, _editedEntry, _imagesToDelete, _initValues['tagIds']);
+			await collectionProvider.updateEntry(entryToAdd.id!, entryToAdd, _imagesToDelete, _initValues['tagIds']);
 			appNav.pop();
 		} else {
 			// Add new entry
@@ -276,6 +321,10 @@ class _RecipeFormState extends State<RecipeForm> {
 																images: _editedEntry.images,
 																tagIds: _editedEntry.tagIds,
                                 notes: _editedEntry.notes,
+                                timestampCreate: _editedEntry.timestampCreate,
+                                timestampLastUpdate: _editedEntry.timestampLastUpdate,
+                                timestampLastExport: _editedEntry.timestampLastExport,
+                                timestampLastImport: _editedEntry.timestampLastImport,
 															);
 														},
 													),
@@ -314,6 +363,10 @@ class _RecipeFormState extends State<RecipeForm> {
 																images: _editedEntry.images,
 																tagIds: _editedEntry.tagIds,
                                 notes: _editedEntry.notes,
+                                timestampCreate: _editedEntry.timestampCreate,
+                                timestampLastUpdate: _editedEntry.timestampLastUpdate,
+                                timestampLastExport: _editedEntry.timestampLastExport,
+                                timestampLastImport: _editedEntry.timestampLastImport,
 															);
 														},
 													),
@@ -357,6 +410,10 @@ class _RecipeFormState extends State<RecipeForm> {
 																images: _editedEntry.images,
 																tagIds: _editedEntry.tagIds,
                                 notes: _editedEntry.notes,
+                                timestampCreate: _editedEntry.timestampCreate,
+                                timestampLastUpdate: _editedEntry.timestampLastUpdate,
+                                timestampLastExport: _editedEntry.timestampLastExport,
+                                timestampLastImport: _editedEntry.timestampLastImport,
 															);
 														},
 													),
@@ -397,6 +454,10 @@ class _RecipeFormState extends State<RecipeForm> {
 																images: _editedEntry.images,
 																tagIds: _editedEntry.tagIds,
                                 notes: _editedEntry.notes,
+                                timestampCreate: _editedEntry.timestampCreate,
+                                timestampLastUpdate: _editedEntry.timestampLastUpdate,
+                                timestampLastExport: _editedEntry.timestampLastExport,
+                                timestampLastImport: _editedEntry.timestampLastImport,
 															);
 														},
 													),
@@ -441,6 +502,10 @@ class _RecipeFormState extends State<RecipeForm> {
 																images: _editedEntry.images,
 																tagIds: _editedEntry.tagIds,
                                 notes: _editedEntry.notes,
+                                timestampCreate: _editedEntry.timestampCreate,
+                                timestampLastUpdate: _editedEntry.timestampLastUpdate,
+                                timestampLastExport: _editedEntry.timestampLastExport,
+                                timestampLastImport: _editedEntry.timestampLastImport,
 															);
 														},
 													),
@@ -482,6 +547,10 @@ class _RecipeFormState extends State<RecipeForm> {
 																images: _editedEntry.images,
 																tagIds: _editedEntry.tagIds,
                                 notes: _editedEntry.notes,
+                                timestampCreate: _editedEntry.timestampCreate,
+                                timestampLastUpdate: _editedEntry.timestampLastUpdate,
+                                timestampLastExport: _editedEntry.timestampLastExport,
+                                timestampLastImport: _editedEntry.timestampLastImport,
 															);
 														},
 													),
@@ -516,6 +585,10 @@ class _RecipeFormState extends State<RecipeForm> {
 													images: _editedEntry.images,
 													tagIds: _editedEntry.tagIds,
                           notes: _editedEntry.notes,
+                          timestampCreate: _editedEntry.timestampCreate,
+                          timestampLastUpdate: _editedEntry.timestampLastUpdate,
+                          timestampLastExport: _editedEntry.timestampLastExport,
+                          timestampLastImport: _editedEntry.timestampLastImport,
 												);
 											},
 										),
@@ -542,6 +615,10 @@ class _RecipeFormState extends State<RecipeForm> {
                           images: _editedEntry.images,
                           tagIds: _editedEntry.tagIds,
                           notes: value!,
+                          timestampCreate: _editedEntry.timestampCreate,
+                          timestampLastUpdate: _editedEntry.timestampLastUpdate,
+                          timestampLastExport: _editedEntry.timestampLastExport,
+                          timestampLastImport: _editedEntry.timestampLastImport,
                         );
                       },
                     ),
@@ -568,6 +645,10 @@ class _RecipeFormState extends State<RecipeForm> {
 													images: _editedEntry.images,
 													tagIds: _editedEntry.tagIds,
                           notes: _editedEntry.notes,
+                          timestampCreate: _editedEntry.timestampCreate,
+                          timestampLastUpdate: _editedEntry.timestampLastUpdate,
+                          timestampLastExport: _editedEntry.timestampLastExport,
+                          timestampLastImport: _editedEntry.timestampLastImport,
 												);
                       }
                     )

@@ -7,6 +7,7 @@ import 'package:path/path.dart' as path;
 import 'package:csv/csv.dart' as csv;
 
 import '../helpers/db_helper.dart';
+import './date_helper.dart';
 import '../models/entry_image.dart' show ImageType;
 
 class CsvHelper {
@@ -30,6 +31,9 @@ class CsvHelper {
     Directory(exportFolderAbsPath).createSync();
 
     final imagesLocalDirAbsPath = '$exportFolderAbsPath/$_localImagesFolderName';
+
+    // Modify 'timestampLastExport' of all 'recipes'.
+    DBHelper.updateRecipeLastDateExportAll();
 
 		final db = await DBHelper.database();
 		// Need to convert our data into lists-of-lists. One per table.
@@ -171,6 +175,13 @@ class CsvHelper {
 
 			dataToImport[currentTable]!.add(dataRecord);
 		}).asFuture();
+
+    // Modify 'timestampLastImport' of all imported entries.
+    if (dataToImport.containsKey('recipes')) {
+      for (var i = 0, ilen = dataToImport['recipes']!.length; i < ilen ; i++) {
+        dataToImport['recipes']![i]['timestampLastImport'] = nowSecondsEpoch();
+      }
+    }
 
     if (dataToImport.containsKey('images')) {
       final appDirPath = (await syspaths.getApplicationDocumentsDirectory()).path;

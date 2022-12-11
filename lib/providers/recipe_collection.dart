@@ -6,6 +6,7 @@ import '../models/entry_image.dart';
 import '../models/recipe_complexity.dart';
 import '../models/technical_difficulty.dart';
 import '../helpers/db_helper.dart';
+import '../helpers/date_helper.dart';
 
 class RecipeCollection with ChangeNotifier {
 	final List<RecipeEntry> _entries = [];
@@ -87,6 +88,8 @@ class RecipeCollection with ChangeNotifier {
 	}
 
 	Future<int> addEntry(RecipeEntry entry) async {
+    final secondsNow = nowSecondsEpoch();
+
 		final entryId = await DBHelper.insert('recipes', {
 			'name': entry.name,
 			'displayId': entry.displayId,
@@ -97,6 +100,7 @@ class RecipeCollection with ChangeNotifier {
 			'servings': entry.servings,
       'rating': entry.rating,
       'notes': entry.notes,
+      'timestampCreate': secondsNow,
 		});
 
 		if (entry.tagIds.isNotEmpty) {
@@ -123,6 +127,10 @@ class RecipeCollection with ChangeNotifier {
 			images: entry.images,
 			tagIds: entry.tagIds,
       notes: entry.notes,
+      timestampCreate: secondsNow,
+      timestampLastUpdate: null,
+      timestampLastExport: null,
+      timestampLastImport: null,
 		);
 		
 		_entries.add(newEntry);
@@ -199,6 +207,10 @@ class RecipeCollection with ChangeNotifier {
 		await DBHelper.batchModifyMNRecipesTags(recordsToInsert, recordsToDelete,);
 	}
 
+  Future<void> updatetimestampLastExportAll() async {
+    
+  }
+
 	Future<void> updateEntry(int id, RecipeEntry newEntry, Set<int> imageIdsToRemove, Set<int> tagsOldSet,) async {
 		final entryIndex = _entries.indexWhere((entry) => entry.id == id);
 		if (entryIndex == -1) {
@@ -222,6 +234,7 @@ class RecipeCollection with ChangeNotifier {
 			'servings': newEntry.servings,
 			'rating': newEntry.rating,
 			'notes': newEntry.notes,
+      'timestampLastUpdate': newEntry.timestampLastUpdate!,
 		});
 
 		await _updateEntryTags(newEntry.id!, newEntry.tagIds, tagsOldSet);
@@ -290,6 +303,10 @@ class RecipeCollection with ChangeNotifier {
 						imageType: ImageType.values[image['imageType']],
 					)).toList(),
 					tagIds: tagsSet,
+          timestampCreate: entry['timestampCreate'] != null ? int.tryParse(entry['timestampCreate']) : null,
+          timestampLastUpdate: entry['timestampLastUpdate'] != null ? int.tryParse(entry['timestampLastUpdate']) : null,
+          timestampLastExport: entry['timestampLastExport'] != null ? int.tryParse(entry['timestampLastExport']) : null,
+          timestampLastImport: entry['timestampLastImport'] != null ? int.tryParse(entry['timestampLastImport']) : null,
 				)
 			);
 			_entriesInsertionSortOnePass();
