@@ -23,6 +23,7 @@ class _RecipeFormTagSelectionState extends State<RecipeFormTagSelection> {
 	final Set<int> _selectedTags = {};
 	String _searchString = '';
 	final _searchTEC = TextEditingController();
+  final _textInputFocusNode = FocusNode();
 	
 	@override
 	void initState() {
@@ -34,6 +35,7 @@ class _RecipeFormTagSelectionState extends State<RecipeFormTagSelection> {
 	@override
 	void dispose() {
 		_searchTEC.dispose();
+    _textInputFocusNode.dispose();
 
 		super.dispose();
 	}
@@ -113,10 +115,11 @@ class _RecipeFormTagSelectionState extends State<RecipeFormTagSelection> {
 								ElevatedButton.icon(
 									label: const Text('Add'),
 									onPressed: () {
+                    _textInputFocusNode.requestFocus();
 										_quickAdd(tagListProvider, _searchTEC).then(
                       (didSucceed) {
                         if (didSucceed) {
-                    _searchTEC.text = '';
+                          _searchTEC.text = '';
                         }
                       }
                     );
@@ -127,12 +130,14 @@ class _RecipeFormTagSelectionState extends State<RecipeFormTagSelection> {
 								Expanded(
 									child: TextField(
 										controller: _searchTEC,
+                    focusNode: _textInputFocusNode,
 									),
 								),
 								const SizedBox(width: 20),
 								ElevatedButton.icon(
 									label: const Text('Search'),
 									onPressed: () {
+                    _textInputFocusNode.requestFocus();
 										setState(() {
 											_searchString = _searchTEC.text;
 										});
