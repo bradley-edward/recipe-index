@@ -67,17 +67,19 @@ class _RecipeFormTagSelectionState extends State<RecipeFormTagSelection> {
 		widget.onTagSelectionUpdate(_selectedTags);
 	}
 
-	void _quickAdd(RecipeTagList rtlProvider, TextEditingController tec) async {
+	Future<bool> _quickAdd(RecipeTagList rtlProvider, TextEditingController tec) async {
 		final newTagName = tec.text;
 
-		if (rtlProvider.search(newTagName).isNotEmpty) return;
+		if (rtlProvider.search(newTagName).isNotEmpty) return false;
 
 		final String strippedNewTag = newTagName.trim();
 
-		if (strippedNewTag.isEmpty) return;
+		if (strippedNewTag.isEmpty) return false;
 
 		final newTagId = await rtlProvider.addTag(RecipeTag(name: strippedNewTag));
 		_selectTag(newTagId);
+
+    return true;
 	}
 
 	@override
@@ -111,7 +113,13 @@ class _RecipeFormTagSelectionState extends State<RecipeFormTagSelection> {
 								ElevatedButton.icon(
 									label: const Text('Add'),
 									onPressed: () {
-										_quickAdd(tagListProvider, _searchTEC);
+										_quickAdd(tagListProvider, _searchTEC).then(
+                      (didSucceed) {
+                        if (didSucceed) {
+                    _searchTEC.text = '';
+                        }
+                      }
+                    );
 									},
 									icon: const Icon(Icons.add),
 								),
