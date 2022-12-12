@@ -49,7 +49,7 @@ class CsvHelper {
 			csvLoL.add([_keyTableName, tableName]);
 			csvLoL.add([_keyTableColumns, ...columnNames]);
 			for (final record in listMap) {
-				csvLoL.add(columnNames.map((col) => record[col]).toList());
+				csvLoL.add(['', ...columnNames.map((col) => record[col]).toList()]);
 			}
 		}
 
@@ -69,7 +69,7 @@ class CsvHelper {
 				if ((record['imageType'] as int) == ImageType.fromInternet.index) {
 					csvLoL.add(columnNames.map((col) => record[col]).toList());
 				} else if ((record['imageType'] as int) == ImageType.onPhone.index) {
-          csvLoL.add(columnNames.map((col) {
+          csvLoL.add(['', ...columnNames.map((col) {
             if (col == 'imageLocation') {
               final imageFileName = path.basename(record[col] as String);
               File(record[col] as String).copySync('$imagesLocalDirAbsPath/$imageFileName');
@@ -77,7 +77,7 @@ class CsvHelper {
               return imageFileName;
             }
             return record[col];
-          }).toList());
+          }).toList()]);
         }
 			}
 		}
@@ -169,8 +169,8 @@ class CsvHelper {
 			}
 
 			final dataRecord = <String,dynamic>{};
-			for (var i = 0; i < tableRecordLength; i++ ) {
-				dataRecord[tableColumnNames[i]] = csvRow[i];
+			for (var i = 1; i < tableRecordLength; i++ ) {
+				dataRecord[tableColumnNames[i-1]] = csvRow[i];
 			}
 
 			dataToImport[currentTable]!.add(dataRecord);
