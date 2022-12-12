@@ -172,11 +172,13 @@ class CsvHelper {
 			dataToImport[currentTable]!.add(dataRecord);
 		}).asFuture();
 
-    final appDirPath = (await syspaths.getApplicationDocumentsDirectory()).path;
-    for (var i = 0, ilen = dataToImport['images']!.length; i < ilen ; i++) {
-      if (int.tryParse(dataToImport['images']![i]['imageType']) == ImageType.onPhone.index) {
-        final imgFileName = dataToImport['images']![i]['imageLocation'];
-        dataToImport['images']![i]['imageLocation'] = '$appDirPath/$imgFileName';
+    if (dataToImport.containsKey('images')) {
+      final appDirPath = (await syspaths.getApplicationDocumentsDirectory()).path;
+      for (var i = 0, ilen = dataToImport['images']!.length; i < ilen ; i++) {
+        if (int.tryParse(dataToImport['images']![i]['imageType']) == ImageType.onPhone.index) {
+          final imgFileName = dataToImport['images']![i]['imageLocation'];
+          dataToImport['images']![i]['imageLocation'] = '$appDirPath/$imgFileName';
+        }
       }
     }
 
