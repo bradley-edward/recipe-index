@@ -298,6 +298,7 @@ class _RecipeFormState extends State<RecipeForm> {
 														initialValue: _initValues['name'],
 														decoration: const InputDecoration(labelText: 'Title',),
 														textInputAction: TextInputAction.next,
+                            autofocus: widget.formMode == 'New' && widget.inputId == null,
 														validator: (value) {
 															if (value == null) {
 																return 'Please provide a value';
