@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+
+import '../providers/recipe_collection.dart';
 import '../screens/tags_edit_screen.dart';
 import '../screens/csv_export_import_screen.dart';
 
@@ -28,16 +31,28 @@ class MainDrawer extends StatelessWidget {
 		final appNavigator = Navigator.of(context);
 		return Drawer(
 			child: Column(children: <Widget>[
-        const DrawerHeader(
-          decoration: BoxDecoration(
+        DrawerHeader(
+          decoration: const BoxDecoration(
             color: Colors.blue,
           ),
-          child: Text(
-            _projectVersion,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-            ),
+          child: Column(
+            children: <Widget>[
+              const Text(
+                _projectVersion,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+              const SizedBox(height: 5,),
+              Text(
+                '${Provider.of<RecipeCollection>(context, listen: false).entryCount.toString()} entries',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                ),
+              ),
+            ],
           ),
         ),
 				buildListTile(

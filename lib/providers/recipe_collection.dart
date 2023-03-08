@@ -15,6 +15,10 @@ class RecipeCollection with ChangeNotifier {
 		return [..._entries];
 	}
 
+  int get entryCount {
+		return _entries.length;
+	}
+
 	int _displayIdCompare(String displayId1, String displayId2) {
 		return displayId1.toLowerCase().compareTo(displayId2.toLowerCase());
 	}
