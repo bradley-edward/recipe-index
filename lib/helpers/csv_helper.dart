@@ -27,7 +27,7 @@ class CsvHelper {
 
 		final secondsSinceEpoch = (DateTime.now().millisecondsSinceEpoch / 1000).floor();
 
-    final exportFolderAbsPath = '$chosenDir/$_archiveFolderName';
+    final exportFolderAbsPath = '$chosenDir/${_archiveFolderName}_$secondsSinceEpoch';
     Directory(exportFolderAbsPath).createSync();
 
     final imagesLocalDirAbsPath = '$exportFolderAbsPath/$_localImagesFolderName';
