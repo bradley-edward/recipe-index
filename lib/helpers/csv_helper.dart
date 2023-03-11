@@ -169,7 +169,7 @@ class CsvHelper {
 			}
 
 			final dataRecord = <String,dynamic>{};
-			for (var i = 1; i < tableRecordLength; i++ ) {
+			for (var i = 1; i <= tableRecordLength; i++ ) {
 				dataRecord[tableColumnNames[i-1]] = csvRow[i];
 			}
 
