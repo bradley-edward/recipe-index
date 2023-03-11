@@ -303,7 +303,9 @@ class _RecipeFormState extends State<RecipeForm> {
 															if (value == null) {
 																return 'Please provide a value';
 															}
-															if (value.isEmpty) {
+
+                              var valueTrimmed = value.trim();
+															if (valueTrimmed.isEmpty) {
 																return 'Please provide a value';
 															}
 															return null;
@@ -311,7 +313,7 @@ class _RecipeFormState extends State<RecipeForm> {
 														onSaved: (value) {
 															_editedEntry = RecipeEntry(
 																id: _editedEntry.id,
-																name: value!,
+																name: value!.trim(),
 																displayId: _editedEntry.displayId,
 																complexity: _editedEntry.complexity,
 																difficulty: _editedEntry.difficulty,
@@ -340,11 +342,13 @@ class _RecipeFormState extends State<RecipeForm> {
 															if (value == null) {
 																return 'Please provide a value';
 															}
-															if (value.isEmpty) {
+
+                              var valueTrimmed = value.trim();
+															if (valueTrimmed.isEmpty) {
 																return 'Please provide a value';
 															}
 
-															if (providerRc.isDisplayIdAlreadyUsed(value, _editedEntry.id)) {
+															if (providerRc.isDisplayIdAlreadyUsed(valueTrimmed, _editedEntry.id)) {
 																return "'$value' is already used. Try another.";
 															}
 
@@ -354,7 +358,7 @@ class _RecipeFormState extends State<RecipeForm> {
 															_editedEntry = RecipeEntry(
 																id: _editedEntry.id,
 																name: _editedEntry.name,
-																displayId: value!,
+																displayId: value!.trim(),
 																complexity: _editedEntry.complexity,
 																difficulty: _editedEntry.difficulty,
 																prepTimeMins: _editedEntry.prepTimeMins,
@@ -567,7 +571,9 @@ class _RecipeFormState extends State<RecipeForm> {
 												if (value == null) {
 													return 'Please provide a value';
 												}
-												if (value.isEmpty) {
+
+                        var valueTrimmed = value.trim();
+                        if (valueTrimmed.isEmpty) {
 													return 'Please provide a value';
 												}
 												return null;
@@ -581,7 +587,7 @@ class _RecipeFormState extends State<RecipeForm> {
 													difficulty: _editedEntry.difficulty,
 													prepTimeMins: _editedEntry.prepTimeMins,
 													cookTimeMins: _editedEntry.cookTimeMins,
-													servings: value!,
+													servings: value!.trim(),
                           rating: _editedEntry.rating,
 													images: _editedEntry.images,
 													tagIds: _editedEntry.tagIds,
