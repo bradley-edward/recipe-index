@@ -5,6 +5,7 @@ import 'dart:convert' as convert;
 import 'package:encrypt/encrypt.dart' as encrypt;
 
 import './date_helper.dart';
+import './db_table_maps.dart';
 
 class DBHelper {
 	static const _backupKey = 'fyUNIYWM()*(*(KIOHRWOP)WR))BN%)R';
@@ -13,11 +14,28 @@ class DBHelper {
 		final dbPath = await sql.getDatabasesPath();
 		return sql.openDatabase(
 			path.join(dbPath, 'collection_indexer.db'),
-			onCreate: (db, version) async {
-				await db.execute('CREATE TABLE recipes(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, displayId TEXT, name TEXT, complexity INTEGER, difficulty INTEGER, prepTime INTEGER, cookingTime INTEGER, servings TEXT, rating REAL, notes TEXT, timestampCreate TEXT, timestampLastUpdate TEXT, timestampLastExport TEXT, timestampLastImport TEXT)');
-				await db.execute('CREATE TABLE images(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, listIndex INTEGER, imageType INTEGER, imageLocation TEXT, ownerId INTEGER NOT NULL)');
-				await db.execute('CREATE TABLE tags(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT)');
-				await db.execute('CREATE TABLE mn_recipes_tags(recipeId INTEGER NOT NULL, tagId INTEGER NOT NULL)');
+			onCreate: (db, version) {
+        tableAttributesMap.forEach((tableName, tableColumns) async {
+          final createTableStatementBuffer = StringBuffer('CREATE TABLE $tableName(');
+
+          final columnFinalIndex = tableColumns.keys.toList().length - 1;
+          var columnIter = 0;
+          
+          tableColumns.forEach((columnName, columnProperties) {
+            createTableStatementBuffer.write('$columnName ${columnProperties['type']}');
+            if (columnProperties.containsKey('other_keywords')) {
+              createTableStatementBuffer.write(' ${columnProperties['other_keywords']}');
+            }
+
+            if (columnIter < columnFinalIndex) {
+              createTableStatementBuffer.write(',');
+            }
+
+            columnIter++;
+          });
+          createTableStatementBuffer.write(')');
+          await db.execute(createTableStatementBuffer.toString());
+        });
 			},
 			/*
 			onConfigure: (db) async {
@@ -32,7 +50,7 @@ class DBHelper {
 		final db = await DBHelper.database();
 		final importOverwriteBatch = db.batch();
 
-		final tablesToClear = ['mn_recipes_tags', 'recipes', 'images', 'tags'];
+		final tablesToClear = tableAttributesMap.keys.toList();
 
 		// First, clear out all tables in the DB.
 		for (final tableName in tablesToClear) {
