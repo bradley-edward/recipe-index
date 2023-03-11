@@ -26,6 +26,23 @@ class RecipeForm extends StatefulWidget {
 class _RecipeFormState extends State<RecipeForm> {
 	final _form = GlobalKey<FormState>();
 
+  String? _timeMinsValidator(String? value) {
+    if (value == null) {
+      return 'Please provide a value';
+    }
+    if (value.isEmpty) {
+      return 'Please provide a value';
+    }
+    final valueInt = int.tryParse(value);
+    if (valueInt == null) {
+      return 'Please provide an integer';
+    }
+    if (valueInt < 0) {
+      return 'Please provide a non-negative value';
+    }
+    return null;
+  }
+
 	var _editedEntry = RecipeEntry(
 		id: null,
 		name: '',
@@ -477,22 +494,7 @@ class _RecipeFormState extends State<RecipeForm> {
 														decoration: const InputDecoration(labelText: 'Prep. Time (mins)',),
 														keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
 														textInputAction: TextInputAction.next,
-														validator: (value) {
-															if (value == null) {
-																return 'Please provide a value';
-															}
-															if (value.isEmpty) {
-																return 'Please provide a value';
-															}
-															final valueInt = int.tryParse(value);
-															if (valueInt == null) {
-																return 'Please provide an integer';
-															}
-															if (valueInt < 1) {
-																return 'Please provide a value greater than 0';
-															}
-															return null;
-														},
+														validator: _timeMinsValidator,
 														onSaved: (value) {
 															_editedEntry = RecipeEntry(
 																id: _editedEntry.id,
@@ -522,22 +524,7 @@ class _RecipeFormState extends State<RecipeForm> {
 														decoration: const InputDecoration(labelText: 'Cooking Time (mins)',),
 														keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
 														textInputAction: TextInputAction.next,
-														validator: (value) {
-															if (value == null) {
-																return 'Please provide a value';
-															}
-															if (value.isEmpty) {
-																return 'Please provide a value';
-															}
-															final valueInt = int.tryParse(value);
-															if (valueInt == null) {
-																return 'Please provide an integer';
-															}
-															if (valueInt < 1) {
-																return 'Please provide a value greater than 0';
-															}
-															return null;
-														},
+														validator: _timeMinsValidator,
 														onSaved: (value) {
 															_editedEntry = RecipeEntry(
 																id: _editedEntry.id,
