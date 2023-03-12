@@ -82,6 +82,17 @@ class SearchForm extends StatelessWidget {
 								unitName: 'mins',
 							),
 						),
+						SizedBox(width: 5,),
+						Expanded(
+							child: IntRangeSlider(
+								titleStr: 'Extra Time',
+								searchName: 'addiTime',
+								rangeMin: 0,
+								rangeMax: 180,
+								rangeStep: 5,
+								unitName: 'mins',
+							),
+						),
 					],
 				),
 				_spacingSizedBox,

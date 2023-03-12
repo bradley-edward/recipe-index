@@ -22,6 +22,10 @@ Map<String,Map<String,Map<String,String>>> tableAttributesMap = {
     'cookingTime': {
       'type': 'INTEGER',
     },
+    'additionalTime': {
+      'type': 'INTEGER',
+      'other_keywords': 'DEFAULT 0'
+    },
     'servings': {
       'type': 'TEXT',
     },

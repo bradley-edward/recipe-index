@@ -157,6 +157,15 @@ class RecipeDetailsScreen extends StatelessWidget {
 													Text(entry.cookingTimeHrsMins),
 												],
 											),
+                      Column(
+												children: [
+													Text(
+														'Extra Time',
+														style: appTheme.textTheme.headline6,
+													),
+													Text(entry.additionalTimeHrsMins),
+												],
+											),
 										],
 									),
 									const SizedBox(height: 20,),

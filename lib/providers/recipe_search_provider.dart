@@ -11,6 +11,7 @@ class RecipeSearchProvider with ChangeNotifier {
 		'difficulty': false,
 		'prepTime': false,
 		'cookTime': false,
+		'addiTime': false,
 		'servings': false,
     'rating': false,
 		'name': false,
@@ -24,6 +25,10 @@ class RecipeSearchProvider with ChangeNotifier {
 		'to': -1,
 	};
 	final Map<String, int> _cookTimeRange = {
+		'from': -1,
+		'to': -1,
+	};
+	final Map<String, int> _addiTimeRange = {
 		'from': -1,
 		'to': -1,
 	};
@@ -55,6 +60,10 @@ class RecipeSearchProvider with ChangeNotifier {
 		if (_enabledSearches['cookTime']!) {
 			atLeastOneEnabled = true;
 			searchPayload.cookTimeRange = _cookTimeRange;
+		}
+		if (_enabledSearches['addiTime']!) {
+			atLeastOneEnabled = true;
+			searchPayload.addiTimeRange = _addiTimeRange;
 		}
 		if (_enabledSearches['rating']!) {
 			atLeastOneEnabled = true;
@@ -128,6 +137,9 @@ class RecipeSearchProvider with ChangeNotifier {
 			case 'cookTime':
 				mapToReturn = _cookTimeRange;
 				break;
+			case 'addiTime':
+				mapToReturn = _addiTimeRange;
+				break;
       case 'rating':
         mapToReturn = _ratingRange;
         break;
@@ -175,6 +187,9 @@ class RecipeSearchProvider with ChangeNotifier {
 				break;
 			case 'cookTime':
 				mapToModify = _cookTimeRange;
+				break;
+			case 'addiTime':
+				mapToModify = _addiTimeRange;
 				break;
 			case 'rating':
 				mapToModify = _ratingRange;

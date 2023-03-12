@@ -10,6 +10,7 @@ class RecipeEntry {
 	final TechnicalDifficulty? difficulty;
 	final int prepTimeMins;
 	final int cookTimeMins;
+	final int addiTimeMins;
 	final String servings;
   final double rating;
   final String notes;
@@ -28,6 +29,7 @@ class RecipeEntry {
 		required this.complexity,
 		required this.prepTimeMins,
 		required this.cookTimeMins,
+		required this.addiTimeMins,
 		required this.servings,
     required this.rating,
 		required this.images,
@@ -56,5 +58,9 @@ class RecipeEntry {
 
 	String get cookingTimeHrsMins {
 		return _getHoursMinutesStr(cookTimeMins);
+	}
+
+	String get additionalTimeHrsMins {
+		return _getHoursMinutesStr(addiTimeMins);
 	}
 }

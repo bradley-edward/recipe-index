@@ -51,6 +51,7 @@ class _RecipeFormState extends State<RecipeForm> {
 		complexity: null,
 		prepTimeMins: 0,
 		cookTimeMins: 0,
+		addiTimeMins: 0,
 		servings: '0',
     rating: 0.0,
 		images: <EntryImage>[],
@@ -71,6 +72,7 @@ class _RecipeFormState extends State<RecipeForm> {
 		'complexity': null,
 		'prepTime': 0,
 		'cookingTime': 0,
+		'additionalTime': 0,
 		'servings': 0,
     'rating': 0.0,
 		'tagIds': <int>{},
@@ -92,6 +94,7 @@ class _RecipeFormState extends State<RecipeForm> {
 			difficulty: _editedEntry.difficulty,
 			prepTimeMins: _editedEntry.prepTimeMins,
 			cookTimeMins: _editedEntry.cookTimeMins,
+			addiTimeMins: _editedEntry.addiTimeMins,
 			servings: _editedEntry.servings,
       rating: _editedEntry.rating,
 			images: _editedEntry.images,
@@ -113,6 +116,7 @@ class _RecipeFormState extends State<RecipeForm> {
 			difficulty: _editedEntry.difficulty,
 			prepTimeMins: _editedEntry.prepTimeMins,
 			cookTimeMins: _editedEntry.cookTimeMins,
+			addiTimeMins: _editedEntry.addiTimeMins,
 			servings: _editedEntry.servings,
       rating: _editedEntry.rating,
 			images: newImagesList,
@@ -143,6 +147,7 @@ class _RecipeFormState extends State<RecipeForm> {
 					complexity: fetchedEntry.complexity,
 					prepTimeMins: fetchedEntry.prepTimeMins,
 					cookTimeMins: fetchedEntry.cookTimeMins,
+			    addiTimeMins: _editedEntry.addiTimeMins,
 					servings: fetchedEntry.servings,
           rating: fetchedEntry.rating,
 					images: fetchedEntry.images.map((image) => EntryImage(
@@ -168,6 +173,7 @@ class _RecipeFormState extends State<RecipeForm> {
 				'difficulty': _editedEntry.difficulty,
 				'prepTime': _editedEntry.prepTimeMins,
 				'cookingTime': _editedEntry.cookTimeMins,
+		    'additionalTime': _editedEntry.addiTimeMins,
 				'servings': _editedEntry.servings,
         'rating': _editedEntry.rating,
         'notes': _editedEntry.notes,
@@ -214,6 +220,7 @@ class _RecipeFormState extends State<RecipeForm> {
         complexity: _editedEntry.complexity,
         prepTimeMins: _editedEntry.prepTimeMins,
         cookTimeMins: _editedEntry.cookTimeMins,
+        addiTimeMins: _editedEntry.addiTimeMins,
         servings: _editedEntry.servings,
         rating: _editedEntry.rating,
         images: _editedEntry.images,
@@ -336,6 +343,7 @@ class _RecipeFormState extends State<RecipeForm> {
 																difficulty: _editedEntry.difficulty,
 																prepTimeMins: _editedEntry.prepTimeMins,
 																cookTimeMins: _editedEntry.cookTimeMins,
+                                addiTimeMins: _editedEntry.addiTimeMins,
 																servings: _editedEntry.servings,
                                 rating: _editedEntry.rating,
 																images: _editedEntry.images,
@@ -380,6 +388,7 @@ class _RecipeFormState extends State<RecipeForm> {
 																difficulty: _editedEntry.difficulty,
 																prepTimeMins: _editedEntry.prepTimeMins,
 																cookTimeMins: _editedEntry.cookTimeMins,
+                                addiTimeMins: _editedEntry.addiTimeMins,
 																servings: _editedEntry.servings,
                                 rating: _editedEntry.rating,
 																images: _editedEntry.images,
@@ -427,6 +436,7 @@ class _RecipeFormState extends State<RecipeForm> {
 																difficulty: _editedEntry.difficulty,
 																prepTimeMins: _editedEntry.prepTimeMins,
 																cookTimeMins: _editedEntry.cookTimeMins,
+                                addiTimeMins: _editedEntry.addiTimeMins,
 																servings: _editedEntry.servings,
                                 rating: _editedEntry.rating,
 																images: _editedEntry.images,
@@ -471,6 +481,7 @@ class _RecipeFormState extends State<RecipeForm> {
 																difficulty: value!,
 																prepTimeMins: _editedEntry.prepTimeMins,
 																cookTimeMins: _editedEntry.cookTimeMins,
+                                addiTimeMins: _editedEntry.addiTimeMins,
 																servings: _editedEntry.servings,
                                 rating: _editedEntry.rating,
 																images: _editedEntry.images,
@@ -504,6 +515,7 @@ class _RecipeFormState extends State<RecipeForm> {
 																difficulty: _editedEntry.difficulty,
 																prepTimeMins: int.parse(value!),
 																cookTimeMins: _editedEntry.cookTimeMins,
+                                addiTimeMins: _editedEntry.addiTimeMins,
 																servings: _editedEntry.servings,
                                 rating: _editedEntry.rating,
 																images: _editedEntry.images,
@@ -517,11 +529,57 @@ class _RecipeFormState extends State<RecipeForm> {
 														},
 													),
 												),
-												const SizedBox(width: 10,),
+												const SizedBox(width: 5,),
 												Expanded(
 													child: TextFormField(
 														initialValue: _initValues['cookingTime'].toString(),
 														decoration: const InputDecoration(labelText: 'Cooking Time (mins)',),
+														keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
+														textInputAction: TextInputAction.next,
+														validator: (value) {
+                              if (value == null) {
+                                return 'Please provide a value';
+                              }
+                              if (value.isEmpty) {
+                                return 'Please provide a value';
+                              }
+                              final valueInt = int.tryParse(value);
+                              if (valueInt == null) {
+                                return 'Please provide an integer';
+                              }
+                              if (valueInt < 1) {
+                                return 'Please provide a value greater than 0';
+                              }
+                              return null;
+                            },
+														onSaved: (value) {
+															_editedEntry = RecipeEntry(
+																id: _editedEntry.id,
+																name: _editedEntry.name,
+																displayId: _editedEntry.displayId,
+																complexity: _editedEntry.complexity,
+																difficulty: _editedEntry.difficulty,
+																prepTimeMins: _editedEntry.prepTimeMins,
+																cookTimeMins: int.parse(value!),
+                                addiTimeMins: _editedEntry.addiTimeMins,
+																servings: _editedEntry.servings,
+                                rating: _editedEntry.rating,
+																images: _editedEntry.images,
+																tagIds: _editedEntry.tagIds,
+                                notes: _editedEntry.notes,
+                                timestampCreate: _editedEntry.timestampCreate,
+                                timestampLastUpdate: _editedEntry.timestampLastUpdate,
+                                timestampLastExport: _editedEntry.timestampLastExport,
+                                timestampLastImport: _editedEntry.timestampLastImport,
+															);
+														},
+													),
+												),
+                        const SizedBox(width: 5,),
+												Expanded(
+													child: TextFormField(
+														initialValue: _initValues['additionalTime'].toString(),
+														decoration: const InputDecoration(labelText: 'Extra Time (mins)',),
 														keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
 														textInputAction: TextInputAction.next,
 														validator: _timeMinsValidator,
@@ -533,7 +591,8 @@ class _RecipeFormState extends State<RecipeForm> {
 																complexity: _editedEntry.complexity,
 																difficulty: _editedEntry.difficulty,
 																prepTimeMins: _editedEntry.prepTimeMins,
-																cookTimeMins: int.parse(value!),
+																cookTimeMins: _editedEntry.cookTimeMins,
+                                addiTimeMins: int.parse(value!),
 																servings: _editedEntry.servings,
                                 rating: _editedEntry.rating,
 																images: _editedEntry.images,
@@ -574,6 +633,7 @@ class _RecipeFormState extends State<RecipeForm> {
 													difficulty: _editedEntry.difficulty,
 													prepTimeMins: _editedEntry.prepTimeMins,
 													cookTimeMins: _editedEntry.cookTimeMins,
+                          addiTimeMins: _editedEntry.addiTimeMins,
 													servings: value!.trim(),
                           rating: _editedEntry.rating,
 													images: _editedEntry.images,
@@ -604,6 +664,7 @@ class _RecipeFormState extends State<RecipeForm> {
                           difficulty: _editedEntry.difficulty,
                           prepTimeMins: _editedEntry.prepTimeMins,
                           cookTimeMins: _editedEntry.cookTimeMins,
+                          addiTimeMins: _editedEntry.addiTimeMins,
                           servings: _editedEntry.servings,
                           rating: _editedEntry.rating,
                           images: _editedEntry.images,
@@ -634,6 +695,7 @@ class _RecipeFormState extends State<RecipeForm> {
 													difficulty: _editedEntry.difficulty,
 													prepTimeMins: _editedEntry.prepTimeMins,
 													cookTimeMins: _editedEntry.cookTimeMins,
+                          addiTimeMins: _editedEntry.addiTimeMins,
 													servings: _editedEntry.servings,
                           rating: rating,
 													images: _editedEntry.images,
