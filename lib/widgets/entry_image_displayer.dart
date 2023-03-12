@@ -30,6 +30,9 @@ class EntryImageDisplayer extends StatelessWidget {
 				return Image.file(
 					File(imageItem.imageLocation,),
 					key: ValueKey(imageItem.imageLocation),
+          errorBuilder: (BuildContext ctx, Object exception, StackTrace? stackTrace) {
+            return Text(exception.toString());
+          },
 				);
 		}
 	}
