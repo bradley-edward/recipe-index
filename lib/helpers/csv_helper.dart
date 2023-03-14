@@ -13,7 +13,6 @@ import '../models/entry_image.dart' show ImageType;
 class CsvHelper {
 	static const _keyTableName = 'TABLE_NAME';
 	static const _keyTableColumns = 'TABLE_COLUMNS';
-  static const _archiveFolderName = 'recipeTagindexer_DbSave';
   static const _localImagesFolderName = 'images_local';
 
 	static Future<bool> exportDbToCsv({bool useExternalStorage = false}) async {
@@ -27,10 +26,7 @@ class CsvHelper {
 
 		final secondsSinceEpoch = (DateTime.now().millisecondsSinceEpoch / 1000).floor();
 
-    final exportFolderAbsPath = '$chosenDir/${_archiveFolderName}_$secondsSinceEpoch';
-    Directory(exportFolderAbsPath).createSync();
-
-    final imagesLocalDirAbsPath = '$exportFolderAbsPath/$_localImagesFolderName';
+    final imagesLocalDirAbsPath = '$chosenDir/${_localImagesFolderName}_$secondsSinceEpoch';
 
     // Modify 'timestampLastExport' of all 'recipes'.
     DBHelper.updateRecipeLastDateExportAll();
@@ -86,10 +82,10 @@ class CsvHelper {
 
 		final csvString = const csv.ListToCsvConverter().convert(csvLoL);
 
-		final csvFileName = '$secondsSinceEpoch.csv';
+		final csvFilePath = '$chosenDir/$secondsSinceEpoch.csv';
 
 		try {
-			File file = File('$exportFolderAbsPath/$csvFileName');
+			File file = File(csvFilePath);
 			await file.writeAsString(csvString);
 		} catch (error) {
 			return false;
@@ -115,6 +111,7 @@ class CsvHelper {
     if (csvFilePickResult == null) return '';
     final csvFileAbsPath = csvFilePickResult.paths.first;
     if (csvFileAbsPath == null) return 'failed to find CSV file to import from!';
+    final csvFileName = path.basenameWithoutExtension(csvFileAbsPath);
 
     final File csvFile = File(csvFileAbsPath);
 
@@ -125,7 +122,7 @@ class CsvHelper {
 
     // Import the local images.
     try {
-      final imagesDir = Directory('$archiveFolderAbsPath/$_localImagesFolderName');
+      final imagesDir = Directory('$archiveFolderAbsPath/${_localImagesFolderName}_$csvFileName');
       if (imagesDir.existsSync()) {
         final appDir = await syspaths.getApplicationDocumentsDirectory();
         
