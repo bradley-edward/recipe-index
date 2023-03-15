@@ -11,7 +11,7 @@ import '../../models/entry_image.dart';
 class ImageInput extends StatelessWidget {
 	final Function onSelectImage;
 
-	ImageInput(this.onSelectImage);
+	const ImageInput(this.onSelectImage, {Key? key}) : super(key: key);
 
 	Future<void> _takePicture(ImageSource imgSrc) async {
 		final picker = ImagePicker();
