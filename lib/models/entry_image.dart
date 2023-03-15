@@ -4,6 +4,8 @@ enum ImageType {
 }
 
 class EntryImage {
+  static const localImagesDirName = 'local_images';
+
 	int? id;
 	final ImageType imageType;
 	final String imageLocation;

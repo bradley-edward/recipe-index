@@ -8,7 +8,7 @@ import 'package:csv/csv.dart' as csv;
 
 import '../helpers/db_helper.dart';
 import './date_helper.dart';
-import '../models/entry_image.dart' show ImageType;
+import '../models/entry_image.dart';
 
 class CsvHelper {
 	static const _keyTableName = 'TABLE_NAME';
@@ -67,8 +67,9 @@ class CsvHelper {
 				} else if ((record['imageType'] as int) == ImageType.onPhone.index) {
           csvLoL.add(['', ...columnNames.map((col) {
             if (col == 'imageLocation') {
-              final imageFileName = path.basename(record[col] as String);
-              File(record[col] as String).copySync('$imagesLocalDirAbsPath/$imageFileName');
+              final imageFilePath = (record[col] as String);
+              final imageFileName = path.basename(imageFilePath);
+              File(imageFilePath).copySync('$imagesLocalDirAbsPath/$imageFileName');
 
               return imageFileName;
             }
@@ -115,8 +116,16 @@ class CsvHelper {
 
     final File csvFile = File(csvFileAbsPath);
 
+    final appDirAbsolutePath = (await syspaths.getApplicationDocumentsDirectory()).absolute.path;
+    final localImagesDestDirPath = '$appDirAbsolutePath/${EntryImage.localImagesDirName}';
+    final localImagesDestDir = Directory(localImagesDestDirPath);
+    if (localImagesDestDir.existsSync()) {
+      localImagesDestDir.deleteSync(recursive: true);
+    }
+    localImagesDestDir.createSync(recursive: true);
+
     // Import the CSV file's data.
-    if (! await importFromCsvFile(csvFile.absolute.path)) {
+    if (! await importFromCsvFile(csvFile.absolute.path, localImagesDestDirPath)) {
       return 'Importing CSV data to directory failed!';
     }
 
@@ -124,10 +133,8 @@ class CsvHelper {
     try {
       final imagesDir = Directory('$archiveFolderAbsPath/${_localImagesFolderName}_$csvFileName');
       if (imagesDir.existsSync()) {
-        final appDir = await syspaths.getApplicationDocumentsDirectory();
-        
         for (final imageFile in imagesDir.listSync()) {
-          await (imageFile as File).copy('${appDir.path}/${path.basename(imageFile.path)}');
+          await (imageFile as File).copy('$localImagesDestDirPath/${path.basename(imageFile.path)}');
         }
       }
     } catch (exception) {
@@ -137,7 +144,7 @@ class CsvHelper {
     return null;
   }
 
-	static Future<bool> importFromCsvFile(String csvAbsPath) async {
+	static Future<bool> importFromCsvFile(String csvAbsPath, String imagesDestPath) async {
 		File csvFile = File(csvAbsPath);
 
 		const csvConvertor = csv.CsvToListConverter(
@@ -181,11 +188,10 @@ class CsvHelper {
     }
 
     if (dataToImport.containsKey('images')) {
-      final appDirPath = (await syspaths.getApplicationDocumentsDirectory()).path;
       for (var i = 0, ilen = dataToImport['images']!.length; i < ilen ; i++) {
         if (int.tryParse(dataToImport['images']![i]['imageType']) == ImageType.onPhone.index) {
           final imgFileName = dataToImport['images']![i]['imageLocation'];
-          dataToImport['images']![i]['imageLocation'] = '$appDirPath/$imgFileName';
+          dataToImport['images']![i]['imageLocation'] = '$imagesDestPath/$imgFileName';
         }
       }
     }
