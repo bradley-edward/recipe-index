@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart' as syspaths;
 import 'package:path/path.dart' as path;
 import 'package:csv/csv.dart' as csv;
@@ -133,8 +134,12 @@ class CsvHelper {
     try {
       final imagesDir = Directory('$archiveFolderAbsPath/${_localImagesFolderName}_$csvFileName');
       if (imagesDir.existsSync()) {
-        for (final imageFile in imagesDir.listSync()) {
-          await (imageFile as File).copy('$localImagesDestDirPath/${path.basename(imageFile.path)}');
+        final ImagePicker _picker = ImagePicker();
+        final imageFileList = await _picker.pickMultiImage(requestFullMetadata: false);
+        for (final xFileItem in imageFileList) {
+          final imageFile = File(xFileItem.path);
+          final destPath = '$localImagesDestDirPath/${path.basename(imageFile.path)}';
+          await imageFile.copy(destPath);
         }
       }
     } catch (exception) {
