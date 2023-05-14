@@ -150,12 +150,19 @@ class _RecipeFormTagSelectionState extends State<RecipeFormTagSelection> {
 					if (_searchString.isNotEmpty && fetchedTags.isEmpty) const Center(
 						child: Text('No tags match your search.'),
 					),
-					if (fetchedTags.isNotEmpty) DisplayTagList(
-						tagList: fetchedTags,
-						isInEditMode: true,
-						selectTagFn: _selectTag,
-						longPressSelectTagFn: _longPressSelectTag,
-						selectedTags: _selectedTags
+					const SizedBox(height: 5),
+					if (fetchedTags.isNotEmpty) Expanded(
+						child: Scrollbar(
+							child: SingleChildScrollView(
+								child: DisplayTagList(
+									tagList: fetchedTags,
+									isInEditMode: true,
+									selectTagFn: _selectTag,
+									longPressSelectTagFn: _longPressSelectTag,
+									selectedTags: _selectedTags
+								),
+							),
+						),
 					),
 				],
 			),
