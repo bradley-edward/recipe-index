@@ -213,12 +213,18 @@ class _TagsEditScreenState extends State<TagsEditScreen> {
 												),
 												const SizedBox(height: 5),
 												if (tagsCount <= 0) const Text('No tags match your search.'),
-												if (tagsCount > 0) DisplayTagList(
-													tagList: fetchedTags,
-													isInEditMode: _isInEditMode,
-													selectTagFn: _selectTag,
-													longPressSelectTagFn: _longPressSelectTag,
-													selectedTags: _selectedTags,
+												if (tagsCount > 0) Expanded(
+													child: Scrollbar(
+														child: SingleChildScrollView(
+															child: DisplayTagList(
+																tagList: fetchedTags,
+																isInEditMode: _isInEditMode,
+																selectTagFn: _selectTag,
+																longPressSelectTagFn: _longPressSelectTag,
+																selectedTags: _selectedTags,
+															),
+														),
+													),
 												),
 											],
 										),
